@@ -1,0 +1,22 @@
+﻿using Datalayer.Models.Email;
+using Datalayer.Models.Users;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Datalayer.Interfaces
+{
+    public interface IUserService
+    {
+        public List<User> GetUsers();
+        public User AddUser(User user);
+        public void RemoveUser(User user);
+        public void AddEmail(Email email);
+        public Email? FindEmail(int userId);
+        public List<Email> GetEmails(int userId);
+        public List<Email> GetShorterEmails(int userId);
+        public User? FindUserByNameAndPassword(string name, string password);
+    }
+}

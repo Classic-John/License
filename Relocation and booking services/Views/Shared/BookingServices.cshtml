@@ -1,0 +1,26 @@
+﻿@model List<Apartment>
+
+<form asp-controller="User" asp-action="Booking">
+    <div class="card-group w-50 h-50 p-5">
+        @foreach (Apartment ap in Model)
+        {
+            <div class="card">
+                <img src="@ap.ImageSrc" class="card-img-top" />
+                <div class="card-body">
+                    <h4 class="card-title">@ap.Name</h4>
+                    <input class="form-control" type="text" value="@ap.CreatorId" name="apartmentCreatorId"hidden />
+                    <input class="form-control" type="text" value="@ap.Id" name="apartmentId"hidden />
+                    <p class="card-text">@ap.Description</p>
+                    <p class="card-text">Company: @ap.CompanyName</p>
+                    <div class="card-footer">
+                        <p class="card-text">@ap.Price</p>
+                        <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" type="submit">Reserve</button>
+                </div>
+            </div>
+        }
+    </div>
+</form>

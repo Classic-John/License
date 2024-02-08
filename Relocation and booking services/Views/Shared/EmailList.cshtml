@@ -1,0 +1,41 @@
+﻿@model List<Email>;
+<form id="emailListForm" method="post">
+    <div class="d-flex table-responsive p-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>Title</th>
+                    <th>Part of mail</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Email mail in Model)
+                {
+                    <tr name="chosenEmail" value="@mail.Id">
+                        <td><object class="image/svg+xml" data="mail.svg"></object></td>
+                        <td><a role="button" class="btn-primary btn-link" onclick="submitEmailViewCommand()">@mail.Title</a></td>
+                        <td>@mail.Body</td>
+                        <td><a role="button" onclick="submitEmailDeleteCommand()" class="btn btn-outline-danger"><object class="image/svg+xml" data="trash-2.svg" tooltip="Delete Mail">D</object></a></td>
+                    </tr>
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+</form>
+
+<script>
+    function submitEmailDeleteCommand() {
+        var form = document.getElementById('emailListForm');
+        form.action = '/Email/DeleteEmail';
+        form.submit();
+    }
+    function submitEmailViewCommand() {
+        var form = document.getElementById('emailListForm');
+        form.action = '/Email/ViewEmail';
+        form.submit();
+    }
+</script>

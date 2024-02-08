@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\Relocation and booking services.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Relocation and booking services.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\wwwroot\\bridge1.jpg",
+      "PackagePath": "staticwebassets\\bridge1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\wwwroot\\javascript.js",
+      "PackagePath": "staticwebassets\\javascript.js"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Relocation and booking services.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.Relocation and booking services.props",
+      "PackagePath": "build\\Relocation and booking services.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.Relocation and booking services.props",
+      "PackagePath": "buildMultiTargeting\\Relocation and booking services.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.Relocation and booking services.props",
+      "PackagePath": "buildTransitive\\Relocation and booking services.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

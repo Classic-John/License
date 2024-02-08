@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\bin\Debug\net8.0\Datalayer.deps.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\bin\Debug\net8.0\Datalayer.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\bin\Debug\net8.0\Datalayer.pdb
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.AssemblyInfo.cs
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\refint\Datalayer.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.pdb
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\ref\Datalayer.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.csproj.AssemblyReference.cache

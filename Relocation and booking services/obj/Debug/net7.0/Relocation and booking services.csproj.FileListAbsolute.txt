@@ -1,0 +1,30 @@
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\appsettings.Development.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\appsettings.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.staticwebassets.runtime.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.exe
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.deps.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.runtimeconfig.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net7.0\Relocation and booking services.pdb
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.AssemblyInfo.cs
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.RazorAssemblyInfo.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.RazorAssemblyInfo.cs
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets.build.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets.development.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets\msbuild.Relocation and booking services.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets\msbuild.build.Relocation and booking services.props
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.Relocation and booking services.props
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.Relocation and booking services.props
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\scopedcss\bundle\Relocation and booking services.styles.css
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\scopedcss\projectbundle\Relocation and booking services.bundle.scp.css
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\refint\Relocation and booking services.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.pdb
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\Relocation and booking services.genruntimeconfig.cache
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net7.0\ref\Relocation and booking services.dll

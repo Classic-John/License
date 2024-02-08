@@ -1,0 +1,26 @@
+﻿@model List<Vehicle>
+
+<form asp-controller="User" asp-action="Renting">
+    <div class="card-group w-50 h-50 p-5">
+        @foreach (Vehicle ap in Model)
+        {
+            <div class="card">
+                <img src="@ap.ImageSrc" class="card-img-top" />
+                <div class="card-body">
+                    <input class="form-control" type="text" value="@ap.CreatorId" name="vehicleCreatorId" hidden />
+                    <input class="form-control" type="text" value="@ap.Id" name="vehicleId" hidden />
+                    <h4 class="card-title">@ap.Name</h4>
+                    <p class="card-text">@ap.Description</p>
+                    <p class="card-text">Company: @ap.CompanyName</p>
+                    <div class="card-footer">
+                        <p class="card-text">@ap.Price</p>
+                        <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" type="submit">Reserve</button>
+                </div>
+            </div>
+        }
+    </div>
+</form>

@@ -1,4 +1,5 @@
 ﻿using Datalayer.Interfaces;
+using Datalayer.Models.Email;
 using Datalayer.Models.Wrapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,16 @@ namespace Relocation_and_booking_services.Controllers
         [Route("ViewEmail")]
         public IActionResult ViewEmail()
         {
-            return View();
+            int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
+            Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
+            return View("Email",selectedEmail);
+        }
+        [Route("DeleteEmail")]
+        public IActionResult DeleteEmail() 
+        {
+           int emailId=Convert.ToInt32(Request.Form["mailId"].ToString());
+            _serviceWrapper._userService.DeleteEmail(emailId);
+            return RedirectToAction("Emails","User");
         }
        
     }

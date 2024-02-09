@@ -31,13 +31,15 @@ namespace Core.Services
         }
         public void AddEmail(Email email) 
             => _unitOfWork.Emails.Add(email);
-        public Email? FindEmail(int userId) 
-            => _unitOfWork.Emails.FirstOrDefault(email => email.UserId == userId);
+        public Email? FindEmail(int emailId) 
+            => _unitOfWork.Emails.FirstOrDefault(email => email.Id == emailId);
         public List<Email> GetEmails(int userId)
             =>_unitOfWork.Emails.Where(email => email.UserId==userId).ToList();
         public List<Email> GetShorterEmails(int userId)
             => GetEmails(userId).Select(email => email.ShorterEmail()).ToList();
         public User? FindUserByNameAndPassword(string name, string password)
             => _unitOfWork.Users.FirstOrDefault(user => user.Name.Equals(name) && user.Password.Equals(password));
+        public bool DeleteEmail(int userId)
+            => _unitOfWork.Emails.Remove(_unitOfWork.Emails.FirstOrDefault(email => email.Id == userId));
     }
 }

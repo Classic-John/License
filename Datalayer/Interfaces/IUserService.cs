@@ -18,5 +18,6 @@ namespace Datalayer.Interfaces
         public List<Email> GetEmails(int userId);
         public List<Email> GetShorterEmails(int userId);
         public User? FindUserByNameAndPassword(string name, string password);
+        public bool DeleteEmail(int userId);
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YjbSfS1SVL27+Z9sQGfb1sPQSl2EBdLlvwkt2GMgOkk=",
+  "Hash": "VDz2GW6IHsZeXwEENE0Zt2tkgRZJY30eId/KRRurLVA=",
   "Source": "Relocation and booking services",
   "BasePath": "_content/Relocation and booking services",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\mail.svg"
+    },
+    {
+      "Identity": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\wwwroot\\send.svg",
+      "SourceId": "Relocation and booking services",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\wwwroot\\",
+      "BasePath": "_content/Relocation and booking services",
+      "RelativePath": "send.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\send.svg"
     },
     {
       "Identity": "C:\\Users\\User\\Desktop\\Facultate\\Anul 3\\Licenta\\Relocation and booking services\\Relocation and booking services\\wwwroot\\trash-2.svg",

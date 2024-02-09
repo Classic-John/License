@@ -57,3 +57,4 @@ C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\R
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services\obj\Debug\net8.0\Relocation and booking services.sourcelink.json

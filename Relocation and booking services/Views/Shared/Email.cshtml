@@ -1,0 +1,48 @@
+﻿@model Email?;
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header d-flex justify-content-center">@Model.Title</div>
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text">@Model.Body</p>
+
+        </div>
+        <div class="card-footer">
+            <p>Sent 2 days ago</p>
+            <button type="button" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
+            <button type="button" class="btn btn-outline-warning">Forward</button>
+            <button type="button" class="btn btn-outline-danger">Delete</button>
+            <form id="individualEmailForm" method="post">
+                <input name="viewedEmailId" value="@Model.Id" hidden />
+                <input id="replyBlockData" name="replyBlockData" hidden />
+                <div id="replySection" class="d-none">
+                    <textarea class="p-5 w-100 h-50" id="replyBlock">
+
+                </textarea>
+                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply('@Model.Body')"><object class="image/svg+xml" data="send.svg"></object>Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function openReply() {
+        var replySection = document.getElementById('replySection');
+        if (replySection.classList.contains("d-none")) {
+            replySection.classList.replace("d-none", "mb-3");
+        }
+    }
+
+    function submitReply(body) {
+        var form = document.getElementById('individualEmailForm');
+        var block = document.getElementById('replyBlock');
+        var blockData = document.getElementById('replyBlockData');
+        var newBody = body + block.value.trim() + "\n";
+        blockData.setAttribute('value', newBody);
+        form.action = "/Email/Reply";
+        form.submit();
+    }
+</script>

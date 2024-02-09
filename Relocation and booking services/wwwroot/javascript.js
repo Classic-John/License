@@ -122,4 +122,3 @@ function hiddenFurniture() {
         furnitureService.classList.replace("d-none", "mb-3");
     }
 }
-document.cookie = "myCookie=myValue; samesite=None; secure";

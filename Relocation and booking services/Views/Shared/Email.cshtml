@@ -5,22 +5,22 @@
         <div class="card-header d-flex justify-content-center">@Model.Title</div>
         <div class="card-body">
             <h5 class="card-title">@Model.Title</h5>
-            <p class="card-text">@Model.Body</p>
+            <p style="white-space:pre-wrap" class="card-text" id="emailBody">@Model.Body</p>
 
         </div>
         <div class="card-footer">
             <p>Sent 2 days ago</p>
             <button type="button" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
             <button type="button" class="btn btn-outline-warning">Forward</button>
-            <button type="button" class="btn btn-outline-danger">Delete</button>
+            <button type="button" class="btn btn-outline-danger" onclick="deleteMail()">Delete</button>
             <form id="individualEmailForm" method="post">
-                <input name="viewedEmailId" value="@Model.Id" hidden />
+                <input type="number" name="viewedEmailId" value="@Model.Id" hidden />
                 <input id="replyBlockData" name="replyBlockData" hidden />
                 <div id="replySection" class="d-none">
-                    <textarea class="p-5 w-100 h-50" id="replyBlock">
+                    <textarea class="form-control w-100" id="replyBlock" rows="3">
 
                 </textarea>
-                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply('@Model.Body')"><object class="image/svg+xml" data="send.svg"></object>Send</button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply()">Send <object class="image/svg+xml" data="send.svg"></object></button>
                 </div>
             </form>
         </div>
@@ -36,11 +36,11 @@
         }
     }
 
-    function submitReply(body) {
+    function submitReply() {
         var form = document.getElementById('individualEmailForm');
         var block = document.getElementById('replyBlock');
         var blockData = document.getElementById('replyBlockData');
-        var newBody = body + block.value.trim() + "\n";
+        let newBody = block.value.trim();
         blockData.setAttribute('value', newBody);
         form.action = "/Email/Reply";
         form.submit();

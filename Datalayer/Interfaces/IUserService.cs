@@ -14,10 +14,12 @@ namespace Datalayer.Interfaces
         public User AddUser(User user);
         public void RemoveUser(User user);
         public void AddEmail(Email email);
-        public Email? FindEmail(int userId);
+        public Email? FindEmail(int emailId);
         public List<Email> GetEmails(int userId);
         public List<Email> GetShorterEmails(int userId);
         public User? FindUserByNameAndPassword(string name, string password);
-        public bool DeleteEmail(int userId);
+        public bool DeleteEmail(int emailId);
+        public Email ModifyEmail(int emailId, string newBody);
+        public User? FindUserById(int userId);
     }
 }

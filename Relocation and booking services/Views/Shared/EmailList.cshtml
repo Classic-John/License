@@ -14,10 +14,10 @@
                 @foreach (Email mail in Model)
                 {
                     <tr name="chosenEmail" value="@mail.Id">
-                        <td><object class="image/svg+xml" data="mail.svg"></object></td>
-                        <td><a role="button" id="viewButton"class="btn-primary btn-link" onclick="submitView('@mail.Id')">@mail.Title</a></td>
+                        <td><object class="image/svg+xml" data="/mail.svg"></object></td>
+                        <td class="white-space:pre-wrap"><a role="button" id="viewButton" class="btn-primary btn-link" onclick="submitView('@mail.Id')">@mail.Title</a></td>
                         <td>@mail.Body</td>
-                        <td><a role="button" onclick="submitDelete('@mail.Id')" class="btn btn-outline-danger"><object class="image/svg+xml" data="trash-2.svg" tooltip="Delete Mail">D</object></a></td>
+                        <td><a role="button" onclick="submitDelete('@mail.Id')" class="btn btn-outline-danger"><object class="image/svg+xml" data="/trash-2.svg"></object></a></td>
                     </tr>
 
                 }
@@ -28,7 +28,6 @@
 </form>
 
 <script>
-
     function submitView(mailId) {
         var form = document.getElementById('emailListForm');
         form.action = '/Email/ViewEmail';
@@ -40,7 +39,7 @@
         return submitEmailCommand(mailId, form);
     }
 
-    function submitEmailCommand(mailId,form) {
+    function submitEmailCommand(mailId, form) {
         if (!input) {
             var input = document.createElement('input');
             input.type = 'hidden';

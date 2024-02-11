@@ -1,26 +1,39 @@
-﻿@model Email?;
+﻿@model (Email?,List<User>);
 
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header d-flex justify-content-center">@Model.Title</div>
+        <div class="card-header d-flex justify-content-center"><p style="white-space:pre-wrap">@Model.Item1.Title</p></div>
         <div class="card-body">
-            <h5 class="card-title">@Model.Title</h5>
-            <p style="white-space:pre-wrap" class="card-text" id="emailBody">@Model.Body</p>
+            <h5 class="card-title white-space:pre-wrap" style="white-space:pre-wrap">@Model.Item1.Title</h5>
+            <p style="white-space:pre-wrap" class="card-text" id="emailBody">@Model.Item1.Body</p>
 
         </div>
         <div class="card-footer">
             <p>Sent 2 days ago</p>
-            <button type="button" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
-            <button type="button" class="btn btn-outline-warning">Forward</button>
-            <button type="button" class="btn btn-outline-danger" onclick="deleteMail()">Delete</button>
+            <button type="button" id="replyButton" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
+            <button type="button" class="btn btn-outline-warning" id="forwardButton" onclick="openForward()">Forward</button>
+            <button type="button" class="btn btn-outline-danger" onclick="Delete()">Delete</button>
             <form id="individualEmailForm" method="post">
-                <input type="number" name="viewedEmailId" value="@Model.Id" hidden />
+                <input type="number" name="mailId" value="@Model.Item1.Id" hidden />
                 <input id="replyBlockData" name="replyBlockData" hidden />
                 <div id="replySection" class="d-none">
                     <textarea class="form-control w-100" id="replyBlock" rows="3">
 
                 </textarea>
-                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply()">Send <object class="image/svg+xml" data="send.svg"></object></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply()">Send <object class="image/svg+xml" data="/send.svg"></object></button>
+                </div>
+                <div id="forwardSection" class="d-none">
+                    <input class="form-control" id="userIds" hidden />
+                    <input class="form-control" id="emails" placeholder="Selected Emails" readonly/>
+                    <label for="forwardCommand"class="form-label">Select people</label>
+                    <input class="form-control" list="forwardList" id="forwardCommand"placeholder="Search"/>
+                    <datalist id="forwardList">
+                        @foreach(User user in Model.Item2)
+                        {
+                            <option id="@user.Id"value="@user.Email" onclick="addToEmails(@user.Id)">@user.Email</option>
+                        }
+                    </datalist>
+                    <button type="button" class="btn btn-outline-secondary" onclick="submitReply()">Send <object class="image/svg+xml" data="/send.svg"></object></button>
                 </div>
             </form>
         </div>
@@ -30,12 +43,44 @@
 <script>
 
     function openReply() {
-        var replySection = document.getElementById('replySection');
+        let replySection = document.getElementById('replySection');
+        let forwardSection = document.getElementById('forwardSection');
         if (replySection.classList.contains("d-none")) {
             replySection.classList.replace("d-none", "mb-3");
+            if(forwardSection.classList.contains("mb-3")){
+                forwardSection.classList.replace("mb-3", "d-none");
+            }
+        }
+        else {
+            replySection.classList.replace("mb-3", "d-none");
         }
     }
-
+    function openForward(){
+        let forwardSection = document.getElementById('forwardSection');
+        let replySection = document.getElementById('replySection');
+        if (forwardSection.classList.contains("d-none")) {
+            forwardSection.classList.replace("d-none", "mb-3");
+            if (replySection.classList.contains("mb-3")) {
+                replySection.classList.replace("mb-3", "d-none");
+            }
+        }
+        else {
+            forwardSection.classList.replace("mb-3", "d-none");
+        }
+    }
+    function Delete() {
+        let form = document.getElementById("individualEmailForm");
+        form.action = "/Email/DeleteEmail";
+        form.submit();
+    }
+    function addToEmails(userId) {
+        let emails = document.getElementById('emails');
+        let ids = document.getElementById('userIds');
+        let email = document.getElementById(String(userId));
+        emails.value += (" " + email.value);
+        ids.value += String(userId);
+        email.classList.add("d-none");
+    }
     function submitReply() {
         var form = document.getElementById('individualEmailForm');
         var block = document.getElementById('replyBlock');
@@ -43,6 +88,11 @@
         let newBody = block.value.trim();
         blockData.setAttribute('value', newBody);
         form.action = "/Email/Reply";
+        form.submit();
+    }
+    function submitForward() {
+        let form = document.getElementById('individualEmailForm');
+        form.action = "/Email/Forward";
         form.submit();
     }
 </script>

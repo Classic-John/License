@@ -1,5 +1,8 @@
 ﻿let role = 0;
 let theName = "";
+
+
+
 function loggedUser(theRole) {
     let crucialDetails = document.getElementById("crucialDetails");
     if (crucialDetails.classList.contains("navbar-nav")) {

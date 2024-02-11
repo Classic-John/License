@@ -21,7 +21,7 @@ namespace Relocation_and_booking_services.Controllers
         {
             int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
-            return View("Email", selectedEmail);
+            return View("Email", (selectedEmail,_serviceWrapper._userService.GetUsers()));
         }
         [Route("DeleteEmail")]
         public IActionResult DeleteEmail()
@@ -30,20 +30,22 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper._userService.DeleteEmail(emailId);
             return RedirectToAction("Emails", "User");
         }
+        //TO DO, find a way to select more emails at once in the view so that you can send the emails to users here.
         [Route("Forward")]
         public IActionResult ForwardMail()
         {
+
             return View();
         }
         [Route("Reply")]
         public IActionResult ReplyToMail()
         {
-            int? mailId = Convert.ToInt32(Request.Form["viewedEmailId"]);
+            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
             string? newBody = $"\n\nReply from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
             Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
-            _serviceWrapper._userService.AddEmail(new() { Body = mail.Body, CreatorId = mail.UserId, EmailAddress = mail.EmailAddress, UserId = mail.CreatorId, Id = mail.Id, Title = mail.Title });
+            _serviceWrapper._userService.AddEmail(new() { Body = mail.Body, CreatorId = mail.UserId, EmailAddress = mail.EmailAddress, UserId = mail.CreatorId, Title = ("Reply\n"+mail.Title) });
             return RedirectToAction("Emails", "User");
         }
 

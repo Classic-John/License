@@ -18,6 +18,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Relocation and booking services
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Email/CreateEmailView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcQ3JlYXRlRW1haWxWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Email/Email.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Email/EmailList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Home/AboutUs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dFVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -44,14 +56,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/BookingServices.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEJvb2tpbmdTZXJ2aWNlcy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/Email.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVtYWlsLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/EmailList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVtYWlsTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/Failed.cshtml]

@@ -16,6 +16,10 @@ namespace Relocation_and_booking_services.Controllers
         {
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
         }
+        [Route("Emails")]
+        public IActionResult Emails()
+          => View("EmailList", _serviceWrapper._userService.GetShorterEmails(HomeController.CurrentUser.Id.Value));
+
         [Route("ViewEmail")]
         public IActionResult ViewEmail()
         {
@@ -28,14 +32,22 @@ namespace Relocation_and_booking_services.Controllers
         {
             int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
             _serviceWrapper._userService.DeleteEmail(emailId);
-            return RedirectToAction("Emails", "User");
+            return Emails();
         }
-        //TO DO, find a way to select more emails at once in the view so that you can send the emails to users here.
         [Route("Forward")]
         public IActionResult ForwardMail()
         {
-
-            return View();
+            string[] ids = Request.Form["ids"].ToString().Split(",");
+            List<int> goodIds=ids.Select(id => Convert.ToInt32(id)).ToList();
+            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
+            Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
+            User? sender = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
+            foreach (int goodId in goodIds)
+            {
+                User? user = _serviceWrapper._userService.FindUserById(goodId);
+                _serviceWrapper._userService.AddEmail(new() { Body = currentEmail.Body, CreatorId = sender.Id, EmailAddress = currentEmail.EmailAddress, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title) });
+            }
+            return Emails();
         }
         [Route("Reply")]
         public IActionResult ReplyToMail()
@@ -43,11 +55,14 @@ namespace Relocation_and_booking_services.Controllers
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
-            string? newBody = $"\n\nReply from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
+            string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
             Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
-            _serviceWrapper._userService.AddEmail(new() { Body = mail.Body, CreatorId = mail.UserId, EmailAddress = mail.EmailAddress, UserId = mail.CreatorId, Title = ("Reply\n"+mail.Title) });
-            return RedirectToAction("Emails", "User");
+            _serviceWrapper._userService.AddEmail(new() { Body = mail.Body, CreatorId = mail.UserId, EmailAddress = mail.EmailAddress, UserId = mail.CreatorId, Title = ("[REPLY]\n"+mail.Title) });
+            return Emails();
         }
+        [Route("CreateEmailView")]
+        public IActionResult CreateEmailView()
+            => View("CreateEmailView");
 
     }
 }

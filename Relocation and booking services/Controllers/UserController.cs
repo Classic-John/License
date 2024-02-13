@@ -113,9 +113,6 @@ namespace Relocation_and_booking_services.Controllers
             return true;
         }
 
-        [Route("Emails")]
-        public IActionResult Emails()
-            => View("EmailList",_serviceWrapper._userService.GetShorterEmails(CurrentUser.Id.Value));
 
         [Route("Booking")]
         public IActionResult Booking()

@@ -15,10 +15,10 @@ namespace Datalayer.Models.Email
         public string? Body { get; set; }
         public int? UserId { get; set; }
         public int? CreatorId { get; set; }
-        public string? EmailAddress {  get; set; }
     }
     public static class EmailExtensions
     {
+        private static string? EmailAddress { get; set; }
         public static Email ShorterEmail(this Email email)
             => new()
             {
@@ -28,6 +28,10 @@ namespace Datalayer.Models.Email
                 CreatorId = email.CreatorId,
                 UserId = email.UserId
             };
+        public static void AddSenderAddress(this Email email,string? senderAddress)
+            => EmailAddress = senderAddress;
+        public static string? GetSenderAddress(this Email email)
+            => EmailAddress;
     }
 }
 

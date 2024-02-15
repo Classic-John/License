@@ -14,6 +14,7 @@ namespace Datalayer.Models.Users
         public int? UserId {  get; set; }
         public string? CompanyName {  get; set; }
         public int? Phone {  get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
+        public int? ServiceType { get; set; }
     }
 }

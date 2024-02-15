@@ -1,19 +1,100 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 using Datalayer.Interfaces;
-
+using Datalayer.Models.Wrapper;
+using Datalayer.Models.Enums;
+using NPOI.XWPF.UserModel;
+using Datalayer.Models.Users;
+using Datalayer.Models;
 namespace Relocation_and_booking_services.Controllers
 {
-
-    public class IndustryUserController :Controller
+    [Route("IndustryUser")]
+    public class IndustryUserController : Controller
     {
-        private readonly IIndustryUserService _industryUserService;
-        public IndustryUserController(IIndustryUserService industryUserService)
+        private readonly ServiceWrapper _serviceWrapper;
+        public IndustryUserController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
+            IUserService userService, IIndustryUserService industryUserService)
         {
-            _industryUserService = industryUserService;
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
         }
 
         [Route("Industry User View")]
-        public IActionResult IndustryUserHome() => View("IndustryUserView");
+        public IActionResult IndustryUserHome()
+            => View("IndustryUserView");
+        [Route("Service List")]
+        public IActionResult ServiceList()
+          => View("PersonalServiceList", _serviceWrapper._industryUserService.GetServiceList(HomeController.CurrentUser.Id.Value));
+
+        [Route("Delete")]
+        public IActionResult Delete()
+        {
+            int? creatorId = Convert.ToInt32(Request.Form["creatorOfItemId"].ToString());
+            int? itemId = Convert.ToInt32(Request.Form["deleteItemId"].ToString());
+            IndustryUser? user = _serviceWrapper._industryUserService.FindIndustryUser(creatorId.Value);
+            switch (user.ServiceType)
+            {
+                case (int)ServiceTypes.Booking:
+                    _serviceWrapper._bookingService.RemoveApartment((Apartment)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
+                    break;
+                case (int)ServiceTypes.Renting:
+                    _serviceWrapper._rentingService.RemoveVehicle((Vehicle)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
+                    break;
+                case (int)ServiceTypes.Job:
+                    _serviceWrapper._jobService.RemoveJob((Job)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
+                    break;
+                case (int)ServiceTypes.Furniture:
+                    _serviceWrapper._furnitureService.RemoveFurnitureTransport((Furniture)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
+                    break;
+                case (int)ServiceTypes.Transport:
+                    _serviceWrapper._transportService.RemoveTransport((Transport)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
+                    break;
+            }
+            return ServiceList();
+        }
+        [Route("UpdateOffer")]
+        public IActionResult UpdateOffer()
+        {
+            int? itemId = Convert.ToInt32(Request.Form["chosenItemId"].ToString());
+            int? creatorId = Convert.ToInt32(Request.Form["currentUserId"].ToString());
+            AbstractModel? item = _serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value);
+            item.Description = Request.Form["offerDescription"];
+            item.Price = Convert.ToInt32(Request.Form["offerPrice"]);
+            item.Link = Request.Form["offerLink"];
+            item.Name = Request.Form["offerTitle"];
+            item.Location = Request.Form["offerLocation"];
+            return ServiceList();
+
+        }
+        [Route("AddOffer")]
+        public IActionResult AddOffer()
+        {
+            int? creatorId =HomeController.CurrentUser.Id;
+            string? title = Request.Form["offerTitle"];
+            string? description = Request.Form["offerDescription"];
+            int? price = Convert.ToInt32(Request.Form["offerPrice"]);
+            string? link = Request.Form["offerLink"];
+            string? image = Request.Form["offerImage"];
+            string? location = Request.Form["offerLocation"];
+            IndustryUser? user = _serviceWrapper._industryUserService.FindIndustryUser(creatorId.Value);
+            switch (user.ServiceType)
+            {
+                case (int)ServiceTypes.Booking:
+                    _serviceWrapper._bookingService.AddApartment(new() { CompanyName=user.CompanyName, CreatorId=user.UserId.Value, Description=description, ImageSrc=image, Link=link, Name=title, Price=price, Location=location });
+                    break;
+                case (int)ServiceTypes.Renting:
+                    _serviceWrapper._rentingService.AddVehicle(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location });
+                    break;
+                case (int)ServiceTypes.Job:
+                    _serviceWrapper._jobService.AddJob(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location });
+                    break;
+                case (int)ServiceTypes.Furniture:
+                    _serviceWrapper._furnitureService.AddFurnitureTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location });
+                    break;
+                case (int)ServiceTypes.Transport:
+                    _serviceWrapper._transportService.AddTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location });
+                    break;
+            }
+            return ServiceList();
+        }
     }
 }

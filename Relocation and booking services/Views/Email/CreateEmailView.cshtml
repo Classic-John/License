@@ -1,1 +1,30 @@
-﻿
+﻿@model List<User>;
+
+<div class="container mt-5">
+    <form method="post" asp-controller="Email" asp-action="SendEmail">
+        <div class="card">
+            <div class="card-body vstack gap-2">
+                <input class="form-control" id="userIds" name="ids" hidden />
+                <input class="form-control" id="emails" placeholder="Selected Emails" readonly />
+                <label for="forwardCommand" class="form-label">Select people</label>
+                <input class="form-control" list="forwardList" id="forwardCommand" placeholder="Search" />
+                <button class="btn btn btn-outline-success w-25" type="button" onclick="addForward()">Add person</button>
+                <datalist id="forwardList">
+                    @foreach (User user in Model)
+                    {
+                        <option data-id="@user.Id" value="@user.Email">@user.Email</option>
+                    }
+                </datalist>
+                <label class="form-label" for="titleName">Email Title</label>
+                <input id="titleName" name="title" class="form-control w-50" />
+                <label class="form-label" for="bodyName">Email Body</label>
+                <textarea type="text" rows="10" class="form-control" id="bodyName" name="body">
+
+                    </textarea>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-dark">Send<object class="image/svg+xml" data="/send.svg"></object></button>
+            </div>
+        </div>
+    </form>
+</div>

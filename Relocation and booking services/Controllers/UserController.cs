@@ -40,7 +40,9 @@ namespace Relocation_and_booking_services.Controllers
         #endregion
 
         [Route("relocation")]
-        public IActionResult Relocation() => View("Relocation", _serviceWrapper);
+        public IActionResult Relocation() 
+            => View("Relocation", _serviceWrapper);
+
         [Route("selected service")]
         public IActionResult ChosenService()
         {

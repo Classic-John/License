@@ -2,10 +2,10 @@
 
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header d-flex justify-content-center"><p style="white-space:pre-wrap">@Model.Item1.Title</p></div>
+        <div class="card-header d-flex justify-content-center"><p style="white-space:pre-wrap">@Model.Item1?.Title</p></div>
         <div class="card-body">
-            <h5 class="card-title white-space:pre-wrap" style="white-space:pre-wrap">@Model.Item1.Title</h5>
-            <p style="white-space:pre-wrap" class="card-text" id="emailBody">@Model.Item1.Body</p>
+            <h5 class="card-title white-space:pre-wrap" style="white-space:pre-wrap">@Model.Item1?.Title</h5>
+            <p style="white-space:pre-wrap" class="card-text" id="emailBody">@Model.Item1?.Body</p>
 
         </div>
         <div class="card-footer">

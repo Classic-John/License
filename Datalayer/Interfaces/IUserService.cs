@@ -13,7 +13,7 @@ namespace Datalayer.Interfaces
         public List<User> GetUsers();
         public User AddUser(User user);
         public void RemoveUser(User user);
-        public void AddEmail(Email email);
+        public Email? AddEmail(Email email);
         public Email? FindEmail(int emailId);
         public List<Email> GetEmails(int userId);
         public List<Email> GetShorterEmails(int userId);

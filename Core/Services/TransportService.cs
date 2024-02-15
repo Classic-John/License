@@ -17,8 +17,13 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Transport> GetItems() => _unitOfWork.Transports;
-        public void AddTransport(Transport transport)=> _unitOfWork.Transports.Add(transport);
+        public List<Transport> GetItems() 
+            => _unitOfWork.Transports;
+        public void AddTransport(Transport transport)
+        { 
+            transport.Id=GetItems().Last().Id+1;
+            _unitOfWork.Transports.Add(transport);
+        }
         public void RemoveTransport(Transport transport) => _unitOfWork.Transports.Remove(transport);
         public List<string> GetCompanyNames()
         {

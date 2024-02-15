@@ -183,3 +183,7 @@ function Search() {
         }
     }
 }
+function takeIds(itemId, creatorId) {
+    document.getElementById('chosen').value = itemId;
+    document.getElementById('user').value = creatorId;
+}

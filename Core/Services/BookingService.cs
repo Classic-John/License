@@ -18,18 +18,24 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Apartment> GetItems() => _unitOfWork.Apartments;
-        public void AddApartment(Apartment apartment) => _unitOfWork.Apartments.Add(apartment);
-        public void RemoveApartment(Apartment apartment) => _unitOfWork.Apartments.Remove(apartment);
-        
+        public List<Apartment> GetItems()
+            => _unitOfWork.Apartments;
+        public void AddApartment(Apartment apartment)
+        {
+            apartment.Id=GetItems().Last().Id+1;
+            _unitOfWork.Apartments.Add(apartment);
+        }
+        public void RemoveApartment(Apartment apartment)
+            => _unitOfWork.Apartments.Remove(apartment);
+
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> companyUsers = new();
-            foreach(Apartment ap in _unitOfWork.Apartments)
+            foreach (Apartment ap in _unitOfWork.Apartments)
             {
-                foreach(IndustryUser ius in _unitOfWork.IndustryUsers)
+                foreach (IndustryUser ius in _unitOfWork.IndustryUsers)
                 {
-                    if(ius.Id==ap.CreatorId) 
+                    if (ius.Id == ap.CreatorId)
                     {
                         companyUsers.Add(ius);
                     }
@@ -38,6 +44,7 @@ namespace Core.Services
             return companyUsers.Select(cu => cu.CompanyName).ToList();
         }
 
-        List<AbstractModel> IService.GetItems() => GetItems().Select(item =>(AbstractModel)item).ToList();
+        List<AbstractModel> IService.GetItems()
+            => GetItems().Select(item => (AbstractModel)item).ToList();
     }
 }

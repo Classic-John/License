@@ -17,9 +17,15 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Job> GetItems() => _unitOfWork.Jobs;
-        public void AddJob(Job job) => _unitOfWork.Jobs.Add(job);
-        public void RemoveJob(Job job)=> _unitOfWork.Jobs.Remove(job);
+        public List<Job> GetItems() 
+            => _unitOfWork.Jobs;
+        public void AddJob(Job job)
+        {
+            job.Id=GetItems().Last().Id+1;
+            _unitOfWork.Jobs.Add(job);
+        }
+        public void RemoveJob(Job job) 
+            => _unitOfWork.Jobs.Remove(job);
 
         public List<string> GetCompanyNames()
         {

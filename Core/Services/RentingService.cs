@@ -17,8 +17,13 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Vehicle> GetItems() => _unitOfWork.Vehicles;
-        public void AddVehicle(Vehicle vehicle)=> _unitOfWork.Vehicles.Add(vehicle);
+        public List<Vehicle> GetItems() 
+            => _unitOfWork.Vehicles;
+        public void AddVehicle(Vehicle vehicle)
+        { 
+            vehicle.Id=GetItems().Last().Id+1;
+            _unitOfWork.Vehicles.Add(vehicle);
+        }
         public void RemoveVehicle(Vehicle vehicle)=> _unitOfWork.Vehicles.Remove(vehicle);
 
         public List<string> GetCompanyNames()

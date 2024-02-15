@@ -1,13 +1,13 @@
 ﻿@model List<Email>;
-
+<div class="hstack">
+    <div class="d-flex justify-content-left">
+        <a class="btn btn-dark" role="button" href="/Email/CreateEmailView">Compose Email</a>
+    </div>
     <div class="d-flex justify-content-center p-5">
         <h3>Emails</h3>
-        <input class="form-control w-50" id="search" oninput="Search()" placeholder="Search..."/>
+        <input class="form-control w-100" id="search" oninput="Search()" placeholder="Search..." />
     </div>
-    <div class="d-flex justify-content-left">
-    <button class="btn btn-outline-info" type="button" asp-controller="Email" asp-action="CreateEmailView">Compose Email</button>
-    </div>
-
+</div>
 <form id="emailListForm" method="post">
     <div class="d-flex table-responsive p-5">
         <table class="table">

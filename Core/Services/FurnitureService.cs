@@ -18,17 +18,23 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Furniture> GetItems() => _unitOfWork.FurnitureTransports;
-        public void AddFurnitureTransport(Furniture furniture)=> _unitOfWork.FurnitureTransports.Add(furniture);
-        public void RemoveFurnitureTransport(Furniture furniture)=> _unitOfWork.FurnitureTransports.Remove(furniture);
+        public List<Furniture> GetItems()
+            => _unitOfWork.FurnitureTransports;
+        public void AddFurnitureTransport(Furniture furniture)
+        {
+            furniture.Id = GetItems().Last().Id + 1;
+            _unitOfWork.FurnitureTransports.Add(furniture);
+        }
+        public void RemoveFurnitureTransport(Furniture furniture)
+            => _unitOfWork.FurnitureTransports.Remove(furniture);
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> result = new();
-            foreach(var iu in _unitOfWork.IndustryUsers) 
+            foreach (var iu in _unitOfWork.IndustryUsers)
             {
-                foreach(var fur in _unitOfWork.FurnitureTransports )
+                foreach (var fur in _unitOfWork.FurnitureTransports)
                 {
-                    if(iu.Id==fur.CreatorId) 
+                    if (iu.Id == fur.CreatorId)
                     {
                         result.Add(iu);
                     }

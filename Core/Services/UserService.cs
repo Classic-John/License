@@ -17,7 +17,8 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<User> GetUsers() => _unitOfWork.Users;
+        public List<User> GetUsers() 
+            => _unitOfWork.Users;
         public User AddUser(User user)
         {
             int? id = 1;
@@ -57,5 +58,14 @@ namespace Core.Services
         }
         public User? FindUserById(int userId)
             => _unitOfWork.Users.FirstOrDefault(user => user.Id == userId);
+        public void UpdateUser(int id,string? name,string? email, int? phone, string? gender, string?description)
+        { 
+            User? user = FindUserById(id);
+            user.Name = name;
+            user.Email = email;
+            user.Phone = phone;
+            user.Gender = gender.Equals("User")?1:2;
+            user.SelfDescription = description;
+        }
     }
 }

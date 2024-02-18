@@ -52,7 +52,7 @@ namespace Datalayer
             {
                 new(){ Id=1, Name="Jonny Cage", Role="User", Email="johhny@cage.com", Password="jonnyIsCool", Phone=0743666999},
                 new() { Id=2, Name="Bill Gates", Role="IndustryUser", Email="gates@money.com", Password="moneymoney",Phone=0799111222},
-                new(){Id=3, Name="Ramona Montana", Role= "User", Email="idk@yikes.com", Password="hannah", Phone=0733222444},
+                new(){Id=3, Name="Ramona Montana", Role= "IndustryUser", Email="idk@yikes.com", Password="hannah", Phone=0733222444},
             };
             IndustryUsers = new()
             {

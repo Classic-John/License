@@ -1,16 +1,40 @@
-﻿let role = 0;
-let theName = "";
-
-
-
-function loggedUser(theRole) {
+﻿function loggedUser(theRole) {
     let crucialDetails = document.getElementById("crucialDetails");
-    if (crucialDetails.classList.contains("navbar-nav")) {
-        crucialDetails.classList.replace("navbar-nav","d-none");
-    }
-    else
-    {
-        crucialDetails.classList.replace("d-none", "navbar-nav");
+    let userDetails = document.getElementById('userDetails');
+    let industryDetails = document.getElementById('industryDetails');
+    switch (theRole) {
+        case 0:
+            if (crucialDetails.classList.contains("d-none")) {
+                crucialDetails.classList.remove("d-none");
+            }
+            if (!userDetails.classList.contains("d-none")) {
+                userDetails.classList.add("d-none");
+            }
+            if (!industryDetails.classList.contains("d-none")) {
+                industryDetails.classList.add("d-none");
+            }
+            break;
+        case 1:
+            if (!crucialDetails.classList.contains("d-none")) {
+                crucialDetails.classList.add("d-none");
+            }
+            if (userDetails.classList.contains("d-none")) {
+                userDetails.classList.remove("d-none");
+            }
+            if (!industryDetails.classList.contains("d-none")) {
+                industryDetails.classList.add("d-none");
+            }
+            break;
+        case 2:
+            if (!crucialDetails.classList.contains("d-none")) {
+                crucialDetails.classList.add("d-none");
+            }
+            if (!userDetails.classList.contains("d-none")) {
+                userDetails.classList.add("d-none");
+            }
+            if (industryDetails.classList.contains("d-none")) {
+                industryDetails.classList.remove("d-none");
+            }
     }
 }
 
@@ -23,28 +47,12 @@ function employeerButton() {
     }
     company.classList.replace("mb-3", "d-none");
 }
-function logOff() {
-    role = 0;
-    theName = "";
-}
 function forcedReload() {
     location.reload(true);
-}
-function setRoleAndName() {
-    let userRadio = document.getElementById("user1");
-    role = userRadio.checked ? 1 : 2;
-    theName=document.getElementById("Name")
-    loggedUser();
-}
-function getName() {
-    return theName;
 }
 
 function successLog() {
     return "Welcome " + theName + " ," + "you are logged as an " + getRole(); 
-}
-function getRole() {
-    return role == 1 ? "User" : "Industry user";
 }
 
 function familly1() {
@@ -186,4 +194,28 @@ function Search() {
 function takeIds(itemId, creatorId) {
     document.getElementById('chosen').value = itemId;
     document.getElementById('user').value = creatorId;
+}
+
+function DeleteOffer(creatorId, itemId) {
+    let form = document.getElementById('personalServiceForm');
+    let input1 = document.createElement('input');
+    let input2 = document.createElement('input');
+    input1.type = 'hidden';
+    input2.type = "hidden";
+    input1.name = 'deleteItemId';
+    input2.name = 'creatorOfItemId';
+    input1.value = itemId;
+    input2.value = creatorId;
+    form.appendChild(input1);
+    form.appendChild(input2);
+    form.action = "/IndustryUser/Delete";
+    form.submit();
+}
+function enableSections() {
+    let sections = document.querySelectorAll('[data-section="section"]');
+    let update = document.getElementById('update1');
+    let submit = document.getElementById('submit1');
+    sections.forEach(section => section.removeAttribute('readonly'));
+    update.classList.add("d-none");
+    submit.classList.remove("d-none");
 }

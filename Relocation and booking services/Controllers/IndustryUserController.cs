@@ -6,6 +6,7 @@ using Datalayer.Models.Enums;
 using NPOI.XWPF.UserModel;
 using Datalayer.Models.Users;
 using Datalayer.Models;
+using static Relocation_and_booking_services.Controllers.HomeController;
 namespace Relocation_and_booking_services.Controllers
 {
     [Route("IndustryUser")]
@@ -20,14 +21,21 @@ namespace Relocation_and_booking_services.Controllers
 
         [Route("Industry User View")]
         public IActionResult IndustryUserHome()
-            => View("IndustryUserView");
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("IndustryUserView");
+        }
         [Route("Service List")]
         public IActionResult ServiceList()
-          => View("PersonalServiceList", _serviceWrapper._industryUserService.GetServiceList(HomeController.CurrentUser.Id.Value));
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("PersonalServiceList", _serviceWrapper._industryUserService.GetServiceList(CurrentUser.Id.Value));
+        }
 
         [Route("Delete")]
         public IActionResult Delete()
         {
+            ViewBag.Role = GetCurrentRole();
             int? creatorId = Convert.ToInt32(Request.Form["creatorOfItemId"].ToString());
             int? itemId = Convert.ToInt32(Request.Form["deleteItemId"].ToString());
             IndustryUser? user = _serviceWrapper._industryUserService.FindIndustryUser(creatorId.Value);
@@ -54,6 +62,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("UpdateOffer")]
         public IActionResult UpdateOffer()
         {
+            ViewBag.Role = GetCurrentRole();
             int? itemId = Convert.ToInt32(Request.Form["chosenItemId"].ToString());
             int? creatorId = Convert.ToInt32(Request.Form["currentUserId"].ToString());
             AbstractModel? item = _serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value);
@@ -68,6 +77,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("AddOffer")]
         public IActionResult AddOffer()
         {
+            ViewBag.Role = GetCurrentRole();
             int? creatorId =HomeController.CurrentUser.Id;
             string? title = Request.Form["offerTitle"];
             string? description = Request.Form["offerDescription"];

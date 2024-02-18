@@ -21,5 +21,6 @@ namespace Datalayer.Interfaces
         public bool DeleteEmail(int emailId);
         public Email ModifyEmail(int emailId, string newBody);
         public User? FindUserById(int userId);
+        public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description);
     }
 }

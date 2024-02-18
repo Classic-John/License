@@ -24,7 +24,11 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
         }
         [Route("user home")]
-        public IActionResult UserHome() => View("UserView");
+        public IActionResult UserHome()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("UserView"); 
+        }
         #region Iservice
         private bool ServiceAvailable(IService service)
             => service.GetCompanyNames().Contains(CityOfOrigin) || service.GetCompanyNames().Contains(Destination);
@@ -40,12 +44,16 @@ namespace Relocation_and_booking_services.Controllers
         #endregion
 
         [Route("relocation")]
-        public IActionResult Relocation() 
-            => View("Relocation", _serviceWrapper);
+        public IActionResult Relocation()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("Relocation", _serviceWrapper);
+        }
 
         [Route("selected service")]
         public IActionResult ChosenService()
         {
+            ViewBag.Role = GetCurrentRole();
             if (ChosenServices.Count == 0) { return View("Success"); }
             try
             {
@@ -80,6 +88,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("selected companies offers")]
         public IActionResult PersonalizedOffers()
         {
+            ViewBag.Role = GetCurrentRole();
             CityOfOrigin = Request.Form["origin"].ToString();
             Destination = Request.Form["target"].ToString();
 
@@ -94,7 +103,6 @@ namespace Relocation_and_booking_services.Controllers
 
             return ChosenService();
         }
-        //TO DO: add email stuff
 
         private bool SendEmail(int personId, int itemId, IService service, string serviceType)
         {
@@ -119,6 +127,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Booking")]
         public IActionResult Booking()
         {
+            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["apartmentCreatorId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["apartmentId"]);
             bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Booking");
@@ -127,6 +136,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Renting")]
         public IActionResult Renting()
         {
+            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["vehicleCreatorId"].ToString());
             int rentingId = Convert.ToInt32(Request.Form["vehicleId"]);
             bool sent = SendEmail(industryUserId, rentingId, _serviceWrapper._bookingService, "Renting");
@@ -135,6 +145,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("ChosenJob")]
         public IActionResult FoundJob()
         {
+            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["jobCreatorId"].ToString());
             int jobId = Convert.ToInt32(Request.Form["jobId"]);
             bool sent = SendEmail(industryUserId, jobId, _serviceWrapper._bookingService, "Job Hunting");
@@ -143,6 +154,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Movers")]
         public IActionResult Movers()
         {
+            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["furnitureCreatorId"].ToString());
             int furnitureId = Convert.ToInt32(Request.Form["furnitureId"]);
             bool sent = SendEmail(industryUserId, furnitureId, _serviceWrapper._bookingService, "Furniture");
@@ -151,6 +163,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Travel")]
         public IActionResult Transport()
         {
+            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["transportCreatorId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["transportId"]);
             bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Travel");

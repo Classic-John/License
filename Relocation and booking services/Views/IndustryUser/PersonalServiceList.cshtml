@@ -127,20 +127,3 @@
     </div>
 </div>
 
-<script>
-    function DeleteOffer(creatorId, itemId) {
-        let form = document.getElementById('personalServiceForm');
-        let input1 = document.createElement('input');
-        let input2 = document.createElement('input');
-        input1.type = 'hidden';
-        input2.type = "hidden";
-        input1.name = 'deleteItemId';
-        input2.name = 'creatorOfItemId';
-        input1.value = itemId;
-        input2.value = creatorId;
-        form.appendChild(input1);
-        form.appendChild(input2);
-        form.action="/IndustryUser/Delete";
-        form.submit();
-    }
-</script>

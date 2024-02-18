@@ -5,6 +5,7 @@ using Datalayer.Models.Wrapper;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.OpenXmlFormats.Spreadsheet;
 using NPOI.XWPF.UserModel;
+using static Relocation_and_booking_services.Controllers.HomeController;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -21,18 +22,23 @@ namespace Relocation_and_booking_services.Controllers
         }
         [Route("Emails")]
         public IActionResult Emails()
-          => View("EmailList", _serviceWrapper._userService.GetShorterEmails(HomeController.CurrentUser.Id.Value));
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("EmailList", _serviceWrapper._userService.GetShorterEmails(CurrentUser.Id.Value));
+        }
 
         [Route("ViewEmail")]
         public IActionResult ViewEmail()
         {
+            ViewBag.Role = GetCurrentRole();
             int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
-            return View("Email", (selectedEmail,_serviceWrapper._userService.GetUsers()));
+            return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers()));
         }
         [Route("DeleteEmail")]
         public IActionResult DeleteEmail()
         {
+            ViewBag.Role = GetCurrentRole();
             int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
             _serviceWrapper._userService.DeleteEmail(emailId);
             return Emails();
@@ -40,8 +46,9 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Forward")]
         public IActionResult ForwardMail()
         {
+            ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
-            List<int> goodIds=ids.Select(id => Convert.ToInt32(id)).ToList();
+            List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? sender = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
@@ -57,6 +64,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Reply")]
         public IActionResult ReplyToMail()
         {
+            ViewBag.Role = GetCurrentRole();
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
@@ -69,20 +77,24 @@ namespace Relocation_and_booking_services.Controllers
         }
         [Route("CreateEmailView")]
         public IActionResult CreateEmailView()
-            => View("CreateEmailView",_serviceWrapper._userService.GetUsers());
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("CreateEmailView", _serviceWrapper._userService.GetUsers());
+        }
 
         [Route("SendEmail")]
         public IActionResult SendEmail()
         {
+            ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
             List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
-            User? sender = _serviceWrapper._userService.FindUserById(HomeController.CurrentUser.Id.Value);
-            string? title = ($"[SENT] from{sender.Name}\n with email: {sender.Email}\n\n "+Request.Form["title"]);
+            User? sender = _serviceWrapper._userService.FindUserById(CurrentUser.Id.Value);
+            string? title = ($"[SENT] from{sender.Name}\n with email: {sender.Email}\n\n " + Request.Form["title"]);
             string? body = ($"[SENT] from{sender.Name}\n with email: {sender.Email}\n\n " + Request.Form["body"]);
             foreach (int id in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(id);
-                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = HomeController.CurrentUser.Id, UserId=user.Id });
+                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id });
                 senderEmail.AddSenderAddress(sender.Email);
             }
             return Emails();

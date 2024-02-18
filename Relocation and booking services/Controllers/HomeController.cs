@@ -7,6 +7,7 @@ using Relocation_and_booking_services.Pages.User;
 using Datalayer.Models.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Bogus.DataSets;
+using Bogus;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -21,19 +22,26 @@ namespace Relocation_and_booking_services.Controllers
         {
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
         }
+        public static int GetCurrentRole()
+            => CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 0;
         private IActionResult ViewSelection(int role)
         {
+            ViewBag.Role = role;
             switch (role)
             {
                 case (int)Roles.User: return RedirectToAction("UserHome", "User");
-                case (int)Roles.Employeer: return RedirectToAction("IndustryUserHome", "IndustryUser");
+                case (int)Roles.IndustryUser: return RedirectToAction("IndustryUserHome", "IndustryUser");
                 default: break;
             }
             return View("Homepage");
         }
         [Route("/")]
         [Route("Homepage")]
-        public IActionResult Homepage() => View("Homepage");
+        public IActionResult Homepage()
+        {
+            ViewBag.Role = 0;
+            return View("Homepage"); 
+        }
 
         //FINISH LOG IN ASWELL
         [Route("Log in")]
@@ -42,7 +50,7 @@ namespace Relocation_and_booking_services.Controllers
             string name = Request.Form["Name"];
             string password = Request.Form["Password"];
             CurrentUser = _serviceWrapper._userService.FindUserByNameAndPassword(name, password);
-
+            ViewBag.Role = GetCurrentRole();
             if (CurrentUser == null)
                 return View("Failed");
             int userType = 0;
@@ -60,6 +68,7 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Logout()
         {
             CurrentUser = null;
+            ViewBag.Role = 0;
             return View("Homepage");
         }
         //Finish Create Account
@@ -79,7 +88,7 @@ namespace Relocation_and_booking_services.Controllers
                 Password = Request.Form["password"]
             });
 
-            if (role == (int)Roles.Employeer)
+            if (role == (int)Roles.IndustryUser)
                 _serviceWrapper._industryUserService.AddIndustryUser(new()
                 {
                     Id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id+1,
@@ -92,28 +101,66 @@ namespace Relocation_and_booking_services.Controllers
             return ViewSelection(role);
         }
         [Route("About Us")]
-        public IActionResult AboutUs() 
-            => View("AboutUs");
+        public IActionResult AboutUs()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("AboutUs");
+
+        }
 
         [Route("Booking Services")]
-        public IActionResult AllBookings() 
-            => View("BookingServices", _serviceWrapper._bookingService.GetItems());
+        public IActionResult AllBookings()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("BookingServices", _serviceWrapper._bookingService.GetItems());
+        }
 
         [Route("Renting Services")]
-        public IActionResult AllRentings() 
-            => View("RentingServices", _serviceWrapper._rentingService.GetItems());
-
+        public IActionResult AllRentings()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("RentingServices", _serviceWrapper._rentingService.GetItems());
+        }
 
         [Route("Furniture Transports Services")]
-        public IActionResult AllFurnitureTransports() 
-            => View("AllFurnitureTransports", _serviceWrapper._furnitureService.GetItems());
+        public IActionResult AllFurnitureTransports()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("AllFurnitureTransports", _serviceWrapper._furnitureService.GetItems());
+        }
 
         [Route("Jobs Services")]
-        public IActionResult AllJobs() 
-            => View("AllJobs", _serviceWrapper._jobService.GetItems());
+        public IActionResult AllJobs()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("AllJobs", _serviceWrapper._jobService.GetItems());
+        }
 
         [Route("All Transports")]
-        public IActionResult AllTransports() 
-            => View("AllTransports", _serviceWrapper._transportService.GetItems());
+        public IActionResult AllTransports()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("AllTransports", _serviceWrapper._transportService.GetItems());
+        }
+        [Route("Profile")]
+        public IActionResult Profile()
+        {
+            ViewBag.Role = GetCurrentRole();
+            User user=_serviceWrapper._userService.FindUserById(CurrentUser.Id.Value);
+            IndustryUser? industryUser = _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id.Value);
+            return View("CurrentProfile",(user,industryUser));
+        }
+        public IActionResult ModifyProfile()
+        {
+            ViewBag.Role = GetCurrentRole();
+            string? name = Request.Form["name"];
+            string?email= Request.Form["email"];
+            int? phone = Convert.ToInt32(Request.Form["phone"]);
+            string? gender = Request.Form["gender"];
+            string?description= Request.Form["description"];
+            _serviceWrapper._userService.UpdateUser(CurrentUser.Id.Value,name,email,phone,gender,description);
+            return View("Homepage");
+        }
+
     }
 }

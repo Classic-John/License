@@ -33,7 +33,8 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
-            return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers()));
+            byte[]? creatorImage=_serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value).ImageData;
+            return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(),creatorImage));
         }
         [Route("DeleteEmail")]
         public IActionResult DeleteEmail()

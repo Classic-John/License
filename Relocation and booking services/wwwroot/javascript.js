@@ -36,6 +36,7 @@
                 industryDetails.classList.remove("d-none");
             }
     }
+    KeepPicture();
 }
 
 function employeerButton() {
@@ -215,7 +216,29 @@ function enableSections() {
     let sections = document.querySelectorAll('[data-section="section"]');
     let update = document.getElementById('update1');
     let submit = document.getElementById('submit1');
-    sections.forEach(section => section.removeAttribute('readonly'));
+    sections.forEach(section => section.removeAttribute('disabled'));
     update.classList.add("d-none");
     submit.classList.remove("d-none");
+}
+function uploadImage(fileId,inputId) {
+    let input = document.getElementById(fileId);
+    const file = input.files[0];
+    const reader = new FileReader();
+    if (file && file.type.startsWith('image/')) {
+        reader.onload = () => document.getElementById(inputId).src = reader.result;
+    }
+    reader.readAsDataURL(file);
+}
+
+function KeepPicture() {
+    const img = document.getElementById('image');
+    fetch('/Home/KeepPicture')
+        .then(response => response.text())
+        .then(data => {
+            
+            img.src = data == null ? '/default.jpg' : data;
+        })
+        .catch(error => {
+            document.getElementById('image').src = '/default.jpg';
+        });
 }

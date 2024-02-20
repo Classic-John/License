@@ -8,6 +8,9 @@ using Datalayer.Models.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Bogus.DataSets;
 using Bogus;
+using System.Reflection.Metadata.Ecma335;
+using Datalayer.Models.Enums;
+using NPOI.Util.ArrayExtensions;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -39,7 +42,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Homepage")]
         public IActionResult Homepage()
         {
-            ViewBag.Role = 0;
+            ViewBag.Role = CurrentUser==null? 0: GetCurrentRole();
             return View("Homepage"); 
         }
 
@@ -71,6 +74,21 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = 0;
             return View("Homepage");
         }
+        [Route("KeepPicture")]
+        public string KeepPicture()
+            => CurrentUser ==null? "/default.jpg" : CurrentUser.ImageData ==null? "/default.jpg": ("data:image/jpg;base64," + Convert.ToBase64String(CurrentUser.ImageData));
+        private async Task<byte[]?> ConvertImageToBytes(IFormFile file)
+        {
+            if(file!=null && file.Length>0)
+            {
+                using(MemoryStream ms = new MemoryStream()) 
+                {
+                    await file.CopyToAsync(ms);
+                    return ms.ToArray();
+                }
+            }
+            return null;
+        }
         //Finish Create Account
         [Route("Create Account")]
         public IActionResult CreateAccount()
@@ -83,9 +101,11 @@ namespace Relocation_and_booking_services.Controllers
                 Id = _serviceWrapper._userService.GetUsers().Last().Id+1,
                 Name = Request.Form["Name"],
                 Role = GlobalService.roleNames[role],
+                Gender = Convert.ToInt32(Request.Form["gender"]),
                 Email = Request.Form["Email"].ToString(),
                 Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
-                Password = Request.Form["password"]
+                Password = Request.Form["password"],
+                ImageData = ConvertImageToBytes(Request.Form.Files["photo"]).Result
             });
 
             if (role == (int)Roles.IndustryUser)
@@ -96,7 +116,8 @@ namespace Relocation_and_booking_services.Controllers
                     Email = Request.Form["Email"].ToString(),
                     Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
                     UserId = 3,
-                    CompanyName = Request.Form["Company"].ToString()
+                    CompanyName = Request.Form["Company"].ToString(),
+                    ServiceType = Convert.ToInt32(Request.Form["serviceType"])
                 });
             return ViewSelection(role);
         }
@@ -158,7 +179,21 @@ namespace Relocation_and_booking_services.Controllers
             int? phone = Convert.ToInt32(Request.Form["phone"]);
             string? gender = Request.Form["gender"];
             string?description= Request.Form["description"];
-            _serviceWrapper._userService.UpdateUser(CurrentUser.Id.Value,name,email,phone,gender,description);
+            string companyName = Request.Form["companyName"];
+            int? serviceType;
+            foreach (int service in Enum.GetValues(typeof(ServiceTypes)))
+                if (nameof(service).Equals(Request.Form["serviceType"]))
+                {
+                    serviceType = service;
+                    break;
+                }
+            byte[]? newImage = ConvertImageToBytes(Request.Form.Files["newPhoto"]).Result;
+            _serviceWrapper._userService.UpdateUser(CurrentUser.Id.Value,name,email,phone,gender,description,newImage);
+            if (!CurrentUser.Role.Equals("User"))
+            {
+                _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id.Value).CompanyName = companyName;
+                _serviceWrapper._industryUserService.ModifyCompanyNameOnOffers(CurrentUser.Id.Value, companyName);
+            }
             return View("Homepage");
         }
 

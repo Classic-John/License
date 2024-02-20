@@ -67,6 +67,8 @@ namespace Core.Services
             => GetServiceList(industryUserId).Select(item => (Furniture)item).ToList();
         public List<Transport?> GetTransports(int industryUserId)
             => GetServiceList(industryUserId).Select(item => (Transport)item).ToList();
-
+        public void ModifyCompanyNameOnOffers(int id, string? companyName)
+            => GetServiceList(id).Select(item => item.CompanyName= companyName).ToList();
+        
     }
 }

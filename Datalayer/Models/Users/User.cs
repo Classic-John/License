@@ -15,7 +15,7 @@ namespace Datalayer.Models.Users
         public int? Phone { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
-        public List<byte>? ImageData { get; set; }
+        public byte[]? ImageData { get; set; }
         public int? Gender { get; set; }
         public string? SelfDescription {  get; set; }
     }

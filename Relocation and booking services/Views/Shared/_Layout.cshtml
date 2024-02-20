@@ -23,9 +23,8 @@
         <div class="container-fluid">
             <div class="mb-3">
                 <a asp-controller="Home" asp-action="Profile">
-                    <img src="/default.jpg" id="image" width="30" height="30" />
+                    <img src="" id="image" width="30" height="30" />
                 </a>
-
             </div>
             <ul class="navbar-nav d-none" id="userDetails">
                 <li class="nav-item">
@@ -133,7 +132,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">CreateAccount</h5>
-                    <form asp-controller="Home" asp-action="CreateAccount" method="post" class="needs-validated">
+                    <form asp-controller="Home" asp-action="CreateAccount" method="post" class="needs-validated" enctype="multipart/form-data">
                         <div class="mb-3 mt-3">
                             <label for="Name" class="form-label">Name:</label>
                             <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Name" required>
@@ -159,24 +158,38 @@
                             <label class="form-check-label" for="employeer1"> Employeer </label>
                         </div>
 
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="radio1" name="gender" value="1" checked>
+                            <label class="form-check-label" for="radio1">Male</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="radio2" name="gender" value="2">
+                            <label class="form-check-label" for="radio2">Female</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="gender" value="3">
+                            <label class="form-check-label">Other</label>
+                        </div>
+
                         <div class="d-none" id="employeerExtra">
                             <label for="Company" class="form-label">Enter Company</label>
                             <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name'" />
                             <div class="valid-feedback">Ok</div>
                             <div class="invalid-feedback">Company name required</div>
+
+                            <label for="serviceType" class="form-label">Choose service type:</label>
+                            <input class="form-control" list="services" name="serviceType" id="serviceType">
+                            <datalist id="services">
+                                <option value="1">Booking</option>
+                                <option value="2">Renting</option>
+                                <option value="3">Jobs</option>
+                                <option value="4">Furniture Transport</option>
+                                <option value="5">Travel</option>
+                            </datalist>
                         </div>
                         <div class="mb-3">
-                            <input type="file" id="imageUpload" accept="image/*" />
-                            <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <pattern id="imageFill" patternUnits="userSpaceOnUse" width="200" height="200">
-                                        <image href="/default.jpg" id="uploadedImage" x="10" y="10" width="180" height="180" />
-                                    </pattern>
-                                </defs>
-
-                                <rect x="10" y="10" width="180" height="180" fill="url(#imageFill)" stroke="black" stroke-width="5" />
-                            </svg>
-
+                            <input type="file" id="imageUpload" accept="image/*" name="photo" onchange="uploadImage('imageUpload','uploaded')" />
+                            <img src="/default.jpg" id="uploaded" width="50" height="50" />
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

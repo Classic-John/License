@@ -1,43 +1,43 @@
 ﻿@model (User,IndustryUser?);
 
-<form asp-controller="Home" asp-action="ModifyProfile" method="post">
+<form asp-controller="Home" asp-action="ModifyProfile" method="post" enctype="multipart/form-data">
     <div class="card p-5">
         <div class="card-header d-flex justify-content-center">
-            <img src="/default.jpg" width="50" height="50" />
+            <img src="@(Model.Item1.ImageData==null? "/default.jpg":"data:image/jpg;base64,"+Convert.ToBase64String(Model.Item1.ImageData))" id="currentImage" name="currentImage" width="50" height="50" />
         </div>
         <div class="card-body">
             <div class="vstack w-100">
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Name" class="form-control" id="userName" placeholder="Name" data-section="section" name="name" readonly />
+                    <input type="text" value="@Model.Item1.Name" class="form-control" id="userName" placeholder="Name" data-section="section" name="name" disabled />
                     <label class="form-label" for="userName">Name</label>
                 </div>
-                <div class="form-floating">
-                    <input type="text" value="@Model.Item2.CompanyName" class="@(Model.Item2!=null?"form-control":"d-none")" id="companyName" placeholder="Company Name" data-section="section" name="companyName" readonly />
+                <div class="form-floating @(Model.Item2==null? "d-none":"")">
+                    <input type="text" value="@(Model.Item2==null? "":Model.Item2.CompanyName)" class="@(Model.Item2!=null?"form-control":"d-none")" id="companyName" placeholder="Company Name" data-section="section" name="companyName" disabled />
                     <label class="form-label" for="companyName">Company Name</label>
                 </div>
-                <div class="form-floating">
-                    <input type="text" value="@Enum.GetNames(typeof(ServiceTypes))[Model.Item2.ServiceType.Value-1]" class="@(Model.Item2!=null?"form-control":"d-none")" id="serviceType" placeholder="Service Type" data-section="section" name="serviceType" readonly />
+                <div class="form-floating @(Model.Item2==null? "d-none":"")">
+                    <input type="text" value="@(Model.Item2==null? " ":Enum.GetNames(typeof(ServiceTypes))[Model.Item2.ServiceType.Value-1])" class="@(Model.Item2!=null?" form-control":"d-none")" id="serviceType" placeholder="Service Type" data-section="section" name="serviceType" disabled />
                     <label class="form-label" for="serviceType">Service Type</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Email" class="form-control" id="email1" placeholder="Email" data-section="section" name="email" readonly />
+                    <input type="text" value="@Model.Item1.Email" class="form-control" id="email1" placeholder="Email" data-section="section" name="email" disabled />
                     <label class="form-label" for="email1">Email</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Phone" class="form-control" id="phone1" placeholder="Phone" data-section="section" name="phone" readonly />
+                    <input type="text" value="@Model.Item1.Phone" class="form-control" id="phone1" placeholder="Phone" data-section="section" name="phone" disabled />
                     <label class="form-label" for="phone1">Phone</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.GenderString()" class="form-control" id="gender1" placeholder="Gender" data-section="section" name="gender" readonly />
+                    <input type="text" value="@Model.Item1.GenderString()" class="form-control" id="gender1" placeholder="Gender" data-section="section" name="gender" disabled />
                     <label class="form-label" for="gender1">Gender</label>
                 </div>
                 <div class="form-floating">
-                    <textarea type="text" class="form-control h-100" id="details1" placeholder="Self Description" data-section="section" name="description" readonly>
+                    <textarea type="text" class="form-control h-100" id="details1" placeholder="Self Description" data-section="section" name="description" disabled>
                         @Model.Item1.SelfDescription
                     </textarea>
                     <label class="form-label" for="details1">Self Description</label>
                 </div>
-
+                <input type="file" id="newImageUpload" accept="image/*" name="newPhoto" data-section="section" onchange="uploadImage('newImageUpload','currentImage')" placeholder="Upload new photo" disabled/>
             </div>
         </div>
         <div class="card-footer">

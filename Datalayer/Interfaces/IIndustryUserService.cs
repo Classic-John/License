@@ -21,6 +21,7 @@ namespace Datalayer.Interfaces
         public List<Transport?> GetTransports(int industryUserId);
         public List<AbstractModel?> GetServiceList(int industryUserId);
         public AbstractModel? GetItem(int industryUserId, int itemId);
+        public void ModifyCompanyNameOnOffers(int id, string? companyName);
 
     }
 }

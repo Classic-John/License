@@ -58,7 +58,7 @@ namespace Core.Services
         }
         public User? FindUserById(int userId)
             => _unitOfWork.Users.FirstOrDefault(user => user.Id == userId);
-        public void UpdateUser(int id,string? name,string? email, int? phone, string? gender, string?description)
+        public void UpdateUser(int id,string? name,string? email, int? phone, string? gender, string?description, byte[]? newImage)
         { 
             User? user = FindUserById(id);
             user.Name = name;
@@ -66,6 +66,7 @@ namespace Core.Services
             user.Phone = phone;
             user.Gender = gender.Equals("User")?1:2;
             user.SelfDescription = description;
+            user.ImageData = newImage;
         }
     }
 }

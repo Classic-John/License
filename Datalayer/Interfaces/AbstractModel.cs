@@ -17,5 +17,6 @@ namespace Datalayer.Interfaces
         public string? Link { get; set; }
         public string? CompanyName { get; set; }
         public string? Location { get; set; }
+        public byte[]? Image { get; set; }
     }
 }

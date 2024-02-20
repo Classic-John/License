@@ -1,8 +1,9 @@
-﻿@model (Email?,List<User>);
+﻿@model (Email?,List<User>,byte[]);
 
 <div class="container mt-5">
     <div class="card">
         <div class="card-header d-flex justify-content-center">
+            <img src="@(Model.Item3 ==null ? "/default.jpg" :"data:image/jpg;base64,"+Convert.ToBase64String(Model.Item3))" width="220" height="200" />
         </div>
         <div class="card-body">
             <h5 class="card-title white-space:pre-wrap" style="white-space:pre-wrap">@Model.Item1?.Title</h5>

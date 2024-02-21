@@ -19,9 +19,9 @@ namespace Relocation_and_booking_services.Controllers
         private static string CityOfOrigin { get; set; }
         private static string Destination { get; set; }
         public UserController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
-            IUserService userService, IIndustryUserService industryUserService)
+            IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
         {
-            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("user home")]
         public IActionResult UserHome()

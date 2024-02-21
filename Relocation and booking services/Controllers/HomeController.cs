@@ -21,9 +21,9 @@ namespace Relocation_and_booking_services.Controllers
         public static bool logged = false;
         public static User CurrentUser { get; set; }
         public HomeController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
-            IUserService userService, IIndustryUserService industryUserService)
+            IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
         {
-            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         public static int GetCurrentRole()
             => CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 0;
@@ -77,7 +77,7 @@ namespace Relocation_and_booking_services.Controllers
         [Route("KeepPicture")]
         public string KeepPicture()
             => CurrentUser ==null? "/default.jpg" : CurrentUser.ImageData ==null? "/default.jpg": ("data:image/jpg;base64," + Convert.ToBase64String(CurrentUser.ImageData));
-        private async Task<byte[]?> ConvertImageToBytes(IFormFile file)
+        public static async Task<byte[]?> ConvertImageToBytes(IFormFile file)
         {
             if(file!=null && file.Length>0)
             {

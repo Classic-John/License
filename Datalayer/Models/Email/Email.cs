@@ -15,6 +15,7 @@ namespace Datalayer.Models.Email
         public string? Body { get; set; }
         public int? UserId { get; set; }
         public int? CreatorId { get; set; }
+        public DateTime? Date { get; set; }
     }
     public static class EmailExtensions
     {

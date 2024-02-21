@@ -1,0 +1,143 @@
+﻿@model List<School>;
+
+
+<button class="btn btn-primary p-5" type="button" data-bs-toggle="modal" data-bs-target="#addModal">Add Offer</button>
+
+<form id="personalServiceForm" method="post">
+    <div class="card-group w-50 h-50 p-5">
+        @foreach (School? item in Model)
+        {
+            <div class="card">
+                <img src="@(item.Image !=null ? "data:image/jpg;base64,"+Convert.ToBase64String(item.Image) : item.ImageSrc)" class="card-img-top" />
+                <div class="card-body">
+                    <input class="form-control" type="text" value="@item.CreatorId" name="itemCreatorId" hidden />
+                    <input class="form-control" type="text" value="@item.Id" name="itemId" hidden />
+                    <h4 class="card-title">@item.Name</h4>
+                    <p class="card-text">@item.Description</p>
+                    <p class="card-text">Company: @item.CompanyName</p>
+                    <p class="card-text">Location: @item.Location</p>
+                    <div class="card-footer">
+                        <p class="card-text">@item.Price</p>
+                        <a class="card-text" href="@item.Link" target="_blank">Visit</a>
+                    </div>
+                </div>
+                <div class="card-footer h-stack gap-3">
+                    <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="takeIds('@item.Id','@item.CreatorId')">Update</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="DeleteOffer('@item.CreatorId','@item.Id')">Delete</button>
+                    <blockquote class="blockquote">
+                       Posted on: @item.Date?.ToString("dd/MM/yyyy");
+                       <br />
+                       At @item.Date?.ToString("hh/mm/ss");
+                    </blockquote>
+                </div>
+            </div>
+        }
+    </div>
+</form>
+
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Update Offer</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-controller="School" asp-action="UpdateSchoolOffer" enctype="multipart/form-data">
+                    <input type="text" class="form-control" name="chosenItemId" id="chosen" hidden />
+                    <input type="text" class="form-control" name="currentUserId" id="user" hidden />
+                    <div class="input-group">
+                        <div class="vstack gap-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" name="offerTitle" id="title" placeholder="Offer Title" required />
+                                <label for="title" class="form-label">Offer Title</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea type="text" class="form-control h-50" name="offerDescription" id="description" placeholder="Description" required>
+
+                        </textarea>
+                                <label for="description" class="form-label">Description</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" name="offerPrice" id="price" placeholder="Price" required />
+                                <label for="price" class="form-label">Price</label>
+                            </div>
+                            @*
+                            <div class="form-floating">
+                            <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
+                            <label class="form-label" for="link">Site's url'</label>
+                            </div>
+                            *@
+                            <div class="form-floating">
+                                <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
+                                <label for="location" class="form-label">Location</label>
+                            </div>
+                            <input type="file" id="newOfferImage" accept="image/*" name="newPhoto" onchange="uploadImage('newOfferImage','offerImage')" placeholder="Upload new photo" />
+                            <img src="/default.jpg" id="offerImage" width="50" height="50" />
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-primary" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <blockquote class="blockquote">
+                    <p><i>Note, to change company's name, you must change it from your user profile'</i></p>
+                </blockquote>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Add Offer</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-body">
+                    <form method="post" asp-controller="School" asp-action="AddSchoolOffer" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <div class="vstack gap-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="offerTitle" id="title" placeholder="Offer Title" required />
+                                    <label for="title" class="form-label">Offer Title</label>
+                                </div>
+                                <div class="form-floating">
+                                    <textarea type="text" class="form-control h-50" name="offerDescription" id="description" placeholder="Description" required>
+
+                        </textarea>
+                                    <label for="description" class="form-label">Description</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="offerPrice" id="price" placeholder="Price" required />
+                                    <label for="price" class="form-label">Price</label>
+                                </div>
+
+                                <div class="form-floating">
+                                    <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
+                                    <label class="form-label" for="link">Site's url'</label>
+                                </div>
+                                @*
+                                <div class="form-floating">
+                                <input class="form-control" type="text" name="offerImage" id="image" placeholder="The Image" />
+                                <label class="form-label" for="image">Offer's product image'</label>
+                                </div>
+                                *@
+                                <div class="form-floating">
+                                    <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
+                                    <label for="location" class="form-label">Location</label>
+                                </div>
+                                <input type="file" id="newerOfferImage" accept="image/*" name="newPhoto" onchange="uploadImage('newerOfferImage','offeredImage')" placeholder="Upload new photo" />
+                                <img src="/default.jpg" id="offeredImage" width="50" height="50" />
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

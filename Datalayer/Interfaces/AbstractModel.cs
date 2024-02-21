@@ -18,5 +18,6 @@ namespace Datalayer.Interfaces
         public string? CompanyName { get; set; }
         public string? Location { get; set; }
         public byte[]? Image { get; set; }
+        public DateTime? Date { get; set; }
     }
 }

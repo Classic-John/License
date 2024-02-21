@@ -1,5 +1,6 @@
 ﻿using Datalayer.Models;
 using Datalayer.Models.Email;
+using Datalayer.Models.SchoolItem;
 using Datalayer.Models.Users;
 using DataLayer.Models.Enums;
 
@@ -15,6 +16,8 @@ namespace Datalayer
         public List<IndustryUser> IndustryUsers { get; set; }
         public List<Transport> Transports { get; set; }
         public List<Email> Emails { get; set; } 
+        public List<School>Schools { get; set; }
+        public List<SchoolUser> SchoolUsers { get; set; }
 
         //Bogus and Bogus.Datalists are a good idea
         public UnitOfWork()

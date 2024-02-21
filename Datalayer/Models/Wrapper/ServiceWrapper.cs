@@ -16,8 +16,10 @@ namespace Datalayer.Models.Wrapper
         public ITransportService _transportService;
         public IUserService _userService;
         public IIndustryUserService _industryUserService;
+        public ISchoolService _schoolService;
 
-        public ServiceWrapper(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService, IUserService userService, IIndustryUserService industryUserService)
+        public ServiceWrapper(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService, 
+            IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService)
         {
             _bookingService = bookingService;
             _furnitureService = furnitureService;
@@ -26,6 +28,7 @@ namespace Datalayer.Models.Wrapper
             _transportService = transportService;
             _userService = userService;
             _industryUserService = industryUserService;
+            _schoolService = schoolService;
         }
     }
 }

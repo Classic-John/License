@@ -1,4 +1,5 @@
-﻿using Datalayer.Interfaces;
+﻿using Bogus.DataSets;
+using Datalayer.Interfaces;
 using Datalayer.Models.Email;
 using Datalayer.Models.Users;
 using Datalayer.Models.Wrapper;
@@ -16,9 +17,9 @@ namespace Relocation_and_booking_services.Controllers
     {
         private readonly ServiceWrapper _serviceWrapper;
         public EmailController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
-            IUserService userService, IIndustryUserService industryUserService)
+            IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
         {
-            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService);
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService,schoolService);
         }
         [Route("Emails")]
         public IActionResult Emails()
@@ -56,7 +57,7 @@ namespace Relocation_and_booking_services.Controllers
             foreach (int goodId in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(goodId);
-                Email? email = new() { Body = currentEmail.Body, CreatorId = sender.Id, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title) };
+                Email? email = new() { Body = currentEmail.Body, CreatorId = sender.Id, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title), Date=DateTime.Now };
                 email.AddSenderAddress(currentEmail.GetSenderAddress());
                 _serviceWrapper._userService.AddEmail(email);
             }
@@ -71,7 +72,7 @@ namespace Relocation_and_booking_services.Controllers
             User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
             string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
             Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
-            Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title) };
+            Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title), Date=DateTime.Now };
             newMail.AddSenderAddress(mail.GetSenderAddress());
             _serviceWrapper._userService.AddEmail(newMail);
             return Emails();
@@ -95,7 +96,7 @@ namespace Relocation_and_booking_services.Controllers
             foreach (int id in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(id);
-                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id });
+                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date=DateTime.Now });
                 senderEmail.AddSenderAddress(sender.Email);
             }
             return Emails();

@@ -11,7 +11,11 @@
 
         </div>
         <div class="card-footer">
-            <p>Sent 2 days ago</p>
+            <blockquote class="blockquote">
+                Posted at @Model.Item1.Date?.ToString("dd/MM/yyyy");
+                <br />
+                At @Model.Item1.Date?.ToString("hh/mm/ss");
+            </blockquote>
             <button type="button" id="replyButton" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
             <button type="button" class="btn btn-outline-warning" id="forwardButton" onclick="openForward()">Forward</button>
             <button type="button" class="btn btn-outline-danger" onclick="Delete()">Delete</button>
@@ -37,6 +41,7 @@
                         }
                     </datalist>
                     <button type="button" class="btn btn-outline-secondary" onclick="submitForward()">Send <object class="image/svg+xml" data="/send.svg"></object></button>
+                    
                 </div>
             </form>
         </div>

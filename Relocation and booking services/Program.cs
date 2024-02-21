@@ -14,6 +14,7 @@ builder.Services.AddSingleton<IRentingService, RentingService>();
 builder.Services.AddSingleton<ITransportService, TransportService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IIndustryUserService, IndustryUserService>();
+builder.Services.AddSingleton<ISchoolService, SchoolService>();
 builder.Services.AddSingleton<UnitOfWork>();
 var app = builder.Build();
 

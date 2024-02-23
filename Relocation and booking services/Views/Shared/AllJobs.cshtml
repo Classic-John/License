@@ -1,6 +1,6 @@
 ﻿@model List<Job>
 
-<form asp-controller="User" asp-action="FoundJob">
+<form id="jobForm" asp-controller="User" asp-action="FoundJob">
     <div class="card-group w-50 h-50 p-5">
         @foreach (Job ap in Model)
         {
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary" type="submit">Apply</button>
+                    <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('jobForm'),'@ap.CreatorId')">Apply</button>
                 </div>
             </div>
         }

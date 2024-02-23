@@ -1,6 +1,6 @@
 ﻿@model List<Apartment>
 
-<form asp-controller="User" asp-action="Booking">
+<form id="bookingForm"asp-controller="User" asp-action="Booking">
     <div class="card-group w-50 h-50 p-5">
         @foreach (Apartment ap in Model)
         {
@@ -8,8 +8,10 @@
                 <img src="@(ap.Image!=null ? "data:image/jpg;base64,"+Convert.ToBase64String(ap.Image): ap.ImageSrc)" class="card-img-top" />
                 <div class="card-body">
                     <h4 class="card-title">@ap.Name</h4>
+                    @*
                     <input class="form-control" type="text" value="@ap.CreatorId" name="apartmentCreatorId"hidden />
                     <input class="form-control" type="text" value="@ap.Id" name="apartmentId"hidden />
+                *@
                     <p class="card-text">@ap.Description</p>
                     <p class="card-text">Company: @ap.CompanyName</p>
                     <div class="card-footer">
@@ -18,7 +20,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary" type="submit">Reserve</button>
+                    <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('bookingForm'),'@ap.CreatorId')">Reserve</button>
                 </div>
             </div>
         }

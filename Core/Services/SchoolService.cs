@@ -19,5 +19,11 @@ namespace Core.Services
             => _unitOfWork.SchoolUsers.FirstOrDefault(user => user.UserId == id);
         public List<School>?GetSchoolServices(int id)
             =>_unitOfWork.Schools.FindAll(item => item.CreatorId == id);
+        public void AddSchoolUser(SchoolUser user)
+            =>_unitOfWork.SchoolUsers.Add(user);
+        public void RemoveSchoolUser(SchoolUser user)
+        => _unitOfWork.SchoolUsers.Remove(user);
+        public List<SchoolUser?> GetSchoolUsers()
+            => _unitOfWork.SchoolUsers;
     }
 }

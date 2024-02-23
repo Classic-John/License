@@ -48,9 +48,6 @@ function employeerButton() {
     }
     company.classList.replace("mb-3", "d-none");
 }
-function forcedReload() {
-    location.reload(true);
-}
 
 function successLog() {
     return "Welcome " + theName + " ," + "you are logged as an " + getRole(); 
@@ -65,40 +62,44 @@ function familly1() {
         famillyOption.classList.replace("mb-3", "d-none");
     }
 }
-function testNavLink() {
-    let relocation = document.getElementById("relocation");
-    if (relocation.classList.contains("nav-link")) {
-        relocation.classList.replace("nav-link", "d-none");
+function checkSection(sectionId) {
+    let section = document.getElementById(sectionId);
+    if (section.classList.contains("d-none")) {
+        section.classList.remove("d-none");
     }
     else {
-        relocation.classList.replace("d-none", "nav-link");
+        section.classList.add("d-none");
     }
-    forcedReload();
-}
-
-
-function checkRole() {
-    return role > 0;
 }
 function submitView(mailId) {
     var form = document.getElementById('emailListForm');
     form.action = '/Email/ViewEmail';
-    return submitEmailCommand(mailId, form);
+    return MakeInputCommand(mailId, form);
 }
 function submitDelete(mailId) {
     var form = document.getElementById('emailListForm');
     form.action = '/Email/DeleteEmail';
-    return submitEmailCommand(mailId, form);
+    return MakeInputCommand(mailId, form);
 }
 
-function submitEmailCommand(mailId, form) {
+function MakeInputCommand(objectId, form,optionalId=-1) {
     if (!input) {
         var input = document.createElement('input');
         input.type = 'hidden';
-        input.name = 'mailId';
+        input.name = 'objectId';
         input.id = 'mailIdInput';
     }
-    input.value = mailId;
+    if (optionalId > -1) {
+
+        var input1 = document.createElement('input');
+        input1.type = 'hidden';
+        input1.name = 'optionalId';
+    }
+    input.value = objectId;
+    if (input1) {
+        input1.value = optionalId;
+        form.appendChild(input1);
+    }
     form.appendChild(input);
     form.submit();
 }

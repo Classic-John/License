@@ -172,9 +172,12 @@
                         </div>
                         <div class="form-check mb-3">
                             <input type="radio" class="form-check-input" id="employeer1" value="2" name="Option" onchange="employeerButton()" />
-                            <label class="form-check-label" for="employeer1"> Employeer </label>
+                            <label class="form-check-label" for="employeer1"> Industry User </label>
                         </div>
-
+                        <div class="form-check mb-3">
+                            <input type="radio" class="form-check-input" id="school1" value="3" name="Option" onchange="checkSection('school1');employeerButton();" />
+                            <label class="form-check-label" for="employeer1"> School User </label>
+                        </div>
                         <div class="form-check">
                             <input type="radio" class="form-check-input" id="radio1" name="gender" value="1" checked>
                             <label class="form-check-label" for="radio1">Male</label>
@@ -190,18 +193,29 @@
 
                         <div class="d-none" id="employeerExtra">
                             <label for="Company" class="form-label">Enter Company</label>
-                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name'" />
+                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name" required />
                             <div class="valid-feedback">Ok</div>
                             <div class="invalid-feedback">Company name required</div>
 
                             <label for="serviceType" class="form-label">Choose service type:</label>
-                            <input class="form-control" list="services" name="serviceType" id="serviceType">
+                            <input class="form-control" list="services" name="serviceType" id="serviceType" required>
                             <datalist id="services">
                                 <option value="1">Booking</option>
                                 <option value="2">Renting</option>
                                 <option value="3">Jobs</option>
                                 <option value="4">Furniture Transport</option>
                                 <option value="5">Travel</option>
+                            </datalist>
+                        </div>
+                        <div class="mb-3 d-none" id="schoolUserExtra">
+                            <label for="schoolType" class="form-label">Choose school type:</label>
+                            <input class="form-control" list="schools" name="schoolType" id="schoolType" required>
+                            <datalist id="schools">
+                                <option value="1">Kindergarten</option>
+                                <option value="2">Elementary School</option>
+                                <option value="3">Gymnasium</option>
+                                <option value="4">HighSchool</option>
+                                <option value="5">University</option>
                             </datalist>
                         </div>
                         <div class="mb-3">
@@ -214,16 +228,6 @@
             </div>
         </div>
     </div>
-    @*
-    <div class="card p-5" style="width: 18rem;">
-    <div class="card-body">
-    <h4 class="card-title">force reload button</h4>
-    </div>
-    <div class="card-footer">
-    <button class="btn-primary" type="button" onclick="forcedReload()">Push</button>
-    </div>
-    </div>
-    *@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

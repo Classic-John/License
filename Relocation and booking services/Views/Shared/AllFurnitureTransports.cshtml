@@ -1,6 +1,6 @@
 ﻿@model List<Furniture>
 
-<form asp-controller="User" asp-action="Movers">
+<form id="furnitureForm" asp-controller="User" asp-action="Movers">
     <div class="card-group w-50 h-50 p-5">
         @foreach (Furniture ap in Model)
         {
@@ -18,7 +18,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-primary" type="submit">Reserve</button>
+                    <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('furnitureForm'),'@ap.CreatorId')">
+                        Reserve
+                    </button>
                 </div>
             </div>
         }

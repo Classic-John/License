@@ -10,7 +10,7 @@ using static Relocation_and_booking_services.Controllers.HomeController;
 
 namespace Relocation_and_booking_services.Controllers
 {
-    //TO DO. Add dates (and maybe sort emails by one or more criterias)
+    //TO DO. Sort emails by one or more criterias)
 
     [Route("Email")]
     public class EmailController : Controller
@@ -32,7 +32,7 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult ViewEmail()
         {
             ViewBag.Role = GetCurrentRole();
-            int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
+            int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
             byte[]? creatorImage=_serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value).ImageData;
             return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(),creatorImage));
@@ -41,7 +41,7 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult DeleteEmail()
         {
             ViewBag.Role = GetCurrentRole();
-            int emailId = Convert.ToInt32(Request.Form["mailId"].ToString());
+            int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
             _serviceWrapper._userService.DeleteEmail(emailId);
             return Emails();
         }
@@ -51,7 +51,7 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
             List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
-            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
+            int? mailId = Convert.ToInt32(Request.Form["objectId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? sender = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
             foreach (int goodId in goodIds)
@@ -67,7 +67,7 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult ReplyToMail()
         {
             ViewBag.Role = GetCurrentRole();
-            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
+            int? mailId = Convert.ToInt32(Request.Form["objectId"]);
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
             string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";

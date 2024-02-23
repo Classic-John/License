@@ -21,12 +21,12 @@ namespace Relocation_and_booking_services.Controllers
         public static bool logged = false;
         public static User CurrentUser { get; set; }
         public HomeController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
-            IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
+            IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService)
         {
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         public static int GetCurrentRole()
-            => CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 0;
+            => CurrentUser == null ? 0 : CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 0;
         private IActionResult ViewSelection(int role)
         {
             ViewBag.Role = role;
@@ -42,8 +42,8 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Homepage")]
         public IActionResult Homepage()
         {
-            ViewBag.Role = CurrentUser==null? 0: GetCurrentRole();
-            return View("Homepage"); 
+            ViewBag.Role = CurrentUser == null ? 0 : GetCurrentRole();
+            return View("Homepage");
         }
 
         //FINISH LOG IN ASWELL
@@ -76,12 +76,12 @@ namespace Relocation_and_booking_services.Controllers
         }
         [Route("KeepPicture")]
         public string KeepPicture()
-            => CurrentUser ==null? "/default.jpg" : CurrentUser.ImageData ==null? "/default.jpg": ("data:image/jpg;base64," + Convert.ToBase64String(CurrentUser.ImageData));
+            => CurrentUser == null ? "/default.jpg" : CurrentUser.ImageData == null ? "/default.jpg" : ("data:image/jpg;base64," + Convert.ToBase64String(CurrentUser.ImageData));
         public static async Task<byte[]?> ConvertImageToBytes(IFormFile file)
         {
-            if(file!=null && file.Length>0)
+            if (file != null && file.Length > 0)
             {
-                using(MemoryStream ms = new MemoryStream()) 
+                using (MemoryStream ms = new MemoryStream())
                 {
                     await file.CopyToAsync(ms);
                     return ms.ToArray();
@@ -98,7 +98,7 @@ namespace Relocation_and_booking_services.Controllers
             GlobalService.Role = role;
             CurrentUser = _serviceWrapper._userService.AddUser(new()
             {
-                Id = _serviceWrapper._userService.GetUsers().Last().Id+1,
+                Id = _serviceWrapper._userService.GetUsers().Last().Id + 1,
                 Name = Request.Form["Name"],
                 Role = GlobalService.roleNames[role],
                 Gender = Convert.ToInt32(Request.Form["gender"]),
@@ -107,18 +107,26 @@ namespace Relocation_and_booking_services.Controllers
                 Password = Request.Form["password"],
                 ImageData = ConvertImageToBytes(Request.Form.Files["photo"]).Result
             });
-
             if (role == (int)Roles.IndustryUser)
                 _serviceWrapper._industryUserService.AddIndustryUser(new()
                 {
-                    Id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id+1,
+                    Id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id + 1,
                     Name = Request.Form["Name"],
                     Email = Request.Form["Email"].ToString(),
                     Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
-                    UserId = 3,
+                    UserId = _serviceWrapper._userService.GetUsers().Last().Id,
                     CompanyName = Request.Form["Company"].ToString(),
                     ServiceType = Convert.ToInt32(Request.Form["serviceType"])
                 });
+            if (role == (int)Roles.SchoolUser)
+            {
+                _serviceWrapper._schoolService.AddSchoolUser(new()
+                {
+                    Id = _serviceWrapper._schoolService.GetSchoolUsers().Last().Id + 1,
+                    SchoolType = Convert.ToInt32(Request.Form["schoolType"]),
+                    UserId = _serviceWrapper._userService.GetUsers().Last().Id
+                });
+            }
             return ViewSelection(role);
         }
         [Route("About Us")]
@@ -126,7 +134,6 @@ namespace Relocation_and_booking_services.Controllers
         {
             ViewBag.Role = GetCurrentRole();
             return View("AboutUs");
-
         }
 
         [Route("Booking Services")]
@@ -167,18 +174,20 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Profile()
         {
             ViewBag.Role = GetCurrentRole();
-            User user=_serviceWrapper._userService.FindUserById(CurrentUser.Id.Value);
+            if (CurrentUser == null)
+                return View("Failed");
+            User user = _serviceWrapper._userService.FindUserById(CurrentUser.Id.Value);
             IndustryUser? industryUser = _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id.Value);
-            return View("CurrentProfile",(user,industryUser));
+            return View("CurrentProfile", (user, industryUser));
         }
         public IActionResult ModifyProfile()
         {
             ViewBag.Role = GetCurrentRole();
             string? name = Request.Form["name"];
-            string?email= Request.Form["email"];
+            string? email = Request.Form["email"];
             int? phone = Convert.ToInt32(Request.Form["phone"]);
             string? gender = Request.Form["gender"];
-            string?description= Request.Form["description"];
+            string? description = Request.Form["description"];
             string companyName = Request.Form["companyName"];
             int? serviceType;
             foreach (int service in Enum.GetValues(typeof(ServiceTypes)))
@@ -188,7 +197,7 @@ namespace Relocation_and_booking_services.Controllers
                     break;
                 }
             byte[]? newImage = ConvertImageToBytes(Request.Form.Files["newPhoto"]).Result;
-            _serviceWrapper._userService.UpdateUser(CurrentUser.Id.Value,name,email,phone,gender,description,newImage);
+            _serviceWrapper._userService.UpdateUser(CurrentUser.Id.Value, name, email, phone, gender, description, newImage);
             if (!CurrentUser.Role.Equals("User"))
             {
                 _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id.Value).CompanyName = companyName;

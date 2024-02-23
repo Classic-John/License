@@ -128,8 +128,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Booking()
         {
             ViewBag.Role = GetCurrentRole();
-            int industryUserId = Convert.ToInt32(Request.Form["apartmentCreatorId"].ToString());
-            int apartmentId = Convert.ToInt32(Request.Form["apartmentId"]);
+            int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Booking");
             return sent ? ChosenService() : View("Failed");
         }
@@ -137,8 +137,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Renting()
         {
             ViewBag.Role = GetCurrentRole();
-            int industryUserId = Convert.ToInt32(Request.Form["vehicleCreatorId"].ToString());
-            int rentingId = Convert.ToInt32(Request.Form["vehicleId"]);
+            int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int rentingId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = SendEmail(industryUserId, rentingId, _serviceWrapper._bookingService, "Renting");
             return sent ? ChosenService() : View("Failed");
         }
@@ -146,8 +146,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult FoundJob()
         {
             ViewBag.Role = GetCurrentRole();
-            int industryUserId = Convert.ToInt32(Request.Form["jobCreatorId"].ToString());
-            int jobId = Convert.ToInt32(Request.Form["jobId"]);
+            int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int jobId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = SendEmail(industryUserId, jobId, _serviceWrapper._bookingService, "Job Hunting");
             return sent ? ChosenService() : View("Failed");
         }
@@ -155,8 +155,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Movers()
         {
             ViewBag.Role = GetCurrentRole();
-            int industryUserId = Convert.ToInt32(Request.Form["furnitureCreatorId"].ToString());
-            int furnitureId = Convert.ToInt32(Request.Form["furnitureId"]);
+            int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int furnitureId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = SendEmail(industryUserId, furnitureId, _serviceWrapper._bookingService, "Furniture");
             return sent ? ChosenService() : View("Failed");
         }
@@ -164,8 +164,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult Transport()
         {
             ViewBag.Role = GetCurrentRole();
-            int industryUserId = Convert.ToInt32(Request.Form["transportCreatorId"].ToString());
-            int apartmentId = Convert.ToInt32(Request.Form["transportId"]);
+            int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Travel");
             return sent ? ChosenService() : View("Failed");
         }

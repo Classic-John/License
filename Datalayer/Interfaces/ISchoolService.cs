@@ -12,5 +12,8 @@ namespace Datalayer.Interfaces
     {
         public SchoolUser? FindSchoolUser(int id);
         public List<School>? GetSchoolServices(int id);
+        public void AddSchoolUser(SchoolUser user);
+        public void RemoveSchoolUser(SchoolUser user);
+        public List<SchoolUser?> GetSchoolUsers();
     }
 }

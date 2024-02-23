@@ -4,6 +4,7 @@
     {
         None,
         User,
-        IndustryUser
+        IndustryUser,
+        SchoolUser
     }
 }

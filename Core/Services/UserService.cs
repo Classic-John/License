@@ -37,6 +37,7 @@ namespace Core.Services
         public Email? AddEmail(Email email)
         {
             email.Id = _unitOfWork.Emails.Count > 0 ? _unitOfWork.Emails.Last().Id + 1 : 1;
+            email.Date = DateTime.Now;
             _unitOfWork.Emails.Add(email);
             return email;
         }
@@ -54,6 +55,7 @@ namespace Core.Services
         {
             Email? email = FindEmail(emailId);
             email.Body += newBody;
+            email.Date = DateTime.Now;
             return email;
         }
         public User? FindUserById(int userId)

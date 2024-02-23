@@ -25,5 +25,7 @@ namespace Core.Services
         => _unitOfWork.SchoolUsers.Remove(user);
         public List<SchoolUser?> GetSchoolUsers()
             => _unitOfWork.SchoolUsers;
+        public bool IsEmpty()
+            =>_unitOfWork.SchoolUsers==null;
     }
 }

@@ -20,6 +20,8 @@ namespace Core.Services
         }
         public List<IndustryUser> GetIndustryUsers()
             => _unitOfWork.IndustryUsers;
+        public bool IsEmpty()
+            => _unitOfWork.IndustryUsers==null;
         public void AddIndustryUser(IndustryUser industryUser)
             => _unitOfWork.IndustryUsers.Add(industryUser);
         public void RemoveIndustryUser(IndustryUser industryUser)

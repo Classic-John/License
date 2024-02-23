@@ -2,6 +2,7 @@
     let crucialDetails = document.getElementById("crucialDetails");
     let userDetails = document.getElementById('userDetails');
     let industryDetails = document.getElementById('industryDetails');
+    let schoolUserDetails = document.getElementById('schoolUserDetails');
     switch (theRole) {
         case 0:
             if (crucialDetails.classList.contains("d-none")) {
@@ -12,6 +13,9 @@
             }
             if (!industryDetails.classList.contains("d-none")) {
                 industryDetails.classList.add("d-none");
+            }
+            if (!schoolUserDetails.classList.contains("d-none")) {
+                schoolUserDetails.classList.add("d-none");
             }
             break;
         case 1:
@@ -24,6 +28,9 @@
             if (!industryDetails.classList.contains("d-none")) {
                 industryDetails.classList.add("d-none");
             }
+            if (!schoolUserDetails.classList.contains("d-none")) {
+                schoolUserDetails.classList.add("d-none");
+            }
             break;
         case 2:
             if (!crucialDetails.classList.contains("d-none")) {
@@ -35,6 +42,23 @@
             if (industryDetails.classList.contains("d-none")) {
                 industryDetails.classList.remove("d-none");
             }
+            if (!schoolUserDetails.classList.contains("d-none")) {
+                schoolUserDetails.classList.add("d-none");
+            }
+        case 3:
+            if (schoolUserDetails.classList.contains("d-none")) {
+                schoolUserDetails.classList.remove("d-none");
+            }
+            if (!userDetails.classList.contains("d-none")) {
+                userDetails.classList.add("d-none");
+            }
+            if (!industryDetails.classList.contains("d-none")) {
+                industryDetails.classList.add("d-none");
+            }
+            if (!crucialDetails.classList.contains("d-none")) {
+                crucialDetails.classList.add("d-none");
+            }
+            break;
     }
     KeepPicture();
 }
@@ -50,7 +74,7 @@ function employeerButton() {
 }
 
 function successLog() {
-    return "Welcome " + theName + " ," + "you are logged as an " + getRole(); 
+    return "Welcome " + theName + " ," + "you are logged as an " + getRole();
 }
 
 function familly1() {
@@ -82,7 +106,7 @@ function submitDelete(mailId) {
     return MakeInputCommand(mailId, form);
 }
 
-function MakeInputCommand(objectId, form,optionalId=-1) {
+function MakeInputCommand(objectId, form, optionalId = -1) {
     if (!input) {
         var input = document.createElement('input');
         input.type = 'hidden';
@@ -221,7 +245,7 @@ function enableSections() {
     update.classList.add("d-none");
     submit.classList.remove("d-none");
 }
-function uploadImage(fileId,inputId) {
+function uploadImage(fileId, inputId) {
     let input = document.getElementById(fileId);
     const file = input.files[0];
     const reader = new FileReader();
@@ -236,7 +260,7 @@ function KeepPicture() {
     fetch('/Home/KeepPicture')
         .then(response => response.text())
         .then(data => {
-            
+
             img.src = data == null ? '/default.jpg' : data;
         })
         .catch(error => {

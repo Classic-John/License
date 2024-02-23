@@ -10,7 +10,6 @@ using Bogus.DataSets;
 using Bogus;
 using System.Reflection.Metadata.Ecma335;
 using Datalayer.Models.Enums;
-using NPOI.Util.ArrayExtensions;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -26,7 +25,7 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         public static int GetCurrentRole()
-            => CurrentUser == null ? 0 : CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 0;
+            => CurrentUser == null ? 0 : CurrentUser.Role.Equals("User") ? 1 : CurrentUser.Role.Equals("IndustryUser") ? 2 : 3;
         private IActionResult ViewSelection(int role)
         {
             ViewBag.Role = role;
@@ -34,6 +33,7 @@ namespace Relocation_and_booking_services.Controllers
             {
                 case (int)Roles.User: return RedirectToAction("UserHome", "User");
                 case (int)Roles.IndustryUser: return RedirectToAction("IndustryUserHome", "IndustryUser");
+                case (int)Roles.SchoolUser: return RedirectToAction("SchoolServices", "School");
                 default: break;
             }
             return View("Homepage");
@@ -89,16 +89,20 @@ namespace Relocation_and_booking_services.Controllers
             }
             return null;
         }
+
         //Finish Create Account
         [Route("Create Account")]
         public IActionResult CreateAccount()
         {
             int role = 0;
+            int? id = -1;
             role = Convert.ToInt32(Request.Form["Option"]);
             GlobalService.Role = role;
+            try { id = _serviceWrapper._userService.GetUsers().Last().Id + 1; }
+            catch (Exception) { id = 1; }
             CurrentUser = _serviceWrapper._userService.AddUser(new()
             {
-                Id = _serviceWrapper._userService.GetUsers().Last().Id + 1,
+                Id = id,
                 Name = Request.Form["Name"],
                 Role = GlobalService.roleNames[role],
                 Gender = Convert.ToInt32(Request.Form["gender"]),
@@ -107,10 +111,12 @@ namespace Relocation_and_booking_services.Controllers
                 Password = Request.Form["password"],
                 ImageData = ConvertImageToBytes(Request.Form.Files["photo"]).Result
             });
+            try { id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id + 1; }
+            catch (Exception) { id = 1; }
             if (role == (int)Roles.IndustryUser)
                 _serviceWrapper._industryUserService.AddIndustryUser(new()
                 {
-                    Id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id + 1,
+                    Id = id,
                     Name = Request.Form["Name"],
                     Email = Request.Form["Email"].ToString(),
                     Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
@@ -118,11 +124,13 @@ namespace Relocation_and_booking_services.Controllers
                     CompanyName = Request.Form["Company"].ToString(),
                     ServiceType = Convert.ToInt32(Request.Form["serviceType"])
                 });
+            try { id = _serviceWrapper._schoolService.GetSchoolUsers().Last().Id + 1; }
+            catch (Exception) { id = 1; };
             if (role == (int)Roles.SchoolUser)
             {
                 _serviceWrapper._schoolService.AddSchoolUser(new()
                 {
-                    Id = _serviceWrapper._schoolService.GetSchoolUsers().Last().Id + 1,
+                    Id =id,
                     SchoolType = Convert.ToInt32(Request.Form["schoolType"]),
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id
                 });
@@ -188,7 +196,7 @@ namespace Relocation_and_booking_services.Controllers
             int? phone = Convert.ToInt32(Request.Form["phone"]);
             string? gender = Request.Form["gender"];
             string? description = Request.Form["description"];
-            string companyName = Request.Form["companyName"];
+            string? companyName = Request.Form["companyName"];
             int? serviceType;
             foreach (int service in Enum.GetValues(typeof(ServiceTypes)))
                 if (nameof(service).Equals(Request.Form["serviceType"]))

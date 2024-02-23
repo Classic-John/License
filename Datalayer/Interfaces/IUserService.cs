@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Datalayer.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IWrapper
     {
         public List<User> GetUsers();
         public User AddUser(User user);
@@ -22,5 +22,6 @@ namespace Datalayer.Interfaces
         public Email ModifyEmail(int emailId, string newBody);
         public User? FindUserById(int userId);
         public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage);
+        public bool IsEmpty();
     }
 }

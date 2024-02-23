@@ -70,6 +70,8 @@ namespace Datalayer
                 new(){Id=4, Title="This tool might be have a use", Body="I have discovered how to send an email to you", UserId=3, CreatorId=2},
                 new(){Id=5,Title="Cool email bro", Body="Now i can bother you whenever i want", UserId=1, CreatorId=3},
             };
+            Schools = new();
+            SchoolUsers = new();
         }
     }
 }

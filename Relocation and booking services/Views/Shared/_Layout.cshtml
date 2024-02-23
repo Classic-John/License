@@ -91,7 +91,7 @@
                     <a class="nav-link text-white" asp-controller="Home" asp-action="Homepage">Homepage</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="SchoolController" asp-action="SchoolServices">Your school servicess</a>
+                    <a class="nav-link text-white" asp-controller="School" asp-action="SchoolServices">Your school servicess</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Email" asp-action="Emails">Emails</a>
@@ -175,7 +175,7 @@
                             <label class="form-check-label" for="employeer1"> Industry User </label>
                         </div>
                         <div class="form-check mb-3">
-                            <input type="radio" class="form-check-input" id="school1" value="3" name="Option" onchange="checkSection('school1');employeerButton();" />
+                            <input type="radio" class="form-check-input" id="school1" value="3" name="Option" onchange="checkSection('schoolUserExtra');employeerButton()" />
                             <label class="form-check-label" for="employeer1"> School User </label>
                         </div>
                         <div class="form-check">
@@ -193,12 +193,12 @@
 
                         <div class="d-none" id="employeerExtra">
                             <label for="Company" class="form-label">Enter Company</label>
-                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name" required />
+                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name"/>
                             <div class="valid-feedback">Ok</div>
                             <div class="invalid-feedback">Company name required</div>
 
                             <label for="serviceType" class="form-label">Choose service type:</label>
-                            <input class="form-control" list="services" name="serviceType" id="serviceType" required>
+                            <input class="form-control" list="services" name="serviceType" id="serviceType">
                             <datalist id="services">
                                 <option value="1">Booking</option>
                                 <option value="2">Renting</option>
@@ -209,7 +209,7 @@
                         </div>
                         <div class="mb-3 d-none" id="schoolUserExtra">
                             <label for="schoolType" class="form-label">Choose school type:</label>
-                            <input class="form-control" list="schools" name="schoolType" id="schoolType" required>
+                            <input class="form-control" list="schools" name="schoolType" id="schoolType">
                             <datalist id="schools">
                                 <option value="1">Kindergarten</option>
                                 <option value="2">Elementary School</option>

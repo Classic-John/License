@@ -17,7 +17,7 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult SchoolServices()
         {
             ViewBag.Role=GetCurrentRole();
-            int id=Convert.ToInt32(Request.Form["userId"]);
+            int id=CurrentUser.Id.Value;
             return View("PersonalSchoolList", _serviceWrapper._schoolService.GetSchoolServices(id));
         }
         [Route("UpdateSchoolOffer")]

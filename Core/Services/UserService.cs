@@ -19,13 +19,15 @@ namespace Core.Services
         }
         public List<User> GetUsers() 
             => _unitOfWork.Users;
+        public bool IsEmpty()
+            => _unitOfWork.Users == null;
         public User AddUser(User user)
         {
             int? id = 1;
             if (_unitOfWork.Emails.Count > 0)
                 id = _unitOfWork.Emails.Last().Id + 1;
 
-            _unitOfWork.Emails.Add(new() { Id = id, UserId = user.Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need" });
+            _unitOfWork.Emails.Add(new() { Id = id, UserId = user.Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need", Date=DateTime.Now });
             _unitOfWork.Users.Add(user);
             return user;
         }

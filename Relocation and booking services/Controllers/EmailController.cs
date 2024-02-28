@@ -17,9 +17,9 @@ namespace Relocation_and_booking_services.Controllers
     {
         private readonly ServiceWrapper _serviceWrapper;
         public EmailController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
-            IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
+            IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService)
         {
-            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService,schoolService);
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("Emails")]
         public IActionResult Emails()
@@ -34,15 +34,17 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
-            byte[]? creatorImage=_serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value).ImageData;
-            return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(),creatorImage));
+            byte[]? creatorImage = null;
+            try { creatorImage = _serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value).ImageData; }
+            catch (Exception) { creatorImage = null; }
+            return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(), creatorImage));
         }
         [Route("DeleteEmail")]
         public IActionResult DeleteEmail()
         {
             ViewBag.Role = GetCurrentRole();
-            int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
-            _serviceWrapper._userService.DeleteEmail(emailId);
+            int? emailId = Request.Form.ContainsKey("objectId") ? Convert.ToInt32(Request.Form["objectId"]):Convert.ToInt32(Request.Form["mailId"]);
+            _serviceWrapper._userService.DeleteEmail(emailId.Value);
             return Emails();
         }
         [Route("Forward")]
@@ -51,13 +53,14 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
             List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
-            int? mailId = Convert.ToInt32(Request.Form["objectId"]);
+            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
+            mailId = mailId == 0 ? 1 : mailId;
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             User? sender = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
             foreach (int goodId in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(goodId);
-                Email? email = new() { Body = currentEmail.Body, CreatorId = sender.Id, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title), Date=DateTime.Now };
+                Email? email = new() { Body = currentEmail.Body, CreatorId = sender.Id, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title), Date = DateTime.Now };
                 email.AddSenderAddress(currentEmail.GetSenderAddress());
                 _serviceWrapper._userService.AddEmail(email);
             }
@@ -66,13 +69,17 @@ namespace Relocation_and_booking_services.Controllers
         [Route("Reply")]
         public IActionResult ReplyToMail()
         {
+            int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             ViewBag.Role = GetCurrentRole();
-            int? mailId = Convert.ToInt32(Request.Form["objectId"]);
+            mailId = mailId == 0 ? 1 : mailId;
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
-            User? user = _serviceWrapper._userService.FindUserById(currentEmail.UserId.Value);
+            if (_serviceWrapper._userService.FindUserById(currentEmail.UserId.Value) is not User user)
+            {
+                return Emails();
+            }
             string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
             Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
-            Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title), Date=DateTime.Now };
+            Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title), Date = DateTime.Now };
             newMail.AddSenderAddress(mail.GetSenderAddress());
             _serviceWrapper._userService.AddEmail(newMail);
             return Emails();
@@ -96,7 +103,7 @@ namespace Relocation_and_booking_services.Controllers
             foreach (int id in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(id);
-                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date=DateTime.Now });
+                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date = DateTime.Now });
                 senderEmail.AddSenderAddress(sender.Email);
             }
             return Emails();

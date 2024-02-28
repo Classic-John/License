@@ -20,8 +20,9 @@ namespace Core.Services
         public List<Transport> GetItems() 
             => _unitOfWork.Transports;
         public void AddTransport(Transport transport)
-        { 
-            transport.Id=GetItems().Last().Id+1;
+        {
+            try { transport.Id = GetItems().Last().Id + 1; }
+            catch(Exception) { transport.Id = 1; }
             _unitOfWork.Transports.Add(transport);
         }
         public void RemoveTransport(Transport transport) => _unitOfWork.Transports.Remove(transport);

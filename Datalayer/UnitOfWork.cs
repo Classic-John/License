@@ -8,21 +8,21 @@ namespace Datalayer
 {
     public class UnitOfWork
     {
-        public List<Apartment> Apartments { get; set; }
-        public List<Furniture> FurnitureTransports { get; set; }
-        public List<Job> Jobs { get; set; }
-        public List<Vehicle> Vehicles { get; set; }
-        public List<User> Users { get; set; }
-        public List<IndustryUser> IndustryUsers { get; set; }
-        public List<Transport> Transports { get; set; }
-        public List<Email> Emails { get; set; } 
-        public List<School>Schools { get; set; }
-        public List<SchoolUser> SchoolUsers { get; set; }
+        public List<Apartment> Apartments { get; set; } = new();
+        public List<Furniture> FurnitureTransports { get; set; } = new();
+        public List<Job> Jobs { get; set; } = new();
+        public List<Vehicle> Vehicles { get; set; } = new();
+        public List<User> Users { get; set; } = new();
+        public List<IndustryUser> IndustryUsers { get; set; } = new();
+        public List<Transport> Transports { get; set; } = new();
+        public List<Email> Emails { get; set; } = new(); 
+        public List<School> Schools { get; set; } = new();
+        public List<SchoolUser> SchoolUsers { get; set; } = new();
 
         //Bogus and Bogus.Datalists are a good idea
         public UnitOfWork()
         {
-            temporaryInitialise();
+           // temporaryInitialise();
         }
         private void temporaryInitialise()
         {

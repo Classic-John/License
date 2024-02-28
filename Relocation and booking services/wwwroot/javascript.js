@@ -45,6 +45,7 @@
             if (!schoolUserDetails.classList.contains("d-none")) {
                 schoolUserDetails.classList.add("d-none");
             }
+            break;
         case 3:
             if (schoolUserDetails.classList.contains("d-none")) {
                 schoolUserDetails.classList.remove("d-none");
@@ -119,7 +120,7 @@ function MakeInputCommand(objectId, form, optionalId = -1) {
         input1.type = 'hidden';
         input1.name = 'optionalId';
     }
-    input.value = objectId;
+    input.value += objectId;
     if (input1) {
         input1.value = optionalId;
         form.appendChild(input1);
@@ -222,7 +223,7 @@ function takeIds(itemId, creatorId) {
     document.getElementById('user').value = creatorId;
 }
 
-function DeleteOffer(creatorId, itemId) {
+function DeleteOffer(creatorId, itemId, actionString = "/IndustryUser/Delete") {
     let form = document.getElementById('personalServiceForm');
     let input1 = document.createElement('input');
     let input2 = document.createElement('input');
@@ -234,7 +235,7 @@ function DeleteOffer(creatorId, itemId) {
     input2.value = creatorId;
     form.appendChild(input1);
     form.appendChild(input2);
-    form.action = "/IndustryUser/Delete";
+    form.action =actionString ;
     form.submit();
 }
 function enableSections() {

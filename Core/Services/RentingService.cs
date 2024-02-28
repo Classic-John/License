@@ -20,8 +20,9 @@ namespace Core.Services
         public List<Vehicle> GetItems() 
             => _unitOfWork.Vehicles;
         public void AddVehicle(Vehicle vehicle)
-        { 
-            vehicle.Id=GetItems().Last().Id+1;
+        {
+            try { vehicle.Id = GetItems().Last().Id + 1; }
+            catch(Exception) { vehicle.Id = 1; }
             _unitOfWork.Vehicles.Add(vehicle);
         }
         public void RemoveVehicle(Vehicle vehicle)=> _unitOfWork.Vehicles.Remove(vehicle);

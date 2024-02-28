@@ -18,6 +18,11 @@
                     </div>
                 </div>
                 <div class="card-footer">
+                    <blockquote class="blockquote">
+                        Posted on: @ap.Date?.ToString("dd/MM/yyyy");
+                        <br />
+                        At @ap.Date?.ToString("hh/mm/ss");
+                    </blockquote>
                     <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('jobForm'),'@ap.CreatorId')">Apply</button>
                 </div>
             </div>

@@ -17,17 +17,17 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<User> GetUsers() 
+        public List<User> GetUsers()
             => _unitOfWork.Users;
         public bool IsEmpty()
             => _unitOfWork.Users == null;
         public User AddUser(User user)
         {
-            int? id = 1;
-            if (_unitOfWork.Emails.Count > 0)
-                id = _unitOfWork.Emails.Last().Id + 1;
-
-            _unitOfWork.Emails.Add(new() { Id = id, UserId = user.Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need", Date=DateTime.Now });
+            int? lastId = 1;
+            try { lastId = _unitOfWork.Emails.Last().Id + 1; }
+            catch(Exception) { lastId = 1; }
+            int? id = lastId;
+            _unitOfWork.Emails.Add(new() { Id = id, UserId = user.Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need", Date = DateTime.Now});
             _unitOfWork.Users.Add(user);
             return user;
         }
@@ -62,13 +62,13 @@ namespace Core.Services
         }
         public User? FindUserById(int userId)
             => _unitOfWork.Users.FirstOrDefault(user => user.Id == userId);
-        public void UpdateUser(int id,string? name,string? email, int? phone, string? gender, string?description, byte[]? newImage)
-        { 
+        public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage)
+        {
             User? user = FindUserById(id);
             user.Name = name;
             user.Email = email;
             user.Phone = phone;
-            user.Gender = gender.Equals("User")?1:2;
+            user.Gender = gender.Equals("User") ? 1 : 2;
             user.SelfDescription = description;
             user.ImageData = newImage;
         }

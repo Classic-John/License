@@ -13,16 +13,14 @@
                     <input class="form-control" type="text" value="@item.Id" name="itemId" hidden />
                     <h4 class="card-title">@item.Name</h4>
                     <p class="card-text">@item.Description</p>
-                    <p class="card-text">Company: @item.CompanyName</p>
                     <p class="card-text">Location: @item.Location</p>
                     <div class="card-footer">
-                        <p class="card-text">@item.Price</p>
                         <a class="card-text" href="@item.Link" target="_blank">Visit</a>
                     </div>
                 </div>
                 <div class="card-footer h-stack gap-3">
                     <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="takeIds('@item.Id','@item.CreatorId')">Update</button>
-                    <button type="button" class="btn btn-outline-danger" onclick="DeleteOffer('@item.CreatorId','@item.Id')">Delete</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="DeleteOffer('@item.CreatorId','@item.Id','@("/School/DeleteSchoolOffer")')">Delete</button>
                     <blockquote class="blockquote">
                        Posted on: @item.Date?.ToString("dd/MM/yyyy");
                        <br />
@@ -56,16 +54,7 @@
                         </textarea>
                                 <label for="description" class="form-label">Description</label>
                             </div>
-                            <div class="form-floating">
-                                <input type="text" class="form-control" name="offerPrice" id="price" placeholder="Price" required />
-                                <label for="price" class="form-label">Price</label>
-                            </div>
-                            @*
-                            <div class="form-floating">
-                            <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
-                            <label class="form-label" for="link">Site's url'</label>
-                            </div>
-                            *@
+
                             <div class="form-floating">
                                 <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
                                 <label for="location" class="form-label">Location</label>
@@ -109,21 +98,12 @@
                         </textarea>
                                     <label for="description" class="form-label">Description</label>
                                 </div>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" name="offerPrice" id="price" placeholder="Price" required />
-                                    <label for="price" class="form-label">Price</label>
-                                </div>
 
                                 <div class="form-floating">
                                     <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
                                     <label class="form-label" for="link">Site's url'</label>
                                 </div>
-                                @*
-                                <div class="form-floating">
-                                <input class="form-control" type="text" name="offerImage" id="image" placeholder="The Image" />
-                                <label class="form-label" for="image">Offer's product image'</label>
-                                </div>
-                                *@
+
                                 <div class="form-floating">
                                     <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
                                     <label for="location" class="form-label">Location</label>

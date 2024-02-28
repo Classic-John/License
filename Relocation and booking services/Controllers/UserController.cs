@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Datalayer.Models.Enums;
 using static Relocation_and_booking_services.Controllers.HomeController;
 using System.Reflection;
-using Org.BouncyCastle.Asn1.X509.Qualified;
+using Datalayer.Models.SchoolItem;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -40,7 +40,7 @@ namespace Relocation_and_booking_services.Controllers
 
         #region Utility Methods
         private IndustryUser? FindIndustryUser(int industryUserId)
-            => _serviceWrapper._industryUserService.GetIndustryUsers().FirstOrDefault(user => user.Id == industryUserId);
+            => _serviceWrapper._industryUserService.GetIndustryUsers().FirstOrDefault(user => user.UserId == industryUserId);
         #endregion
 
         [Route("relocation")]
@@ -54,7 +54,8 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult ChosenService()
         {
             ViewBag.Role = GetCurrentRole();
-            if (ChosenServices.Count == 0) { return View("Success"); }
+            if (ChosenServices.Count == 0) 
+                return View("Success");
             try
             {
                 switch (ChosenServices[0])
@@ -79,6 +80,10 @@ namespace Relocation_and_booking_services.Controllers
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
                         return View("AllTransports", FilterItems(_serviceWrapper._transportService).Select(item => (Transport)item).ToList());
+                    case 6:
+                        if (ChosenServices.Count > 0)
+                            ChosenServices.RemoveAt(0);
+                        return View("AllSchools",_serviceWrapper._schoolService.GetSchools().Where(item => item.Location.Equals(Destination)).ToList());
 
                 }
             }
@@ -123,7 +128,22 @@ namespace Relocation_and_booking_services.Controllers
             return true;
         }
 
-
+        private bool SendSchoolEmail(int userId,int itemId, ISchoolService service) 
+        {
+            SchoolUser? user= service.FindSchoolUser(userId);
+            User? actualUser=_serviceWrapper._userService.FindUserById(userId);
+            if (user is not SchoolUser && actualUser is not null)
+                return false;
+            School? item = service.FindSchoolService(userId, itemId);
+            if(item is not School) 
+                return false;
+            Email? schoolEmail = new() {
+                Title = $"{actualUser.Name} applied to your school service", Body=$"{actualUser.Name} requests a place either for himself or his children at {item.Name}\n.Here is his phone: {actualUser.Password} and email: {actualUser.Email}"
+                , Date=DateTime.Now, UserId=userId 
+            };
+            _serviceWrapper._userService.AddEmail(schoolEmail);
+            return true;
+        }
         [Route("Booking")]
         public IActionResult Booking()
         {
@@ -139,7 +159,7 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int rentingId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, rentingId, _serviceWrapper._bookingService, "Renting");
+            bool sent = SendEmail(industryUserId, rentingId, _serviceWrapper._rentingService, "Renting");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("ChosenJob")]
@@ -148,7 +168,7 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int jobId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, jobId, _serviceWrapper._bookingService, "Job Hunting");
+            bool sent = SendEmail(industryUserId, jobId, _serviceWrapper._jobService, "Job Hunting");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("Movers")]
@@ -157,7 +177,7 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int furnitureId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, furnitureId, _serviceWrapper._bookingService, "Furniture");
+            bool sent = SendEmail(industryUserId, furnitureId, _serviceWrapper._furnitureService, "Furniture");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("Travel")]
@@ -166,7 +186,16 @@ namespace Relocation_and_booking_services.Controllers
             ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Travel");
+            bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._transportService, "Travel");
+            return sent ? ChosenService() : View("Failed");
+        }
+        [Route("ChosenSchool")]
+        public IActionResult ChosenSchool()
+        {
+            ViewBag.Role = GetCurrentRole();
+            int userId = Convert.ToInt32(Request.Form["optionalId"].ToString());
+            int objectId = Convert.ToInt32(Request.Form["objectId"]);
+            bool sent = SendSchoolEmail(userId, objectId, _serviceWrapper._schoolService);
             return sent ? ChosenService() : View("Failed");
         }
     }

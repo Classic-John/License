@@ -22,7 +22,8 @@ namespace Core.Services
             => _unitOfWork.Apartments;
         public void AddApartment(Apartment apartment)
         {
-            apartment.Id=GetItems().Last().Id+1;
+            try { apartment.Id = GetItems().Last().Id + 1; }
+            catch { apartment.Id = 1; }
             _unitOfWork.Apartments.Add(apartment);
         }
         public void RemoveApartment(Apartment apartment)

@@ -10,6 +10,7 @@ using Bogus.DataSets;
 using Bogus;
 using System.Reflection.Metadata.Ecma335;
 using Datalayer.Models.Enums;
+using Datalayer.Models.SchoolItem;
 
 namespace Relocation_and_booking_services.Controllers
 {
@@ -177,6 +178,12 @@ namespace Relocation_and_booking_services.Controllers
         {
             ViewBag.Role = GetCurrentRole();
             return View("AllTransports", _serviceWrapper._transportService.GetItems());
+        }
+        [Route("All Schools")]
+        public IActionResult AllSchools()
+        {
+            ViewBag.Role = GetCurrentRole();
+            return View("AllSchools", _serviceWrapper._schoolService.GetSchools());
         }
         [Route("Profile")]
         public IActionResult Profile()

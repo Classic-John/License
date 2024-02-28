@@ -22,7 +22,8 @@ namespace Core.Services
             => _unitOfWork.FurnitureTransports;
         public void AddFurnitureTransport(Furniture furniture)
         {
-            furniture.Id = GetItems().Last().Id + 1;
+            try { furniture.Id = GetItems().Last().Id + 1; }
+            catch(Exception) { furniture.Id = 1; }
             _unitOfWork.FurnitureTransports.Add(furniture);
         }
         public void RemoveFurnitureTransport(Furniture furniture)

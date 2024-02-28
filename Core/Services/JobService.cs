@@ -21,7 +21,8 @@ namespace Core.Services
             => _unitOfWork.Jobs;
         public void AddJob(Job job)
         {
-            job.Id=GetItems().Last().Id+1;
+            try { job.Id = GetItems().Last().Id + 1; }
+            catch (Exception) { job.Id = 1; }
             _unitOfWork.Jobs.Add(job);
         }
         public void RemoveJob(Job job) 
@@ -43,6 +44,7 @@ namespace Core.Services
             return result.Select(iu => iu.CompanyName).ToList();
         }
 
-        List<AbstractModel> IService.GetItems() => GetItems().Select(item => (AbstractModel)item).ToList();
+        List<AbstractModel> IService.GetItems() 
+            => GetItems().Select(item => (AbstractModel)item).ToList();
     }
 }

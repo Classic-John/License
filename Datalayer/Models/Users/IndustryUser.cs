@@ -10,11 +10,8 @@ namespace Datalayer.Models.Users
     public class IndustryUser
     {
         public int? Id { get; set; }
-        public string? Name { get; set; }
         public int? UserId {  get; set; }
         public string? CompanyName {  get; set; }
-        public int? Phone {  get; set; }
-        public string? Email { get; set; }
         public int? ServiceType { get; set; }
     }
 }

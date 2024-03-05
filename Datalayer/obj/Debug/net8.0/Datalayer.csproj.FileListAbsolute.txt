@@ -11,3 +11,5 @@ C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\D
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\ref\Datalayer.dll
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.csproj.AssemblyReference.cache
 C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.sourcelink.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\bin\Debug\net8.0\Datalayer.runtimeconfig.json
+C:\Users\User\Desktop\Facultate\Anul 3\Licenta\Relocation and booking services\Datalayer\obj\Debug\net8.0\Datalayer.genruntimeconfig.cache

@@ -118,9 +118,6 @@ namespace Relocation_and_booking_services.Controllers
                 _serviceWrapper._industryUserService.AddIndustryUser(new()
                 {
                     Id = id,
-                    Name = Request.Form["Name"],
-                    Email = Request.Form["Email"].ToString(),
-                    Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id,
                     CompanyName = Request.Form["Company"].ToString(),
                     ServiceType = Convert.ToInt32(Request.Form["serviceType"])

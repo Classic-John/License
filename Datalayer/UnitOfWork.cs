@@ -1,13 +1,26 @@
 ﻿using Datalayer.Models;
 using Datalayer.Models.Email;
+using Datalayer.Models.Repositories;
 using Datalayer.Models.SchoolItem;
 using Datalayer.Models.Users;
 using DataLayer.Models.Enums;
 
 namespace Datalayer
 {
+    //Pune listele in repozitoarele lor si acceseazale de acolo+ SCAPA DE "ImageSrc" SI DE "CompanyName" DIN ULTIMELE 5 MODELE
     public class UnitOfWork
     {
+        public List<BookingRepo> Apartments1;
+        public List<FurnitureRepo> Furnitures1;
+        public List<JobRepo> Jobs1;
+        public List<RentingRepo> Vehicles1;
+        public List<TransportRepo> Transport1;
+        public List<SchoolRepo> Schools1;
+        public List<UserRepo> Users1;
+        public List<EmailRepo> Emails1;
+        public List<SchoolUserRepo> SchoolUsers1;
+        public List<IndustryUserRepo> IndustryUsers1;
+
         public List<Apartment> Apartments { get; set; } = new();
         public List<Furniture> FurnitureTransports { get; set; } = new();
         public List<Job> Jobs { get; set; } = new();
@@ -19,7 +32,7 @@ namespace Datalayer
         public List<School> Schools { get; set; } = new();
         public List<SchoolUser> SchoolUsers { get; set; } = new();
 
-        //Bogus and Bogus.Datalists are a good idea
+        //Scapa de metoda asta odata
         public UnitOfWork()
         {
            // temporaryInitialise();
@@ -59,8 +72,8 @@ namespace Datalayer
             };
             IndustryUsers = new()
             {
-                new(){Id=1, Name="Bill Gates", UserId=2, CompanyName="Rolemus", Email="gates@money.com", ServiceType=1},
-                new(){Id=2, Name="Ramona Montana", UserId=3,CompanyName="Siemens", Email="idk@yikes.com", ServiceType=2}
+                new(){Id=1, UserId=2, CompanyName="Rolemus", ServiceType=1},
+                new(){Id=2, UserId=3,CompanyName="Siemens", ServiceType=2}
             };
             Emails = new()
             {

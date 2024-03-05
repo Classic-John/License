@@ -9,6 +9,6 @@ namespace Datalayer.Models
 {
     public class Apartment:AbstractModel
     {
-
+        
     }
 }

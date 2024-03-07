@@ -5,7 +5,7 @@
         @foreach (Vehicle ap in Model)
         {
             <div class="card">
-                <img src="@(ap.Image!=null ? "data:image/jpg;base64,"+Convert.ToBase64String(ap.Image): ap.ImageSrc)" class="card-img-top" />
+                <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
                     <input class="form-control" type="text" value="@ap.CreatorId" name="vehicleCreatorId" hidden />
                     <input class="form-control" type="text" value="@ap.Id" name="vehicleId" hidden />

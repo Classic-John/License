@@ -17,22 +17,19 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Vehicle> GetItems() 
-            => _unitOfWork.Vehicles;
-        public void AddVehicle(Vehicle vehicle)
-        {
-            try { vehicle.Id = GetItems().Last().Id + 1; }
-            catch(Exception) { vehicle.Id = 1; }
-            _unitOfWork.Vehicles.Add(vehicle);
-        }
-        public void RemoveVehicle(Vehicle vehicle)=> _unitOfWork.Vehicles.Remove(vehicle);
+        public List<Vehicle> GetItems()
+            => _unitOfWork.Vehicles.GetItems();
+        public async void AddVehicle(Vehicle vehicle) 
+            => await _unitOfWork.Vehicles.Add(vehicle);
+        public async void RemoveVehicle(Vehicle vehicle)
+            => await _unitOfWork.Vehicles.Delete(vehicle);
 
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> result = new();
-            foreach (var iu in _unitOfWork.IndustryUsers)
+            foreach (var iu in _unitOfWork.IndustryUsers.GetItems())
             {
-                foreach (var vehicle in _unitOfWork.Vehicles)
+                foreach (var vehicle in GetItems())
                 {
                     if (iu.Id == vehicle.CreatorId)
                     {
@@ -42,6 +39,7 @@ namespace Core.Services
             }
             return result.Select(iu => iu.CompanyName).ToList();
         }
-        List<AbstractModel> IService.GetItems() => GetItems().Select(item => (AbstractModel)item).ToList();
+        List<AbstractModel> IService.GetItems() 
+            => GetItems().Select(item => (AbstractModel)item).ToList();
     }
 }

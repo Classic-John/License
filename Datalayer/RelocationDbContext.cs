@@ -1,5 +1,6 @@
 ﻿using Datalayer.Models;
 using Datalayer.Models.Email;
+using Datalayer.Models.Repositories;
 using Datalayer.Models.SchoolItem;
 using Datalayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,11 @@ namespace Datalayer
         : base(options)
         {
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+       /* protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
            
         }
+       */
         public DbSet<Apartment> Apartments { get; set; }
         public DbSet<Furniture> Furnitures { get; set;}
         public DbSet<Job> Jobs { get; set; }

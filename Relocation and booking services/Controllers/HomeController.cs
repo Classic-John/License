@@ -3,7 +3,7 @@ using Core.Services;
 using Datalayer.Interfaces;
 using DataLayer.Models.Enums;
 using Datalayer.Models.Wrapper;
-using Relocation_and_booking_services.Pages.User;
+using Relocation_and_booking_services;
 using Datalayer.Models.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Bogus.DataSets;
@@ -96,14 +96,10 @@ namespace Relocation_and_booking_services.Controllers
         public IActionResult CreateAccount()
         {
             int role = 0;
-            int? id = -1;
             role = Convert.ToInt32(Request.Form["Option"]);
             GlobalService.Role = role;
-            try { id = _serviceWrapper._userService.GetUsers().Last().Id + 1; }
-            catch (Exception) { id = 1; }
             CurrentUser = _serviceWrapper._userService.AddUser(new()
             {
-                Id = id,
                 Name = Request.Form["Name"],
                 Role = GlobalService.roleNames[role],
                 Gender = Convert.ToInt32(Request.Form["gender"]),
@@ -111,24 +107,18 @@ namespace Relocation_and_booking_services.Controllers
                 Phone = Convert.ToInt32(Request.Form["Phone"].ToString()),
                 Password = Request.Form["password"],
                 ImageData = ConvertImageToBytes(Request.Form.Files["photo"]).Result
-            });
-            try { id = _serviceWrapper._industryUserService.GetIndustryUsers().Last().Id + 1; }
-            catch (Exception) { id = 1; }
+            }).Result;
             if (role == (int)Roles.IndustryUser)
                 _serviceWrapper._industryUserService.AddIndustryUser(new()
                 {
-                    Id = id,
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id,
                     CompanyName = Request.Form["Company"].ToString(),
                     ServiceType = Convert.ToInt32(Request.Form["serviceType"])
                 });
-            try { id = _serviceWrapper._schoolService.GetSchoolUsers().Last().Id + 1; }
-            catch (Exception) { id = 1; };
             if (role == (int)Roles.SchoolUser)
             {
                 _serviceWrapper._schoolService.AddSchoolUser(new()
                 {
-                    Id =id,
                     SchoolType = Convert.ToInt32(Request.Form["schoolType"]),
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id
                 });

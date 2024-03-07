@@ -10,15 +10,15 @@ namespace Datalayer.Interfaces
 {
     public interface IUserService : IWrapper
     {
-        public List<User> GetUsers();
-        public User AddUser(User user);
+        public List<User>? GetUsers();
+        public Task<User> AddUser(User user);
         public void RemoveUser(User user);
-        public Email? AddEmail(Email email);
+        public Task<Email?> AddEmail(Email email);
         public Email? FindEmail(int emailId);
-        public List<Email> GetEmails(int userId);
-        public List<Email> GetShorterEmails(int userId);
+        public Task<List<Email>> GetEmails(int userId);
+        public Task<List<Email>> GetShorterEmails(int userId);
         public User? FindUserByNameAndPassword(string name, string password);
-        public bool DeleteEmail(int emailId);
+        public Task<bool> DeleteEmail(int emailId);
         public Email ModifyEmail(int emailId, string newBody);
         public User? FindUserById(int userId);
         public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage);

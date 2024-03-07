@@ -17,42 +17,46 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<User> GetUsers()
-            => _unitOfWork.Users;
+        public List<User>? GetUsers()
+            => _unitOfWork.Users.GetItems();
         public bool IsEmpty()
             => _unitOfWork.Users == null;
-        public User AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
-            int? lastId = 1;
-            try { lastId = _unitOfWork.Emails.Last().Id + 1; }
-            catch(Exception) { lastId = 1; }
-            int? id = lastId;
-            _unitOfWork.Emails.Add(new() { Id = id, UserId = user.Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need", Date = DateTime.Now});
-            _unitOfWork.Users.Add(user);
+            await _unitOfWork.Users.Add(user);
+            await _unitOfWork.Emails.Add(new() { UserId = GetUsers().Last().Id, Title = "Welcome to reallocation platorm", Body = $"Dear {user.Name},\n,we welcome you here and hope you will find what you need", Date = DateTime.Now, CreatorId = -1 });
+
             return user;
         }
-        public void RemoveUser(User user)
+        public async void RemoveUser(User user)
         {
-            _unitOfWork.Emails.RemoveAll(email => email.UserId == user.Id);
-            _unitOfWork.Users.Remove(user);
+            _unitOfWork.Emails.GetItems().RemoveAll(email => email.UserId == user.Id);
+            await _unitOfWork.Users.Delete(user);
         }
-        public Email? AddEmail(Email email)
+        public async Task<Email?> AddEmail(Email email)
         {
-            email.Id = _unitOfWork.Emails.Count > 0 ? _unitOfWork.Emails.Last().Id + 1 : 1;
             email.Date = DateTime.Now;
-            _unitOfWork.Emails.Add(email);
+            await _unitOfWork.Emails.Add(email);
             return email;
         }
         public Email? FindEmail(int emailId)
-            => _unitOfWork.Emails.FirstOrDefault(email => email.Id == emailId);
-        public List<Email> GetEmails(int userId)
-            => _unitOfWork.Emails.Where(email => email.UserId == userId).ToList();
-        public List<Email> GetShorterEmails(int userId)
-            => GetEmails(userId).Select(email => email.ShorterEmail()).ToList();
+            => _unitOfWork.Emails.GetItems().FirstOrDefault(email => email.Id == emailId);
+        public async Task<List<Email>> GetEmails(int userId)
+             => _unitOfWork.Emails.GetItems().Where(email => email.UserId == userId).ToList();
+        public async Task<List<Email>> GetShorterEmails(int userId)
+            => (await GetEmails(userId)).Select(email => email.ShorterEmail()).ToList();
         public User? FindUserByNameAndPassword(string name, string password)
-            => _unitOfWork.Users.FirstOrDefault(user => user.Name.Equals(name) && user.Password.Equals(password));
-        public bool DeleteEmail(int mailId)
-            => _unitOfWork.Emails.Remove(_unitOfWork.Emails.FirstOrDefault(email => email.Id == mailId));
+            => GetUsers().FirstOrDefault(user => user.Name.Equals(name) && user.Password.Equals(password));
+        public async Task<bool> DeleteEmail(int mailId)
+        {
+            try
+            {
+                Email? mail = _unitOfWork.Emails.GetItems().FirstOrDefault(email => email.Id == mailId);
+                await _unitOfWork.Emails.Delete(mail);
+            }
+            catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); return false; }
+            return true;
+        }
         public Email ModifyEmail(int emailId, string newBody)
         {
             Email? email = FindEmail(emailId);
@@ -61,14 +65,14 @@ namespace Core.Services
             return email;
         }
         public User? FindUserById(int userId)
-            => _unitOfWork.Users.FirstOrDefault(user => user.Id == userId);
+            => GetUsers().FirstOrDefault(user => user.Id == userId);
         public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage)
         {
             User? user = FindUserById(id);
             user.Name = name;
             user.Email = email;
             user.Phone = phone;
-            user.Gender = gender.Equals("User") ? 1 : 2;
+            user.Gender = gender.Equals("Male") ? 1 : 2;
             user.SelfDescription = description;
             user.ImageData = newImage;
         }

@@ -121,7 +121,6 @@ namespace Relocation_and_booking_services.Controllers
             if (item == null)
                 return false;
             Email? industryEmail = EmailTexts.IndustryUserReceivedEmail(CurrentUser.Name, serviceType, personId, CurrentUser.Phone.Value,CurrentUser.Id.Value);
-
             if (industryEmail == null)
                 return false;
             _serviceWrapper._userService.AddEmail(industryEmail);

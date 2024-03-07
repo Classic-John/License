@@ -19,17 +19,14 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
         }
         public List<IndustryUser> GetIndustryUsers()
-            => _unitOfWork.IndustryUsers;
+            => _unitOfWork.IndustryUsers.GetItems();
         public bool IsEmpty()
-            => _unitOfWork.IndustryUsers==null;
-        public void AddIndustryUser(IndustryUser industryUser)
-        {
-            try { industryUser.Id = _unitOfWork.IndustryUsers.Last().Id + 1; }
-            catch(Exception) { industryUser.Id = 1; }
-            _unitOfWork.IndustryUsers.Add(industryUser); 
-        }
-        public void RemoveIndustryUser(IndustryUser industryUser)
-            => _unitOfWork.IndustryUsers.Remove(industryUser);
+            => _unitOfWork.IndustryUsers == null;
+        public async void AddIndustryUser(IndustryUser industryUser)
+            => await _unitOfWork.IndustryUsers.Add(industryUser);
+
+        public async void RemoveIndustryUser(IndustryUser industryUser)
+            => await _unitOfWork.IndustryUsers.Delete(industryUser);
         public IndustryUser? FindIndustryUser(int userId)
             => GetIndustryUsers().FirstOrDefault(iUser => iUser.UserId == userId);
         public List<AbstractModel?> GetServiceList(int userId)
@@ -39,23 +36,23 @@ namespace Core.Services
             switch (user.ServiceType)
             {
                 case (int)ServiceTypes.Booking:
-                    services = _unitOfWork.Apartments.Where(apartment => apartment.CreatorId == user.UserId)
+                    services = _unitOfWork.Apartments.GetItems().Where(apartment => apartment.CreatorId == user.UserId)
                         .Select(item => (AbstractModel?)item).ToList();
                     break;
                 case (int)ServiceTypes.Renting:
-                    services = _unitOfWork.Vehicles.Where(vehicle => vehicle.CreatorId == user.UserId)
+                    services = _unitOfWork.Vehicles.GetItems().Where(vehicle => vehicle.CreatorId == user.UserId)
                         .Select(item => (AbstractModel?)item).ToList();
                     break;
                 case (int)ServiceTypes.Job:
-                    services = _unitOfWork.Jobs.Where(jobs => jobs.CreatorId == user.UserId)
+                    services = _unitOfWork.Jobs.GetItems().Where(jobs => jobs.CreatorId == user.UserId)
                         .Select(item => (AbstractModel?)item).ToList();
                     break;
                 case (int)ServiceTypes.Furniture:
-                    services = _unitOfWork.FurnitureTransports.Where(furniture => furniture.CreatorId == user.UserId)
+                    services =  _unitOfWork.Furnitures.GetItems().Where(furniture => furniture.CreatorId == user.UserId)
                         .Select(item => (AbstractModel?)item).ToList();
                     break;
                 case (int)ServiceTypes.Transport:
-                    services = _unitOfWork.Transports.Where(transport => transport.CreatorId == user.UserId)
+                    services = _unitOfWork.Transports.GetItems().Where(transport => transport.CreatorId == user.UserId)
                         .Select(item => (AbstractModel?)item).ToList();
                     break;
             }
@@ -74,7 +71,7 @@ namespace Core.Services
         public List<Transport?> GetTransports(int industryUserId)
             => GetServiceList(industryUserId).Select(item => (Transport)item).ToList();
         public void ModifyCompanyNameOnOffers(int id, string? companyName)
-            => GetServiceList(id).Select(item => item.CompanyName= companyName).ToList();
-        
+            => GetServiceList(id).Select(item => item.CompanyName = companyName).ToList();
+
     }
 }

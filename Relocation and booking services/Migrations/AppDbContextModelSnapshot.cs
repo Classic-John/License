@@ -45,9 +45,6 @@ namespace Relocation_and_booking_services.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
 
@@ -116,9 +113,6 @@ namespace Relocation_and_booking_services.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
 
@@ -158,9 +152,6 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
@@ -202,9 +193,6 @@ namespace Relocation_and_booking_services.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
 
@@ -244,9 +232,6 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
@@ -365,9 +350,6 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageSrc")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");

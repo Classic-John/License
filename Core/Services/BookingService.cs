@@ -19,22 +19,19 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
         }
         public List<Apartment> GetItems()
-            => _unitOfWork.Apartments;
-        public void AddApartment(Apartment apartment)
-        {
-            try { apartment.Id = GetItems().Last().Id + 1; }
-            catch { apartment.Id = 1; }
-            _unitOfWork.Apartments.Add(apartment);
-        }
-        public void RemoveApartment(Apartment apartment)
-            => _unitOfWork.Apartments.Remove(apartment);
+            => _unitOfWork.Apartments.GetItems();
+        public async void AddApartment(Apartment apartment)
+            => await _unitOfWork.Apartments.Add(apartment);
+
+        public async void RemoveApartment(Apartment apartment)
+            => await _unitOfWork.Apartments.Delete(apartment);
 
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> companyUsers = new();
-            foreach (Apartment ap in _unitOfWork.Apartments)
+            foreach (Apartment ap in GetItems())
             {
-                foreach (IndustryUser ius in _unitOfWork.IndustryUsers)
+                foreach (IndustryUser ius in _unitOfWork.IndustryUsers.GetItems())
                 {
                     if (ius.Id == ap.CreatorId)
                     {
@@ -47,5 +44,6 @@ namespace Core.Services
 
         List<AbstractModel> IService.GetItems()
             => GetItems().Select(item => (AbstractModel)item).ToList();
+
     }
 }

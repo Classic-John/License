@@ -85,26 +85,25 @@ namespace Relocation_and_booking_services.Controllers
             string? description = Request.Form["offerDescription"];
             int? price = Convert.ToInt32(Request.Form["offerPrice"]);
             string? link = Request.Form["offerLink"];
-            string? image = Request.Form["offerImage"];
             string? location = Request.Form["offerLocation"];
             byte[]? newImage= ConvertImageToBytes(Request.Form.Files["newPhoto"]).Result;
             IndustryUser? user = _serviceWrapper._industryUserService.FindIndustryUser(creatorId.Value);
             switch (user.ServiceType)
             {
                 case (int)ServiceTypes.Booking:
-                    _serviceWrapper._bookingService.AddApartment(new() { CompanyName=user.CompanyName, CreatorId=user.UserId.Value, Description=description, ImageSrc=image, Link=link, Name=title, Price=price, Location=location, Image=newImage, Date=DateTime.Now });
+                    _serviceWrapper._bookingService.AddApartment(new() {CompanyName=user.CompanyName, CreatorId=user.UserId.Value, Description=description, Link=link, Name=title, Price=price, Location=location, Image=newImage, Date=DateTime.Now });
                     break;
                 case (int)ServiceTypes.Renting:
-                    _serviceWrapper._rentingService.AddVehicle(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date = DateTime.Now });
+                    _serviceWrapper._rentingService.AddVehicle(new() {CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date = DateTime.Now });
                     break;
                 case (int)ServiceTypes.Job:
-                    _serviceWrapper._jobService.AddJob(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
+                    _serviceWrapper._jobService.AddJob(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
                     break;
                 case (int)ServiceTypes.Furniture:
-                    _serviceWrapper._furnitureService.AddFurnitureTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
+                    _serviceWrapper._furnitureService.AddFurnitureTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
                     break;
                 case (int)ServiceTypes.Transport:
-                    _serviceWrapper._transportService.AddTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, ImageSrc = image, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
+                    _serviceWrapper._transportService.AddTransport(new() { CompanyName = user.CompanyName, CreatorId = user.UserId.Value, Description = description, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date=DateTime.Now });
                     break;
             }
             return ServiceList();

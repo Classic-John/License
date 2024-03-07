@@ -19,21 +19,18 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
         }
         public List<Furniture> GetItems()
-            => _unitOfWork.FurnitureTransports;
-        public void AddFurnitureTransport(Furniture furniture)
-        {
-            try { furniture.Id = GetItems().Last().Id + 1; }
-            catch(Exception) { furniture.Id = 1; }
-            _unitOfWork.FurnitureTransports.Add(furniture);
-        }
-        public void RemoveFurnitureTransport(Furniture furniture)
-            => _unitOfWork.FurnitureTransports.Remove(furniture);
+            => _unitOfWork.Furnitures.GetItems();
+        public async void AddFurnitureTransport(Furniture furniture)
+          => await _unitOfWork.Furnitures.Add(furniture);
+
+        public async void RemoveFurnitureTransport(Furniture furniture)
+            => await _unitOfWork.Furnitures.Delete(furniture);
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> result = new();
-            foreach (var iu in _unitOfWork.IndustryUsers)
+            foreach (var iu in _unitOfWork.IndustryUsers.GetItems())
             {
-                foreach (var fur in _unitOfWork.FurnitureTransports)
+                foreach (var fur in GetItems())
                 {
                     if (iu.Id == fur.CreatorId)
                     {
@@ -44,6 +41,7 @@ namespace Core.Services
             return result.Select(iu => iu.CompanyName).ToList();
         }
 
-        List<AbstractModel> IService.GetItems() => GetItems().Select(item => (AbstractModel)item).ToList();
+        List<AbstractModel> IService.GetItems() =>
+            GetItems().Select(item => (AbstractModel)item).ToList();
     }
 }

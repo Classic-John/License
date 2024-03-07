@@ -22,10 +22,10 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("Emails")]
-        public IActionResult Emails()
+        public async Task<IActionResult> Emails()
         {
             ViewBag.Role = GetCurrentRole();
-            return View("EmailList", _serviceWrapper._userService.GetShorterEmails(CurrentUser.Id.Value));
+            return View("EmailList",await _serviceWrapper._userService.GetShorterEmails(CurrentUser.Id.Value));
         }
 
         [Route("ViewEmail")]
@@ -40,15 +40,15 @@ namespace Relocation_and_booking_services.Controllers
             return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(), creatorImage));
         }
         [Route("DeleteEmail")]
-        public IActionResult DeleteEmail()
+        public async Task<IActionResult> DeleteEmail()
         {
             ViewBag.Role = GetCurrentRole();
             int? emailId = Request.Form.ContainsKey("objectId") ? Convert.ToInt32(Request.Form["objectId"]):Convert.ToInt32(Request.Form["mailId"]);
             _serviceWrapper._userService.DeleteEmail(emailId.Value);
-            return Emails();
+            return await Emails();
         }
         [Route("Forward")]
-        public IActionResult ForwardMail()
+        public async Task<IActionResult> ForwardMail()
         {
             ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
@@ -64,10 +64,10 @@ namespace Relocation_and_booking_services.Controllers
                 email.AddSenderAddress(currentEmail.GetSenderAddress());
                 _serviceWrapper._userService.AddEmail(email);
             }
-            return Emails();
+            return await Emails();
         }
         [Route("Reply")]
-        public IActionResult ReplyToMail()
+        public async Task<IActionResult> ReplyToMail()
         {
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
             ViewBag.Role = GetCurrentRole();
@@ -75,14 +75,14 @@ namespace Relocation_and_booking_services.Controllers
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             if (_serviceWrapper._userService.FindUserById(currentEmail.UserId.Value) is not User user)
             {
-                return Emails();
+                return await Emails();
             }
             string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
             Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
             Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title), Date = DateTime.Now };
             newMail.AddSenderAddress(mail.GetSenderAddress());
             _serviceWrapper._userService.AddEmail(newMail);
-            return Emails();
+            return await Emails();
         }
         [Route("CreateEmailView")]
         public IActionResult CreateEmailView()
@@ -92,7 +92,7 @@ namespace Relocation_and_booking_services.Controllers
         }
 
         [Route("SendEmail")]
-        public IActionResult SendEmail()
+        public async Task<IActionResult> SendEmail()
         {
             ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
@@ -103,10 +103,10 @@ namespace Relocation_and_booking_services.Controllers
             foreach (int id in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(id);
-                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date = DateTime.Now });
+                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date = DateTime.Now }).Result;
                 senderEmail.AddSenderAddress(sender.Email);
             }
-            return Emails();
+            return await Emails();
         }
 
     }

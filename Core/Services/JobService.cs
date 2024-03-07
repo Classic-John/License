@@ -17,23 +17,20 @@ namespace Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public List<Job> GetItems() 
-            => _unitOfWork.Jobs;
-        public void AddJob(Job job)
-        {
-            try { job.Id = GetItems().Last().Id + 1; }
-            catch (Exception) { job.Id = 1; }
-            _unitOfWork.Jobs.Add(job);
-        }
-        public void RemoveJob(Job job) 
-            => _unitOfWork.Jobs.Remove(job);
+        public List<Job> GetItems()
+            => _unitOfWork.Jobs.GetItems();
+        public async void AddJob(Job job)
+            => await _unitOfWork.Jobs.Add(job);
+
+        public async void RemoveJob(Job job)
+            =>  await _unitOfWork.Jobs.Delete(job);
 
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> result = new();
-            foreach (var iu in _unitOfWork.IndustryUsers)
+            foreach (var iu in _unitOfWork.IndustryUsers.GetItems())
             {
-                foreach (var job in _unitOfWork.Jobs)
+                foreach (var job in GetItems())
                 {
                     if (iu.Id == job.CreatorId)
                     {
@@ -44,7 +41,7 @@ namespace Core.Services
             return result.Select(iu => iu.CompanyName).ToList();
         }
 
-        List<AbstractModel> IService.GetItems() 
+        List<AbstractModel> IService.GetItems()
             => GetItems().Select(item => (AbstractModel)item).ToList();
     }
 }

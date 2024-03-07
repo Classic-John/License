@@ -16,32 +16,24 @@ namespace Core.Services
         public SchoolService(UnitOfWork unitOfWork)
             => _unitOfWork = unitOfWork;
         public SchoolUser? FindSchoolUser(int id)
-            => _unitOfWork.SchoolUsers.FirstOrDefault(user => user.UserId == id);
+            => GetSchoolUsers().FirstOrDefault(user => user.UserId == id);
         public List<School>? GetSchoolServices(int id)
-            => _unitOfWork.Schools.FindAll(item => item.CreatorId == id);
-        public School? FindSchoolService(int id,int schoolId)
-            =>GetSchoolServices(id).FirstOrDefault(item => item.Id == schoolId);
-        public void AddSchoolUser(SchoolUser user)
-        {
-            try { user.Id = _unitOfWork.SchoolUsers.Last().Id + 1; }
-            catch(Exception) { user.Id = 1; }
-            _unitOfWork.SchoolUsers.Add(user); 
-        }
-        public void AddSchoolItem(School item)
-        {
-            try { item.Id = _unitOfWork.Schools.Last().Id + 1; }
-            catch (Exception) { item.Id = 1; }
-            _unitOfWork.Schools.Add(item);
-        }
-        public void RemoveSchoolUser(SchoolUser user)
-        => _unitOfWork.SchoolUsers.Remove(user);
-        public void RemoveSchoolService(School item)
-            =>_unitOfWork.Schools.Remove(item);
+            => GetSchools().FindAll(item => item.CreatorId == id);
+        public School? FindSchoolService(int id, int schoolId)
+            => GetSchoolServices(id).FirstOrDefault(item => item.Id == schoolId);
+        public async void AddSchoolUser(SchoolUser user)
+            => await _unitOfWork.SchoolUsers.Add(user);
+        public async void AddSchoolItem(School item)
+            => await _unitOfWork.Schools.Add(item);
+        public async void RemoveSchoolUser(SchoolUser user)
+            => await _unitOfWork.SchoolUsers.Delete(user);
+        public async void RemoveSchoolService(School item)
+            => await _unitOfWork.Schools.Delete(item);
         public List<SchoolUser?> GetSchoolUsers()
-            => _unitOfWork.SchoolUsers;
+            => _unitOfWork.SchoolUsers.GetItems();
         public bool IsEmpty()
             => _unitOfWork.SchoolUsers == null;
-        public List<School>GetSchools()
-            => _unitOfWork.Schools;
+        public List<School> GetSchools()
+            =>  _unitOfWork.Schools.GetItems();
     }
 }

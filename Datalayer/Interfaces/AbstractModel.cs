@@ -10,12 +10,12 @@ namespace Datalayer.Interfaces
 {
     public abstract class AbstractModel
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }= default;
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int CreatorId { get; set; }
-        [NotMapped]
-        public string? ImageSrc { get; set; }
         public int? Price { get; set; }
         public string? Link { get; set; }
         public string? CompanyName { get; set; }

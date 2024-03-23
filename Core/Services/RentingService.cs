@@ -19,9 +19,9 @@ namespace Core.Services
         }
         public List<Vehicle> GetItems()
             => _unitOfWork.Vehicles.GetItems();
-        public async void AddVehicle(Vehicle vehicle) 
+        public async Task<Vehicle> AddVehicle(Vehicle vehicle) 
             => await _unitOfWork.Vehicles.Add(vehicle);
-        public async void RemoveVehicle(Vehicle vehicle)
+        public async Task<bool> RemoveVehicle(Vehicle vehicle)
             => await _unitOfWork.Vehicles.Delete(vehicle);
 
         public List<string> GetCompanyNames()
@@ -41,5 +41,7 @@ namespace Core.Services
         }
         List<AbstractModel> IService.GetItems() 
             => GetItems().Select(item => (AbstractModel)item).ToList();
+        public async Task<Vehicle> UpdateVehicle(Vehicle vehicle)
+            => await _unitOfWork.Vehicles.Update(vehicle);
     }
 }

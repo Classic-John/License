@@ -20,11 +20,13 @@ namespace Core.Services
         }
         public List<Furniture> GetItems()
             => _unitOfWork.Furnitures.GetItems();
-        public async void AddFurnitureTransport(Furniture furniture)
+        public async Task<Furniture> AddFurnitureTransport(Furniture furniture)
           => await _unitOfWork.Furnitures.Add(furniture);
 
-        public async void RemoveFurnitureTransport(Furniture furniture)
+        public async Task<bool> RemoveFurnitureTransport(Furniture furniture)
             => await _unitOfWork.Furnitures.Delete(furniture);
+        public async Task<Furniture> UpdateFurniture(Furniture furniture)
+            => await _unitOfWork.Furnitures.Update(furniture);
         public List<string> GetCompanyNames()
         {
             List<IndustryUser> result = new();

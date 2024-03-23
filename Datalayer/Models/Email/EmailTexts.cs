@@ -11,8 +11,8 @@ namespace Datalayer.Models.Email
         static (string Title, string Body) SuccessEmail = new() { Title = "Message sent", Body = "Your email has been sent to the desired person" };
         static (string Title, string Body) FailEmail = new() { Title = "Error", Body = "Your email couldn't be sent" };
 
-        public static Email? IndustryUserReceivedEmail(string? personName, string? applicationType, int userId, int phoneNumber,int senderId)
+        public static Email? IndustryUserReceivedEmail(string? personName, string? applicationType, int userId, long phoneNumber,int senderId)
             => (personName == null || applicationType == null) ? null :
-                new() { Id = 3, UserId = userId, Title = $"{personName} has applied for your {applicationType} service", Body = $"Here is his phone: {phoneNumber}", CreatorId=senderId };
+                new() {  UserId = userId, Title = $"{personName} has applied for your {applicationType} service", Body = $"Here is his phone: {phoneNumber}", CreatorId=senderId };
     }
 }

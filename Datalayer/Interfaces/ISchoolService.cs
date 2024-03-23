@@ -12,13 +12,16 @@ namespace Datalayer.Interfaces
     {
         public SchoolUser? FindSchoolUser(int id);
         public List<School>? GetSchoolServices(int id);
-        public void AddSchoolUser(SchoolUser user);
-        public void RemoveSchoolUser(SchoolUser user);
+        public Task<SchoolUser> AddSchoolUser(SchoolUser user);
+        public Task<bool> RemoveSchoolUser(SchoolUser user);
         public List<SchoolUser?> GetSchoolUsers();
-        public void AddSchoolItem(School item);
+        public Task<School> AddSchoolItem(School item);
         public School? FindSchoolService(int id, int schoolId);
-        public void RemoveSchoolService(School item);
+        public Task<bool> RemoveSchoolService(School item);
         public List<School> GetSchools();
         public bool IsEmpty();
+        public Task<School> UpdateSchool(School school);
+        public Task<SchoolUser> UpdateSchoolUser(SchoolUser user);
+        public Task<bool> DeleteSchoolUser(int id);
     }
 }

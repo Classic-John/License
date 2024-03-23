@@ -13,12 +13,5 @@ namespace Datalayer.Models.Repositories
         {
 
         }
-        public async Task<User> UpdateUser(User? user)
-        {
-            await Update(user);
-            User? user1 = _items.Find(item => item.Id == user.Id);
-            user1 = user;
-            return user;
-        }
     }
 }

@@ -20,11 +20,13 @@ namespace Core.Services
         }
         public List<Apartment> GetItems()
             => _unitOfWork.Apartments.GetItems();
-        public async void AddApartment(Apartment apartment)
+        public async Task<Apartment> AddApartment(Apartment apartment)
             => await _unitOfWork.Apartments.Add(apartment);
 
-        public async void RemoveApartment(Apartment apartment)
+        public async Task<bool> RemoveApartment(Apartment apartment)
             => await _unitOfWork.Apartments.Delete(apartment);
+        public async Task<Apartment> UpdateApartment(Apartment apartment)
+            => await _unitOfWork.Apartments.Update(apartment);
 
         public List<string> GetCompanyNames()
         {

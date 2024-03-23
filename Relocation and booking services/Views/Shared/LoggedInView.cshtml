@@ -1,5 +1,4 @@
-﻿@if (!HomeController.logged)
-{
+﻿@*
 
     <div class="p-5 alert alert-success alert-dismissible fade show" role="alert" id="alert">
         <h4 class="justify content-center alert-heading">You have logged in</h4>
@@ -9,4 +8,4 @@
     <script>
         document.getElementById("loggedIn").innerHTML = @($"Welcome,{GlobalService.Name},you are logged as {GlobalService.roleNames[GlobalService.Role]}");
     </script>
-}
+    *@

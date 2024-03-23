@@ -11,7 +11,8 @@ namespace Datalayer.Interfaces
     public interface IBookingService : IService
     {
         public new List<Apartment> GetItems();
-        public void AddApartment(Apartment apartment);
-        public void RemoveApartment(Apartment apartment);
+        public Task<Apartment> AddApartment(Apartment apartment);
+        public Task<bool>RemoveApartment(Apartment apartment);
+        public Task<Apartment> UpdateApartment(Apartment apartment);
     }
 }

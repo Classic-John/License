@@ -10,7 +10,8 @@ namespace Datalayer.Interfaces
     public interface ITransportService : IService
     {
         public new List<Transport> GetItems();
-        public void AddTransport(Transport transport);
-        public void RemoveTransport(Transport transport);
+        public Task<Transport> AddTransport(Transport transport);
+        public Task<bool> RemoveTransport(Transport transport);
+        public Task<Transport> UpdateTransport(Transport transport);
     }
 }

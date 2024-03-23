@@ -1,15 +1,26 @@
-﻿@model List<School>
+﻿@model (List<School>,List<SchoolUser>)
 
+<div class="d-flex justify-content-center p-5">
+    <input class="form-control w-25" list="cities" id="chosenCity" placeholder="Cities available" oninput="FilterOffers('schoolForm',this.value)">
+    <datalist id="cities">
+        @foreach (string? company in Model.Item1.Select(item => item.Name).Distinct().ToList())
+        {
+            <option value="@company" />
+        }
+    </datalist>
+</div>
 
 <form id="schoolForm" asp-controller="User" asp-action="ChosenSchool">
     <div class="card-group w-50 h-50 p-5">
-        @foreach (School? ap in Model)
+        @foreach (School? ap in Model.Item1)
         {
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
+                    @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <p class="card-text">@ap.Description</p>
+                    <p class="card-text">School Type: @(Model.Item2.First(item => item.UserId==ap.CreatorId).SchoolType)</p>
                     <div class="card-footer">
                         <a class="card-text" href="@ap.Link" target="_blank">Visit</a> 
                     </div>

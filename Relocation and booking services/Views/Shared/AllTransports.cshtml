@@ -1,17 +1,27 @@
-﻿@model List<Transport>
+﻿@model (List<Transport>,List<IndustryUser>)
 
+<div class="d-flex justify-content-center p-5">
+    <input class="form-control w-25" list="cities" id="chosenCity" placeholder="Cities available" oninput="FilterOffers('transportForm',this.value)">
+    <datalist id="cities">
+        @foreach (string? company in Model.Item2.Select(item => item.CompanyName).Distinct().ToList())
+        {
+            <option value="@company" />
+        }
+    </datalist>
+</div>
 <form id="transportForm" asp-controller="User" asp-action="Transport">
     <div class="card-group w-50 h-50 p-5">
-        @foreach (Transport ap in Model)
+        @foreach (Transport ap in Model.Item1)
         {
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
+                    @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <input class="form-control" type="text" value="@ap.CreatorId" name="transportCreatorId" hidden />
                     <input class="form-control" type="text" value="@ap.Id" name="transportId" hidden />
                     <p class="card-text">@ap.Description</p>
-                    <p class="card-text">Company: @ap.CompanyName</p>
+                    <p class="card-text">Company @(Model.Item2.First(item => item.UserId == ap.CreatorId).CompanyName)</p>
                     <div class="card-footer">
                         <p class="card-text">@ap.Price</p>
                         <a class="card-text" href="@ap.Link" target="_blank">Visit</a>

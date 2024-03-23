@@ -24,11 +24,8 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("user home")]
-        public IActionResult UserHome()
-        {
-            ViewBag.Role = GetCurrentRole();
-            return View("UserView"); 
-        }
+        public IActionResult UserHome() 
+            => View("UserView");
         #region Iservice
         private bool ServiceAvailable(IService service)
             => service.GetCompanyNames().Contains(CityOfOrigin) || service.GetCompanyNames().Contains(Destination);
@@ -44,16 +41,12 @@ namespace Relocation_and_booking_services.Controllers
         #endregion
 
         [Route("relocation")]
-        public IActionResult Relocation()
-        {
-            ViewBag.Role = GetCurrentRole();
-            return View("Relocation", _serviceWrapper);
-        }
+        public IActionResult Relocation() 
+            => View("Relocation", _serviceWrapper);
 
         [Route("selected service")]
         public IActionResult ChosenService()
         {
-            ViewBag.Role = GetCurrentRole();
             if (ChosenServices.Count == 0) 
                 return View("Success");
             try
@@ -93,23 +86,18 @@ namespace Relocation_and_booking_services.Controllers
         [Route("selected companies offers")]
         public IActionResult PersonalizedOffers()
         {
-            ViewBag.Role = GetCurrentRole();
             CityOfOrigin = Request.Form["origin"].ToString();
             Destination = Request.Form["target"].ToString();
-
             foreach (string option in Request.Form.Keys)
             {
                 if (!int.TryParse(Request.Form[option], out int outcome))
-                {
                     continue;
-                }
                 ChosenServices.Add(outcome);
             }
-
             return ChosenService();
         }
 
-        private bool SendEmail(int personId, int itemId, IService service, string serviceType)
+        private async Task<bool> SendEmail(int personId, int itemId, IService service, string serviceType)
         {
             IndustryUser? industryUser = FindIndustryUser(personId);
 
@@ -120,14 +108,14 @@ namespace Relocation_and_booking_services.Controllers
 
             if (item == null)
                 return false;
-            Email? industryEmail = EmailTexts.IndustryUserReceivedEmail(CurrentUser.Name, serviceType, personId, CurrentUser.Phone.Value,CurrentUser.Id.Value);
+            Email? industryEmail = EmailTexts.IndustryUserReceivedEmail(CurrentUser.Name, serviceType, personId, CurrentUser.Phone.Value,CurrentUser.Id);
             if (industryEmail == null)
                 return false;
-            _serviceWrapper._userService.AddEmail(industryEmail);
+           await _serviceWrapper._userService.AddEmail(industryEmail);
             return true;
         }
 
-        private bool SendSchoolEmail(int userId,int itemId, ISchoolService service) 
+        private async Task<bool> SendSchoolEmail(int userId,int itemId, ISchoolService service) 
         {
             SchoolUser? user= service.FindSchoolUser(userId);
             User? actualUser=_serviceWrapper._userService.FindUserById(userId);
@@ -140,61 +128,55 @@ namespace Relocation_and_booking_services.Controllers
                 Title = $"{actualUser.Name} applied to your school service", Body=$"{actualUser.Name} requests a place either for himself or his children at {item.Name}\n.Here is his phone: {actualUser.Password} and email: {actualUser.Email}"
                 , Date=DateTime.Now, UserId=userId 
             };
-            _serviceWrapper._userService.AddEmail(schoolEmail);
+            await _serviceWrapper._userService.AddEmail(schoolEmail);
             return true;
         }
         [Route("Booking")]
-        public IActionResult Booking()
+        public async Task<IActionResult> Booking()
         {
-            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Booking");
+            bool sent = await SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Booking");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("Renting")]
-        public IActionResult Renting()
+        public async Task<IActionResult> Renting()
         {
-            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int rentingId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, rentingId, _serviceWrapper._rentingService, "Renting");
+            bool sent = await SendEmail(industryUserId, rentingId, _serviceWrapper._rentingService, "Renting");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("ChosenJob")]
-        public IActionResult FoundJob()
+        public async Task<IActionResult> FoundJob()
         {
-            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int jobId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, jobId, _serviceWrapper._jobService, "Job Hunting");
+            bool sent = await SendEmail(industryUserId, jobId, _serviceWrapper._jobService, "Job Hunting");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("Movers")]
-        public IActionResult Movers()
+        public async Task<IActionResult> Movers()
         {
-            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int furnitureId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, furnitureId, _serviceWrapper._furnitureService, "Furniture");
+            bool sent = await SendEmail(industryUserId, furnitureId, _serviceWrapper._furnitureService, "Furniture");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("Travel")]
-        public IActionResult Transport()
+        public async Task<IActionResult> Transport()
         {
-            ViewBag.Role = GetCurrentRole();
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendEmail(industryUserId, apartmentId, _serviceWrapper._transportService, "Travel");
+            bool sent = await SendEmail(industryUserId, apartmentId, _serviceWrapper._transportService, "Travel");
             return sent ? ChosenService() : View("Failed");
         }
         [Route("ChosenSchool")]
-        public IActionResult ChosenSchool()
+        public async Task<IActionResult> ChosenSchool()
         {
-            ViewBag.Role = GetCurrentRole();
             int userId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int objectId = Convert.ToInt32(Request.Form["objectId"]);
-            bool sent = SendSchoolEmail(userId, objectId, _serviceWrapper._schoolService);
+            bool sent = await SendSchoolEmail(userId, objectId, _serviceWrapper._schoolService);
             return sent ? ChosenService() : View("Failed");
         }
     }

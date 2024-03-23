@@ -10,7 +10,8 @@ namespace Datalayer.Interfaces
     public interface IJobService : IService
     {
         public new List<Job> GetItems();
-        public void AddJob(Job job);
-        public void RemoveJob(Job job);
+        public Task<Job> AddJob(Job job);
+        public Task<bool> RemoveJob(Job job);
+        public Task<Job> UpdateJob(Job job);
     }
 }

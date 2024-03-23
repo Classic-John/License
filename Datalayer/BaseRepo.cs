@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Datalayer.Models.BaseClass;
+using Microsoft.IdentityModel.Tokens;
 namespace Datalayer
 {
-    public class BaseRepo<T> where T : class
+    public class BaseRepo<T> where T : BaseEntity
     {
-        protected readonly RelocationDbContext _relocationDbContext;
-        protected readonly DbSet<T> _dbSet;
-        protected List<T> _items;
+        private readonly RelocationDbContext _relocationDbContext;
+        private readonly DbSet<T> _dbSet;
+        private readonly List<T> _items;
         public BaseRepo(RelocationDbContext context)
         {
             _relocationDbContext = context;
@@ -26,7 +27,7 @@ namespace Datalayer
                 _items.Add(item);
                 await _relocationDbContext.SaveChangesAsync();
             }
-            catch(Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
+            catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
             return item;
         }
         public List<T> GetItems()
@@ -35,10 +36,12 @@ namespace Datalayer
         {
             try
             {
-                _dbSet.Update(item);
+                T? found = _items.Find(item1 => item1.Id == item.Id);
+                found = item;
+                _dbSet.Update(found);
                 await _relocationDbContext.SaveChangesAsync();
             }
-            catch(Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
+            catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
             return item;
         }
         public async Task<bool> Delete(T item)
@@ -49,8 +52,27 @@ namespace Datalayer
                 _items.Remove(item);
                 await _relocationDbContext.SaveChangesAsync();
             }
-            catch(Exception ex) { Console.WriteLine(ex.InnerException?.Message);return false; }
+            catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); return false; }
             return true;
+        }
+        public async Task<bool> DeleteAll(List<T> items)
+        {
+            if (items == null)
+                return false;
+            items.ForEach(item => _dbSet.Remove(item));
+            await _relocationDbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<List<T>> UpdateAll(List<T> items)
+        {
+            foreach(T item in items)
+            {
+                T? found = _items.Find(item1 => item1.Id == item.Id);
+                found = item;
+                _dbSet.Update(found);
+            }
+            await _relocationDbContext.SaveChangesAsync();
+            return items;
         }
     }
 }

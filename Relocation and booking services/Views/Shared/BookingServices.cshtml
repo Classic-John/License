@@ -1,15 +1,26 @@
-﻿@model List<Apartment>
+﻿@model (List<Apartment>,List<IndustryUser>)
+
+<div class="d-flex justify-content-center p-5">
+    <input class="form-control w-25" list="cities" id="chosenCity" placeholder="Cities available" oninput="FilterOffers('bookingForm',this.value)">
+    <datalist id="cities">
+        @foreach (string? company in Model.Item2.Select(item => item.CompanyName).Distinct().ToList())
+        {
+            <option value="@company" />
+        }
+    </datalist>
+</div>
 
 <form id="bookingForm"asp-controller="User" asp-action="Booking">
     <div class="card-group w-50 h-50 p-5">
-        @foreach (Apartment ap in Model)
+        @foreach (Apartment ap in Model.Item1)
         {
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
+                    @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <p class="card-text">@ap.Description</p>
-                    <p class="card-text">Company: @ap.CompanyName</p>
+                    <p class="card-text">Company @(Model.Item2.First(item => item.UserId == ap.CreatorId).CompanyName)</p>
                     <div class="card-footer">
                         <p class="card-text">@ap.Price</p>
                         <a class="card-text" href="@ap.Link" target="_blank">Visit</a>

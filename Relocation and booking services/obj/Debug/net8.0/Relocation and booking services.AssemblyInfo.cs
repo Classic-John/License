@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Relocation and booking services")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f9f4ae312d81e6ecc48063dd2fa297161ddd8b6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+92c1a644ae143864b80d65161dcf1e6335a08823")]
 [assembly: System.Reflection.AssemblyProductAttribute("Relocation and booking services")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Relocation and booking services")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

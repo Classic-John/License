@@ -11,13 +11,6 @@ namespace Datalayer.Models.Repositories
         public BookingRepo(RelocationDbContext context) : base(context)
         {
         }
-        public async Task<Apartment?> UpdateApartment(Apartment? apartment)
-        {
-           await Update(apartment);
-            Apartment? apartment1 = _items.Find(item => item.Id == apartment.Id);
-            apartment1 = apartment;
-            return apartment1;
-        }
        
     }
 }

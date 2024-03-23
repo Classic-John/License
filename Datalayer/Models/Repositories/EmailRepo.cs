@@ -12,12 +12,5 @@ namespace Datalayer.Models.Repositories
         {
 
         }
-        public async Task<Email.Email> UpdateEmail(Email.Email? mail)
-        {
-            await Update(mail);
-            Email.Email? email = _items.Find(item => item.Id == mail.Id);
-            email = mail;
-            return mail;
-        }
     }
 }

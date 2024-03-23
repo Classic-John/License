@@ -15,13 +15,15 @@ namespace Datalayer.Interfaces
         public void RemoveUser(User user);
         public Task<Email?> AddEmail(Email email);
         public Email? FindEmail(int emailId);
-        public Task<List<Email>> GetEmails(int userId);
-        public Task<List<Email>> GetShorterEmails(int userId);
-        public User? FindUserByNameAndPassword(string name, string password);
+        public List<Email> GetEmails(int userId);
+        public List<Email> GetShorterEmails(int userId);
         public Task<bool> DeleteEmail(int emailId);
-        public Email ModifyEmail(int emailId, string newBody);
+        public Task<Email> ModifyEmail(int emailId, string newBody);
         public User? FindUserById(int userId);
-        public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage);
+        public Task<User> UpdateUser(int id, string? name, string? email, long? phone, string? gender, string? description, byte[]? newImage);
         public bool IsEmpty();
+        public User? FindUserByName(string? name);
+        public Task<bool> DeleteUser(int id);
+        public User? FindUserByGoogleId(string? googleId);
     }
 }

@@ -30,7 +30,7 @@ namespace Core.Services
         }
         public async void RemoveUser(User user)
         {
-            _unitOfWork.Emails.GetItems().RemoveAll(email => email.UserId == user.Id);
+            await _unitOfWork.Emails.DeleteAll(_unitOfWork.Emails.GetItems().Where(email => email.UserId == user.Id).ToList());
             await _unitOfWork.Users.Delete(user);
         }
         public async Task<Email?> AddEmail(Email email)
@@ -41,12 +41,11 @@ namespace Core.Services
         }
         public Email? FindEmail(int emailId)
             => _unitOfWork.Emails.GetItems().FirstOrDefault(email => email.Id == emailId);
-        public async Task<List<Email>> GetEmails(int userId)
+        public List<Email> GetEmails(int userId)
              => _unitOfWork.Emails.GetItems().Where(email => email.UserId == userId).ToList();
-        public async Task<List<Email>> GetShorterEmails(int userId)
-            => (await GetEmails(userId)).Select(email => email.ShorterEmail()).ToList();
-        public User? FindUserByNameAndPassword(string name, string password)
-            => GetUsers().FirstOrDefault(user => user.Name.Equals(name) && user.Password.Equals(password));
+        public List<Email> GetShorterEmails(int userId)
+            => GetEmails(userId).Select(email => email.ShorterEmail()).ToList();
+
         public async Task<bool> DeleteEmail(int mailId)
         {
             try
@@ -57,16 +56,17 @@ namespace Core.Services
             catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); return false; }
             return true;
         }
-        public Email ModifyEmail(int emailId, string newBody)
+        public async Task<Email> ModifyEmail(int emailId, string newBody)
         {
             Email? email = FindEmail(emailId);
             email.Body += newBody;
             email.Date = DateTime.Now;
+            await _unitOfWork.Emails.Update(email);
             return email;
         }
         public User? FindUserById(int userId)
             => GetUsers().FirstOrDefault(user => user.Id == userId);
-        public void UpdateUser(int id, string? name, string? email, int? phone, string? gender, string? description, byte[]? newImage)
+        public async Task<User> UpdateUser(int id, string? name, string? email, long? phone, string? gender, string? description, byte[]? newImage)
         {
             User? user = FindUserById(id);
             user.Name = name;
@@ -75,6 +75,19 @@ namespace Core.Services
             user.Gender = gender.Equals("Male") ? 1 : 2;
             user.SelfDescription = description;
             user.ImageData = newImage;
+            return await _unitOfWork.Users.Update(user);
         }
+        public User? FindUserByName(string? name)
+            => GetUsers().FirstOrDefault(item => item.Name.Equals(name));
+
+        public async Task<bool> DeleteUser(int id)
+        {
+            User user = FindUserById(id);
+            await _unitOfWork.Emails.DeleteAll(GetEmails(id));
+            await _unitOfWork.Users.Delete(user);
+            return true;
+        }
+        public User? FindUserByGoogleId(string? googleId)
+            => GetUsers().FirstOrDefault(user => user.GoogleId.Equals(googleId));
     }
 }

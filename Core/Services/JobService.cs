@@ -19,10 +19,10 @@ namespace Core.Services
         }
         public List<Job> GetItems()
             => _unitOfWork.Jobs.GetItems();
-        public async void AddJob(Job job)
+        public async Task<Job> AddJob(Job job)
             => await _unitOfWork.Jobs.Add(job);
 
-        public async void RemoveJob(Job job)
+        public async Task<bool> RemoveJob(Job job)
             =>  await _unitOfWork.Jobs.Delete(job);
 
         public List<string> GetCompanyNames()
@@ -43,5 +43,7 @@ namespace Core.Services
 
         List<AbstractModel> IService.GetItems()
             => GetItems().Select(item => (AbstractModel)item).ToList();
+        public async Task<Job> UpdateJob(Job job)
+            => await _unitOfWork.Jobs.Update(job);
     }
 }

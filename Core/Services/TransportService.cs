@@ -19,10 +19,10 @@ namespace Core.Services
         }
         public List<Transport> GetItems()
             => _unitOfWork.Transports.GetItems();
-        public async void AddTransport(Transport transport)
+        public async Task<Transport> AddTransport(Transport transport)
            => await _unitOfWork.Transports.Add(transport);
 
-        public async void RemoveTransport(Transport transport) 
+        public async Task<bool> RemoveTransport(Transport transport)
             => await _unitOfWork.Transports.Delete(transport);
         public List<string> GetCompanyNames()
         {
@@ -41,5 +41,8 @@ namespace Core.Services
         }
         List<AbstractModel> IService.GetItems()
             => GetItems().Select(item => (AbstractModel)item).ToList();
+        public async Task<Transport> UpdateTransport(Transport transport)
+           => await _unitOfWork.Transports.Update(transport);
+
     }
 }

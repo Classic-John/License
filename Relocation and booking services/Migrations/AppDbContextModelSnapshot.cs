@@ -17,7 +17,7 @@ namespace Relocation_and_booking_services.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -29,9 +29,6 @@ namespace Relocation_and_booking_services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
@@ -64,11 +61,11 @@ namespace Relocation_and_booking_services.Migrations
 
             modelBuilder.Entity("Datalayer.Models.Email.Email", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
@@ -97,9 +94,6 @@ namespace Relocation_and_booking_services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
@@ -138,9 +132,6 @@ namespace Relocation_and_booking_services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
@@ -177,9 +168,6 @@ namespace Relocation_and_booking_services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
@@ -218,9 +206,6 @@ namespace Relocation_and_booking_services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
@@ -252,11 +237,11 @@ namespace Relocation_and_booking_services.Migrations
 
             modelBuilder.Entity("Datalayer.Models.Users.IndustryUser", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
@@ -274,11 +259,11 @@ namespace Relocation_and_booking_services.Migrations
 
             modelBuilder.Entity("Datalayer.Models.Users.SchoolUser", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("SchoolType")
                         .HasColumnType("int");
@@ -293,17 +278,20 @@ namespace Relocation_and_booking_services.Migrations
 
             modelBuilder.Entity("Datalayer.Models.Users.User", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
@@ -314,8 +302,8 @@ namespace Relocation_and_booking_services.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int");
+                    b.Property<long?>("Phone")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
@@ -335,9 +323,6 @@ namespace Relocation_and_booking_services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");

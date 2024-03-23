@@ -14,49 +14,45 @@ namespace Relocation_and_booking_services.Controllers
         public SchoolController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
             IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService)
         {
-            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService,schoolService);
+            _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("SchoolServices")]
-        public IActionResult SchoolServices()
-        {
-            ViewBag.Role=GetCurrentRole();
-            int id=CurrentUser.Id.Value;
-            return View("PersonalSchoolList", _serviceWrapper._schoolService.GetSchoolServices(id));
-        }
+        public IActionResult SchoolServices() 
+            => View("PersonalSchoolList", _serviceWrapper._schoolService.GetSchoolServices(CurrentUser.Id));
+
         [Route("UpdateSchoolOffer")]
-        public IActionResult UpdateSchoolOffer()
+        public async Task<IActionResult> UpdateSchoolOffer()
         {
             string? schoolName = Request.Form["offerTitle"];
             string? schoolDescription = Request.Form["offerDescription"];
             string? schoolLink = Request.Form["offerLink"];
             string? schoolLocation = Request.Form["offerLocation"];
             byte[]? newImage = ConvertImageToBytes(Request.Form.Files["newPhoto"]).Result;
-            School? item = _serviceWrapper._schoolService.FindSchoolService(CurrentUser.Id.Value, Convert.ToInt32(Request.Form["chosenItemId"]));
+            School? item = _serviceWrapper._schoolService.FindSchoolService(CurrentUser.Id, Convert.ToInt32(Request.Form["chosenItemId"]));
             item.Name = schoolName;
             item.Description = schoolDescription;
             item.Link = schoolLink;
             item.Location = schoolLocation;
             item.Image = newImage;
+            await _serviceWrapper._schoolService.UpdateSchool(item);
             return SchoolServices();
         }
         [Route("AddSchoolOffer")]
-        public IActionResult AddSchoolOffer()
+        public async Task<IActionResult> AddSchoolOffer()
         {
-            ViewBag.Role = GetCurrentRole();
             string? schoolName = Request.Form["offerTitle"];
             string? schoolDescription = Request.Form["offerDescription"];
             string? schoolLink = Request.Form["offerLink"];
             string? schoolLocation = Request.Form["offerLocation"];
             byte[]? newImage = ConvertImageToBytes(Request.Form.Files["newPhoto"]).Result;
-            _serviceWrapper._schoolService.AddSchoolItem(new() { Name=schoolName, Description=schoolDescription, Link=schoolLink, Location=schoolLocation, Image=newImage, Date=DateTime.Now, CreatorId=CurrentUser.Id.Value});
+            await _serviceWrapper._schoolService.AddSchoolItem(new() { Name = schoolName, Description = schoolDescription, Link = schoolLink, Location = schoolLocation, Image = newImage, Date = DateTime.Now, CreatorId = CurrentUser.Id });
             return SchoolServices();
         }
         [Route("DeleteSchoolOffer")]
-        public IActionResult DeleteSchoolOffer() 
+        public async Task<IActionResult> DeleteSchoolOffer()
         {
-            ViewBag.Role = GetCurrentRole();
-            School? item = _serviceWrapper._schoolService.FindSchoolService(CurrentUser.Id.Value, Convert.ToInt32(Request.Form["deleteItemId"]));
-            _serviceWrapper._schoolService.RemoveSchoolService(item);
+            School? item = _serviceWrapper._schoolService.FindSchoolService(CurrentUser.Id, Convert.ToInt32(Request.Form["deleteItemId"]));
+            await _serviceWrapper._schoolService.RemoveSchoolService(item);
             return SchoolServices();
         }
     }

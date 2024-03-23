@@ -18,7 +18,7 @@
     <script src="/javascript.js?v=1.0"></script>
 </head>
 
-<body onload="loggedUser(@ViewBag.Role)">
+<body onload="loggedUser()">
     <nav class="navbar navbar-expand-sm bg-dark fixed-top p-0 d-flex justify-content-right">
         <div class="container-fluid">
             <div class="mb-3">
@@ -138,11 +138,10 @@
                             <div class="valid-feedback">Ok</div>
                             <div class="invalid-feedback">You must enter password in order to log in</div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" name="remember">
-                            <label class="form-check-label"> Remember me </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <hstack>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a asp-controller="Home" asp-action="GoogleLogin" class="btn btn-outline-dark">Google Login <img src="/GoogleLogo.jpg" width="25" height="25" /></a>
+                        </hstack>
                     </form>
                 </div>
             </div>
@@ -154,51 +153,54 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">CreateAccount</h5>
-                    <form asp-controller="Home" asp-action="CreateAccount" method="post" class="needs-validated" enctype="multipart/form-data">
-                        <div class="mb-3 mt-3">
+                    <form method="post" id="createAccountForm" enctype="multipart/form-data">
+                        <div class="mb-3 mt-3" data-section="nonGoogle">
                             <label for="Name" class="form-label">Name:</label>
-                            <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Name" required>
+                            <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Name">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" data-section="nonGoogle">
                             <label for="Password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="Password" name=Password placeholder="Enter password" required>
+                            <input type="password" class="form-control" id="Password" name=Password placeholder="Enter password">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" data-section="nonGoogle">
                             <label for="Email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="Email" name=Email placeholder="Enter Email" required>
+                            <input type="email" class="form-control" id="Email" name=Email placeholder="Enter Email">
                         </div>
                         <div class="mb-3">
                             <label for="Phone" class="form-label">Phone:</label>
                             <input type="text" class="form-control" id="Phone" name=Phone placeholder="Enter Phone Number" required>
                         </div>
-                        <div class="form-check mb-3">
-                            <input type="radio" class="form-check-input" id="user1" value="1" data-bs-toggle="collapse" name="Option" onchange="employeerButton()" />
-                            <label class="form-check-label" for="user1"> User </label>
+                        <div class="container" required>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" id="user1" value="1" data-bs-toggle="collapse" name="Option" onchange="employeerButton()" />
+                                <label class="form-check-label" for="user1"> User </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" id="employeer1" value="2" name="Option" onchange="employeerButton()" />
+                                <label class="form-check-label" for="employeer1"> Industry User </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" id="school1" value="3" name="Option" onchange="checkSection('schoolUserExtra');employeerButton()" />
+                                <label class="form-check-label" for="employeer1"> School User </label>
+                            </div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input type="radio" class="form-check-input" id="employeer1" value="2" name="Option" onchange="employeerButton()" />
-                            <label class="form-check-label" for="employeer1"> Industry User </label>
+                        <div class="container" required>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio1" name="gender" value="1" checked>
+                                <label class="form-check-label" for="radio1">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio2" name="gender" value="2">
+                                <label class="form-check-label" for="radio2">Female</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="gender" value="3">
+                                <label class="form-check-label">Other</label>
+                            </div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input type="radio" class="form-check-input" id="school1" value="3" name="Option" onchange="checkSection('schoolUserExtra');employeerButton()" />
-                            <label class="form-check-label" for="employeer1"> School User </label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="radio1" name="gender" value="1" checked>
-                            <label class="form-check-label" for="radio1">Male</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="radio2" name="gender" value="2">
-                            <label class="form-check-label" for="radio2">Female</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="gender" value="3">
-                            <label class="form-check-label">Other</label>
-                        </div>
-
                         <div class="d-none" id="employeerExtra">
                             <label for="Company" class="form-label">Enter Company</label>
-                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name"/>
+                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name" />
                             <div class="valid-feedback">Ok</div>
                             <div class="invalid-feedback">Company name required</div>
 
@@ -223,11 +225,15 @@
                                 <option value="5">University</option>
                             </datalist>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" data-section="nonGoogle">
                             <input type="file" id="imageUpload" accept="image/*" name="photo" onchange="uploadImage('imageUpload','uploaded')" />
                             <img src="/default.jpg" id="uploaded" width="50" height="50" />
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <input class="input" name="google" value="no" id="withGoogle" hidden />
+                        <button type="button" id="normalCreate" class="btn btn-primary" onclick="createNormal()">Create Account</button>
+                        <button type="button" data-section="nonGoogle" class="btn btn-outline-dark" onclick="hideNonGoogle()">Try with Google</button>
+                        <button type="button" id="createWithGoogleButton" class="btn btn-outline-dark d-none" onclick="createWithGoogle()">Sign up <img src="/GoogleLogo.jpg" width="25" height="25" /></button>
+                        <button type="button" id="resetCreate" class="btn btn-outline-warning d-none" onclick="resetMethod()">Reset</button>
                     </form>
                 </div>
             </div>

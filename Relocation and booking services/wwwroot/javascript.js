@@ -1,9 +1,23 @@
-﻿function loggedUser(theRole) {
+﻿async function getTheRole() {
+    try {
+        const response = await fetch('/Home/GetRole');
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error("Failed to load the role", error);
+        return 0;
+    }
+}
+
+async function loggedUser() {
+    let option = getTheRole()
+    option = await getTheRole(option);
     let crucialDetails = document.getElementById("crucialDetails");
     let userDetails = document.getElementById('userDetails');
     let industryDetails = document.getElementById('industryDetails');
     let schoolUserDetails = document.getElementById('schoolUserDetails');
-    switch (theRole) {
+    switch (option) {
         case 0:
             if (crucialDetails.classList.contains("d-none")) {
                 crucialDetails.classList.remove("d-none");
@@ -242,9 +256,11 @@ function enableSections() {
     let sections = document.querySelectorAll('[data-section="section"]');
     let update = document.getElementById('update1');
     let submit = document.getElementById('submit1');
+    let delete1 = document.getElementById('deleteAccount');
     sections.forEach(section => section.removeAttribute('disabled'));
     update.classList.add("d-none");
     submit.classList.remove("d-none");
+    delete1.classList.remove("d-none");
 }
 function uploadImage(fileId, inputId) {
     let input = document.getElementById(fileId);
@@ -267,4 +283,58 @@ function KeepPicture() {
         .catch(error => {
             document.getElementById('image').src = '/default.jpg';
         });
+}
+
+function SendAccountDelete() {
+    let profile = document.getElementById('profileForm');
+    profile.action = 'DeleteAccount';
+    profile.submit();
+}
+function FilterOffers(formId, cityName) {
+    let divs = document.getElementById(formId).querySelectorAll(".card-group .card .card-body")
+    divs.forEach(item => {
+        let parent = item.closest(".card");
+        let currentCity = item.querySelector('.card-text.d-flex');
+        if (!currentCity.textContent.includes(cityName) && !parent.classList.contains("d-none")) {
+            parent.classList.add("d-none");
+        }
+        if (currentCity.textContent.includes(cityName) && parent.classList.contains("d-none")) {
+            parent.classList.remove("d-none");
+        }
+    });
+}
+function hideNonGoogle() {
+    let sections = document.querySelectorAll('[data-section="nonGoogle"]');
+    sections.forEach(item => item.classList.add("d-none"));
+    let button = document.getElementById("createWithGoogleButton");
+    let button1 = document.getElementById("normalCreate");
+    let google = document.getElementById("withGoogle");
+    let resetButton = document.getElementById("resetCreate");
+    button1.classList.add("d-none");
+    button.classList.remove("d-none");
+    google.value = "yes";
+    resetButton.classList.remove("d-none");
+}
+
+function resetMethod() {
+    let sections = document.querySelectorAll('[data-section="nonGoogle"]');
+    sections.forEach(item => item.classList.remove("d-none"));
+    let button = document.getElementById("createWithGoogleButton");
+    let button1 = document.getElementById("normalCreate");
+    let google = document.getElementById("withGoogle");
+    let resetButton = document.getElementById("resetCreate");
+    button1.classList.remove("d-none");
+    button.classList.add("d-none");
+    google.value = "no";
+    resetButton.classList.add("d-none");
+}
+function createWithGoogle() {
+    let form = document.getElementById('createAccountForm');
+    form.action ="/Home/CreateAccountWithGoogle";
+    form.submit();
+}
+function createNormal() {
+    let form = document.getElementById('createAccountForm');
+    form.action = "/Home/Create Account";
+    form.submit();
 }

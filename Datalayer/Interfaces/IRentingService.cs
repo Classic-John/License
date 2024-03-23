@@ -10,7 +10,8 @@ namespace Datalayer.Interfaces
     public interface IRentingService : IService
     {
         public new List<Vehicle> GetItems();
-        public void AddVehicle(Vehicle vehicle);
-        public void RemoveVehicle(Vehicle vehicle);
+        public Task<Vehicle> AddVehicle(Vehicle vehicle);
+        public Task<bool> RemoveVehicle(Vehicle vehicle);
+        public Task<Vehicle> UpdateVehicle(Vehicle vehicle);
     }
 }

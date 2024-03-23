@@ -22,16 +22,13 @@ namespace Relocation_and_booking_services.Controllers
             _serviceWrapper = new(bookingService, furnitureService, jobService, rentingService, transportService, userService, industryUserService, schoolService);
         }
         [Route("Emails")]
-        public async Task<IActionResult> Emails()
-        {
-            ViewBag.Role = GetCurrentRole();
-            return View("EmailList",await _serviceWrapper._userService.GetShorterEmails(CurrentUser.Id.Value));
-        }
+        public IActionResult Emails()
+            => View("EmailList", _serviceWrapper._userService.GetShorterEmails(CurrentUser.Id));
+
 
         [Route("ViewEmail")]
         public IActionResult ViewEmail()
         {
-            ViewBag.Role = GetCurrentRole();
             int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
             byte[]? creatorImage = null;
@@ -42,15 +39,13 @@ namespace Relocation_and_booking_services.Controllers
         [Route("DeleteEmail")]
         public async Task<IActionResult> DeleteEmail()
         {
-            ViewBag.Role = GetCurrentRole();
-            int? emailId = Request.Form.ContainsKey("objectId") ? Convert.ToInt32(Request.Form["objectId"]):Convert.ToInt32(Request.Form["mailId"]);
-            _serviceWrapper._userService.DeleteEmail(emailId.Value);
-            return await Emails();
+            int? emailId = Request.Form.ContainsKey("objectId") ? Convert.ToInt32(Request.Form["objectId"]) : Convert.ToInt32(Request.Form["mailId"]);
+            await _serviceWrapper._userService.DeleteEmail(emailId.Value);
+            return Emails();
         }
         [Route("Forward")]
         public async Task<IActionResult> ForwardMail()
         {
-            ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
             List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
@@ -62,51 +57,46 @@ namespace Relocation_and_booking_services.Controllers
                 User? user = _serviceWrapper._userService.FindUserById(goodId);
                 Email? email = new() { Body = currentEmail.Body, CreatorId = sender.Id, UserId = user.Id, Title = ($"[FORWARD] from {sender.Name}\n" + currentEmail.Title), Date = DateTime.Now };
                 email.AddSenderAddress(currentEmail.GetSenderAddress());
-                _serviceWrapper._userService.AddEmail(email);
+                await _serviceWrapper._userService.AddEmail(email);
             }
-            return await Emails();
+            return Emails();
         }
         [Route("Reply")]
         public async Task<IActionResult> ReplyToMail()
         {
             int? mailId = Convert.ToInt32(Request.Form["mailId"]);
-            ViewBag.Role = GetCurrentRole();
             mailId = mailId == 0 ? 1 : mailId;
             Email? currentEmail = _serviceWrapper._userService.FindEmail(mailId.Value);
             if (_serviceWrapper._userService.FindUserById(currentEmail.UserId.Value) is not User user)
             {
-                return await Emails();
+                return Emails();
             }
             string? newBody = $"\n\n[Reply] from {user.Name}\n with email address:{user.Email}:\n\n {Request.Form["replyBlockData"]}";
-            Email? mail = _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
+            Email? mail = await _serviceWrapper._userService.ModifyEmail(mailId.Value, newBody);
             Email newMail = new() { Body = mail.Body, CreatorId = mail.UserId, UserId = mail.CreatorId, Title = ("[REPLY]\n" + mail.Title), Date = DateTime.Now };
             newMail.AddSenderAddress(mail.GetSenderAddress());
-            _serviceWrapper._userService.AddEmail(newMail);
-            return await Emails();
+            await _serviceWrapper._userService.AddEmail(newMail);
+            return Emails();
         }
         [Route("CreateEmailView")]
-        public IActionResult CreateEmailView()
-        {
-            ViewBag.Role = GetCurrentRole();
-            return View("CreateEmailView", _serviceWrapper._userService.GetUsers());
-        }
+        public IActionResult CreateEmailView() 
+            => View("CreateEmailView", _serviceWrapper._userService.GetUsers());
 
         [Route("SendEmail")]
         public async Task<IActionResult> SendEmail()
         {
-            ViewBag.Role = GetCurrentRole();
             string[] ids = Request.Form["ids"].ToString().Split(",");
             List<int> goodIds = ids.Select(id => Convert.ToInt32(id)).ToList();
-            User? sender = _serviceWrapper._userService.FindUserById(CurrentUser.Id.Value);
+            User? sender = _serviceWrapper._userService.FindUserById(CurrentUser.Id);
             string? title = ($"[SENT] from{sender.Name}\n with email: {sender.Email}\n\n " + Request.Form["title"]);
             string? body = ($"[SENT] from{sender.Name}\n with email: {sender.Email}\n\n " + Request.Form["body"]);
             foreach (int id in goodIds)
             {
                 User? user = _serviceWrapper._userService.FindUserById(id);
-                Email? senderEmail = _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date = DateTime.Now }).Result;
-                senderEmail.AddSenderAddress(sender.Email);
+                Email? senderEmail = await _serviceWrapper._userService.AddEmail(new() { Title = title, Body = body, CreatorId = CurrentUser.Id, UserId = user.Id, Date = DateTime.Now });
+                senderEmail?.AddSenderAddress(sender.Email);
             }
-            return await Emails();
+            return Emails();
         }
 
     }

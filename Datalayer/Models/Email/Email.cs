@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Datalayer.Models.BaseClass;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace Datalayer.Models.Email
 {
-    public class Email
+    public class Email: BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? Id { get; set; } = default;
         public string? Title { get; set; }
         public string? Body { get; set; }
         public int? UserId { get; set; }

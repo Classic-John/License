@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datalayer.Models.Enums;
+using NPOI.OpenXmlFormats.Spreadsheet;
 
 namespace Core.Services
 {
@@ -22,11 +23,13 @@ namespace Core.Services
             => _unitOfWork.IndustryUsers.GetItems();
         public bool IsEmpty()
             => _unitOfWork.IndustryUsers == null;
-        public async void AddIndustryUser(IndustryUser industryUser)
+        public async Task<IndustryUser> AddIndustryUser(IndustryUser industryUser)
             => await _unitOfWork.IndustryUsers.Add(industryUser);
 
-        public async void RemoveIndustryUser(IndustryUser industryUser)
+        public async Task<bool> RemoveIndustryUser(IndustryUser industryUser)
             => await _unitOfWork.IndustryUsers.Delete(industryUser);
+        public async Task<IndustryUser> UpdateIndustryUser(IndustryUser user)
+            => await _unitOfWork.IndustryUsers.Update(user);
         public IndustryUser? FindIndustryUser(int userId)
             => GetIndustryUsers().FirstOrDefault(iUser => iUser.UserId == userId);
         public List<AbstractModel?> GetServiceList(int userId)
@@ -70,8 +73,19 @@ namespace Core.Services
             => GetServiceList(industryUserId).Select(item => (Furniture)item).ToList();
         public List<Transport?> GetTransports(int industryUserId)
             => GetServiceList(industryUserId).Select(item => (Transport)item).ToList();
-        public void ModifyCompanyNameOnOffers(int id, string? companyName)
-            => GetServiceList(id).Select(item => item.CompanyName = companyName).ToList();
-
+        public async Task<bool> DeleteIndustryUser(int id)
+        {
+            IndustryUser user= FindIndustryUser(id);
+            switch(user.ServiceType) 
+            {
+                case 1: await _unitOfWork.Apartments.DeleteAll(GetApartments(id)); break;
+                case 2: await _unitOfWork.Vehicles.DeleteAll(GetVehicles(id)); break;
+                case 3: await _unitOfWork.Jobs.DeleteAll(GetJobs(id)); break;
+                case 4: await _unitOfWork.Furnitures.DeleteAll(GetFurnitureTransports(id)); break;
+                case 5: await _unitOfWork.Transports.DeleteAll(GetTransports(id)); break;
+            }
+            await _unitOfWork.IndustryUsers.Delete(user);
+            return true;
+        }
     }
 }

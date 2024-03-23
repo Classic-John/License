@@ -11,7 +11,8 @@ namespace Datalayer.Interfaces
     public interface IFurnitureService : IService
     {
         public new List<Furniture> GetItems();
-        public void AddFurnitureTransport(Furniture furniture);
-        public void RemoveFurnitureTransport(Furniture furniture);
+        public Task<Furniture> AddFurnitureTransport(Furniture furniture);
+        public Task<bool> RemoveFurnitureTransport(Furniture furniture);
+        public Task<Furniture> UpdateFurniture(Furniture furniture);
     }
 }

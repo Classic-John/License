@@ -21,19 +21,32 @@ namespace Core.Services
             => GetSchools().FindAll(item => item.CreatorId == id);
         public School? FindSchoolService(int id, int schoolId)
             => GetSchoolServices(id).FirstOrDefault(item => item.Id == schoolId);
-        public async void AddSchoolUser(SchoolUser user)
+        public async Task<SchoolUser> AddSchoolUser(SchoolUser user)
             => await _unitOfWork.SchoolUsers.Add(user);
-        public async void AddSchoolItem(School item)
+        public async Task<School> AddSchoolItem(School item)
             => await _unitOfWork.Schools.Add(item);
-        public async void RemoveSchoolUser(SchoolUser user)
+        public async Task<bool> RemoveSchoolUser(SchoolUser user)
             => await _unitOfWork.SchoolUsers.Delete(user);
-        public async void RemoveSchoolService(School item)
+        public async Task<bool> RemoveSchoolService(School item)
             => await _unitOfWork.Schools.Delete(item);
         public List<SchoolUser?> GetSchoolUsers()
             => _unitOfWork.SchoolUsers.GetItems();
         public bool IsEmpty()
             => _unitOfWork.SchoolUsers == null;
         public List<School> GetSchools()
-            =>  _unitOfWork.Schools.GetItems();
+            => _unitOfWork.Schools.GetItems();
+        public async Task<School> UpdateSchool(School school)
+            => await _unitOfWork.Schools.Update(school);
+        public async Task<SchoolUser> UpdateSchoolUser(SchoolUser user)
+            => await _unitOfWork.SchoolUsers.Update(user);
+
+        public async Task<bool> DeleteSchoolUser(int id)
+        {
+            SchoolUser user= FindSchoolUser(id);
+            List<School> services = GetSchoolServices(id);
+            await _unitOfWork.Schools.DeleteAll(services);
+            await _unitOfWork.SchoolUsers.Delete(user);
+            return true;
+        }
     }
 }

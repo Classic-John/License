@@ -11,6 +11,7 @@ namespace Datalayer.Models.Users
 {
     public class SchoolUser : BaseEntity
     {
+        [ForeignKey("User")]
         public int? UserId { get; set; }
         public int? SchoolType { get; set; }
 

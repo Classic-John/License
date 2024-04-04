@@ -12,6 +12,7 @@ namespace Datalayer.Interfaces
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
+        [ForeignKey("User")]
         public int CreatorId { get; set; }
         public int? Price { get; set; }
         public string? Link { get; set; }

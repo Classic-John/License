@@ -30,7 +30,7 @@ namespace Core.Services
         }
         public async void RemoveUser(User user)
         {
-            await _unitOfWork.Emails.DeleteAll(_unitOfWork.Emails.GetItems().Where(email => email.UserId == user.Id).ToList());
+ //           await _unitOfWork.Emails.DeleteAll(_unitOfWork.Emails.GetItems().Where(email => email.UserId == user.Id).ToList());
             await _unitOfWork.Users.Delete(user);
         }
         public async Task<Email?> AddEmail(Email email)
@@ -88,6 +88,11 @@ namespace Core.Services
             return true;
         }
         public User? FindUserByGoogleId(string? googleId)
-            => GetUsers().FirstOrDefault(user => user.GoogleId.Equals(googleId));
+        {
+            List<User> users = GetUsers();
+            if(users ==null || users.Count()<1)
+                return null;
+            return users.FirstOrDefault(user => user.GoogleId.Equals(googleId));
+        }
     }
 }

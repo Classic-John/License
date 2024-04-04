@@ -10,7 +10,6 @@ using static Relocation_and_booking_services.Controllers.HomeController;
 namespace Relocation_and_booking_services.Controllers
 {
     [Route("IndustryUser")]
-    [ValidateAntiForgeryToken]
     public class IndustryUserController : Controller
     {
         private readonly ServiceWrapper _serviceWrapper;

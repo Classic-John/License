@@ -32,8 +32,9 @@ namespace Relocation_and_booking_services.Controllers
             int emailId = Convert.ToInt32(Request.Form["objectId"].ToString());
             Email? selectedEmail = _serviceWrapper._userService.FindEmail(emailId);
             byte[]? creatorImage = null;
-            try { creatorImage = _serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value).ImageData; }
-            catch (Exception) { creatorImage = null; }
+            User? user = _serviceWrapper._userService.FindUserById(selectedEmail.CreatorId.Value);
+            if (user != null)
+                creatorImage = user.ImageData;
             return View("Email", (selectedEmail, _serviceWrapper._userService.GetUsers(), creatorImage));
         }
         [Route("DeleteEmail")]
@@ -79,7 +80,7 @@ namespace Relocation_and_booking_services.Controllers
             return Emails();
         }
         [Route("CreateEmailView")]
-        public IActionResult CreateEmailView() 
+        public IActionResult CreateEmailView()
             => View("CreateEmailView", _serviceWrapper._userService.GetUsers());
 
         [Route("SendEmail")]

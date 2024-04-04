@@ -15,6 +15,7 @@ namespace Datalayer.Models.Email
         public string? Title { get; set; }
         public string? Body { get; set; }
         public int? UserId { get; set; }
+        [ForeignKey("User")]
         public int? CreatorId { get; set; }
         public DateTime? Date { get; set; }
     }

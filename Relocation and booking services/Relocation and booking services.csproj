@@ -28,8 +28,4 @@
     <ProjectReference Include="..\Datalayer\Datalayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="External Services\" />
-  </ItemGroup>
-
 </Project>

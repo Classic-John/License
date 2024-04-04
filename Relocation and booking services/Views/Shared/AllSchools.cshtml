@@ -20,7 +20,7 @@
                     @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <p class="card-text">@ap.Description</p>
-                    <p class="card-text">School Type: @(Model.Item2.First(item => item.UserId==ap.CreatorId).SchoolType)</p>
+                    <p class="card-text">School Type: @(Model.Item2.FirstOrDefault(item => item.UserId==ap.CreatorId).SchoolType)</p>
                     <div class="card-footer">
                         <a class="card-text" href="@ap.Link" target="_blank">Visit</a> 
                     </div>

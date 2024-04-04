@@ -12,6 +12,7 @@ namespace Datalayer.Models.Users
 {
     public class IndustryUser : BaseEntity
     {
+        [ForeignKey("User")]
         public int? UserId { get; set; }
         public string? CompanyName { get; set; }
         public int? ServiceType { get; set; }

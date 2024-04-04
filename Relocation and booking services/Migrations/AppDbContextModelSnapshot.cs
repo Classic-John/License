@@ -22,7 +22,7 @@ namespace Relocation_and_booking_services.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Datalayer.Models.Apartment", b =>
+            modelBuilder.Entity("Datalayer.Interfaces.AbstractModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,6 +38,11 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
@@ -56,7 +61,13 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Apartments");
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("AbstractModel");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("AbstractModel");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Datalayer.Models.Email.Email", b =>
@@ -84,155 +95,9 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Emails");
-                });
-
-            modelBuilder.Entity("Datalayer.Models.Furniture", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Furnitures");
-                });
-
-            modelBuilder.Entity("Datalayer.Models.Job", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Jobs");
-                });
-
-            modelBuilder.Entity("Datalayer.Models.SchoolItem.School", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Schools");
-                });
-
-            modelBuilder.Entity("Datalayer.Models.Transport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Transports");
                 });
 
             modelBuilder.Entity("Datalayer.Models.Users.IndustryUser", b =>
@@ -254,6 +119,8 @@ namespace Relocation_and_booking_services.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("IndustryUsers");
                 });
 
@@ -272,6 +139,8 @@ namespace Relocation_and_booking_services.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SchoolsUser");
                 });
@@ -316,41 +185,79 @@ namespace Relocation_and_booking_services.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Datalayer.Models.Apartment", b =>
+                {
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
+
+                    b.HasDiscriminator().HasValue("Apartment");
+                });
+
+            modelBuilder.Entity("Datalayer.Models.Furniture", b =>
+                {
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
+
+                    b.HasDiscriminator().HasValue("Furniture");
+                });
+
+            modelBuilder.Entity("Datalayer.Models.Job", b =>
+                {
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
+
+                    b.HasDiscriminator().HasValue("Job");
+                });
+
+            modelBuilder.Entity("Datalayer.Models.SchoolItem.School", b =>
+                {
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
+
+                    b.HasDiscriminator().HasValue("School");
+                });
+
+            modelBuilder.Entity("Datalayer.Models.Transport", b =>
+                {
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
+
+                    b.HasDiscriminator().HasValue("Transport");
+                });
+
             modelBuilder.Entity("Datalayer.Models.Vehicle", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasBaseType("Datalayer.Interfaces.AbstractModel");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.HasDiscriminator().HasValue("Vehicle");
+                });
 
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
+            modelBuilder.Entity("Datalayer.Interfaces.AbstractModel", b =>
+                {
+                    b.HasOne("Datalayer.Models.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
+            modelBuilder.Entity("Datalayer.Models.Email.Email", b =>
+                {
+                    b.HasOne("Datalayer.Models.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity("Datalayer.Models.Users.IndustryUser", b =>
+                {
+                    b.HasOne("Datalayer.Models.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vehicles");
+            modelBuilder.Entity("Datalayer.Models.Users.SchoolUser", b =>
+                {
+                    b.HasOne("Datalayer.Models.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

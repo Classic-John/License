@@ -22,6 +22,9 @@ namespace Relocation_and_booking_services.Controllers
         private readonly ServiceWrapper _serviceWrapper;
         private readonly IHttpClientFactory _httpClientFactory;
         public static User CurrentUser { get; set; }
+        private IndustryUser? IndustryUser { get; set; }
+        private SchoolUser? SchoolUser { get; set; }
+        private bool FromLogin { get; set; } = false;
         public HomeController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
             IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService, IHttpClientFactory httpClientFactory)
         {
@@ -78,6 +81,8 @@ namespace Relocation_and_booking_services.Controllers
             if (HttpContext.User.Identity.IsAuthenticated)
                 await HttpContext.SignOutAsync();
             CurrentUser = null;
+            IndustryUser = null;
+            SchoolUser = null;
             return View("Homepage");
         }
         [Route("KeepPicture")]
@@ -113,6 +118,7 @@ namespace Relocation_and_booking_services.Controllers
                 Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", "")),
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword(Request.Form["password"], 14),
                 ImageData = await ConvertImageToBytes(Request.Form.Files["photo"]),
+                GoogleId=default
             });
             if (role == (int)Roles.IndustryUser)
                 await _serviceWrapper._industryUserService.AddIndustryUser(new()
@@ -139,29 +145,33 @@ namespace Relocation_and_booking_services.Controllers
             {
                 Role = Enum.GetNames(typeof(Roles))[Convert.ToInt32(role)],
                 Gender = Convert.ToInt32(Request.Form["gender"]),
-                Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", "")),
+                Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", ""))
             };
             if (role == (int)Roles.IndustryUser)
-                await _serviceWrapper._industryUserService.AddIndustryUser(new()
+                IndustryUser = new()
                 {
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id,
                     CompanyName = Request.Form["Company"].ToString(),
                     ServiceType = Convert.ToInt32(Request.Form["serviceType"])
-                });
+                };
             if (role == (int)Roles.SchoolUser)
             {
-                await _serviceWrapper._schoolService.AddSchoolUser(new()
+                SchoolUser = new()
                 {
                     SchoolType = Convert.ToInt32(Request.Form["schoolType"]),
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id
-                });
+                };
             }
+            FromLogin = true;
             await GoogleLogin();
         }
         [Route("google-login")]
         [AllowAnonymous]
         public async Task GoogleLogin()
-            => await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new() { RedirectUri = Url.Action("GoogleResponse") });
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new() { RedirectUri = Url.Action("GoogleResponse") });
+            FromLogin = true;
+        }
 
         private async Task<Stream> GetImageStreamAsync(string imageUrl)
         {
@@ -187,12 +197,14 @@ namespace Relocation_and_booking_services.Controllers
             User? user = _serviceWrapper._userService.FindUserByGoogleId(googleId);
             if (user == null)
             {
+                if (FromLogin)
+                    return View("Failed");
                 string? email = claims.FirstOrDefault(claim => claim.Type.Equals("email")).Value;
                 string? name = claims.FirstOrDefault(claim => claim.Type.Equals("name")).Value;
                 string? picture = claims.FirstOrDefault(claim => claim.Type.Equals("picture")).Value;
                 CurrentUser.Email = email;
                 CurrentUser.Name = name;
-                CurrentUser.GoogleId= googleId;
+                CurrentUser.GoogleId = googleId;
                 CurrentUser.SelfDescription = "";
                 CurrentUser.Password = "";
                 Stream stream = await GetImageStreamAsync(picture);
@@ -202,9 +214,16 @@ namespace Relocation_and_booking_services.Controllers
                     CurrentUser.ImageData = memoryStream.ToArray();
                 }
                 await _serviceWrapper._userService.AddUser(CurrentUser);
+                if (IndustryUser != null)
+                    await _serviceWrapper._industryUserService.AddIndustryUser(IndustryUser);
+                if (SchoolUser != null)
+                    await _serviceWrapper._schoolService.AddSchoolUser(SchoolUser);
+                IndustryUser = null;
+                SchoolUser = null;
             }
             else
                 CurrentUser = user;
+            FromLogin = false;
             return ViewSelection(GetCurrentRole());
         }
         [Route("DeleteAccount")]
@@ -219,7 +238,7 @@ namespace Relocation_and_booking_services.Controllers
             else if (found.Role.Equals("SchoolUser"))
                 await _serviceWrapper._schoolService.DeleteSchoolUser(id);
             await _serviceWrapper._userService.DeleteUser(id);
-            return View("Homepage");
+            return await Logout();
         }
         [Route("About Us")]
         [AllowAnonymous]

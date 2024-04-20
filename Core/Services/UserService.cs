@@ -94,5 +94,9 @@ namespace Core.Services
                 return null;
             return users.FirstOrDefault(user => user.GoogleId.Equals(googleId));
         }
+
+        public List<Email> GetNumberOfNewEmails(int id)
+           => GetEmails(id).Where(email => email.Opened==false).ToList();
+        
     }
 }

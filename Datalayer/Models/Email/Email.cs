@@ -18,6 +18,7 @@ namespace Datalayer.Models.Email
         [ForeignKey("User")]
         public int? CreatorId { get; set; }
         public DateTime? Date { get; set; }
+        public bool Opened { get; set; }
     }
     public static class EmailExtensions
     {

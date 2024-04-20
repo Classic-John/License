@@ -17,7 +17,6 @@
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
-                    @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <p class="card-text">@ap.Description</p>
                     <p class="card-text">Company @(Model.Item2.First(item => item.UserId == ap.CreatorId).CompanyName)</p>
@@ -28,9 +27,7 @@
                 </div>
                 <div class="card-footer">
                     <blockquote class="blockquote">
-                        Posted on: @ap.Date?.ToString("dd/MM/yyyy");
-                        <br />
-                        At @ap.Date?.ToString("hh/mm/ss");
+                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
                     </blockquote>
                     <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('bookingForm'),'@ap.CreatorId')">Reserve</button>
                 </div>

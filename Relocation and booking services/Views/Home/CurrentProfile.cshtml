@@ -1,14 +1,19 @@
-﻿@model (User,IndustryUser?,SchoolUser?);
+﻿@model (User,IndustryUser?,SchoolUser?,string?);
+
+@if(Model.Item4!=null)
+{
+    await Html.RenderPartialAsync("Failed",Model.Item4);
+}
 
 <form asp-controller="Home" asp-action="ModifyProfile" method="post" id="profileForm" enctype="multipart/form-data">
-    <div class="card p-5"
+    <div class="card p-5">
         <div class="card-header d-flex justify-content-center">
             <img src="@(Model.Item1.ImageData==null? "/default.jpg":"data:image/jpg;base64,"+Convert.ToBase64String(Model.Item1.ImageData))" id="currentImage" name="currentImage" width="50" height="50" />
         </div>
         <div class="card-body">
             <div class="vstack w-100">
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Name" class="form-control" id="userName" placeholder="Name" data-section="section" name="name" disabled />
+                    <input type="text" value="@Model.Item1.Name" class="form-control" id="userName" placeholder="Name" data-section="section" name="name" disabled required />
                     <label class="form-label" for="userName">Name</label>
                 </div>
                 <div class="form-floating @(Model.Item2==null? "d-none":"")">
@@ -16,19 +21,31 @@
                     <label class="form-label" for="companyName">Company Name</label>
                 </div>
                 <div class="form-floating @(Model.Item2==null? "d-none":"")">
-                    <input type="text" value="@(Model.Item2==null? " ":Enum.GetNames(typeof(ServiceTypes))[Model.Item2.ServiceType.Value-1])" class="@(Model.Item2!=null?" form-control":"d-none")" id="serviceType" placeholder="Service Type" data-section="section" name="serviceType" disabled />
+                    <input type="text" list="serviceList" value="@(Model.Item2==null? " ":Enum.GetNames(typeof(ServiceTypes))[Model.Item2.ServiceType.Value-1])" @(Model.Item2 == null ? "" : "required") class="@(Model.Item2 != null ? " form-control" : "d-none")" id="serviceType" placeholder="Service Type" data-section="section" name="serviceType" disabled /> />
+                    <datalist id="serviceList">
+                        @foreach (string service in Enum.GetNames(typeof(ServiceTypes)))
+                        {
+                            <option value=@service>@service</option>
+                        }
+                    </datalist>
                     <label class="form-label" for="serviceType">Service Type</label>
                 </div>
                 <div class="form-floating @(Model.Item3==null? "d-none":"")">
-                    <input type="text" value="@(Model.Item3==null? " ":Enum.GetNames(typeof(ServiceTypes))[Model.Item3.SchoolType.Value-1])" class="@(Model.Item3!=null?" form-control":"d-none")" id="schoolType" placeholder="School Type" data-section="section" name="schoolType" disabled />
+                    <input type="text" list="schoolList" value="@(Model.Item3==null? " ":Enum.GetNames(typeof(SchoolTypes))[Model.Item3.SchoolType.Value-1])" @(Model.Item3 == null ? "" : "required") class="@(Model.Item3 != null ? " form-control" : "d-none")" id="schoolType" placeholder="School Type" data-section="section" name="schoolType" disabled />
+                    <datalist id="schoolList">
+                        @foreach (string school in Enum.GetNames(typeof(SchoolTypes)))
+                        {
+                            <option value=@school>@school</option>
+                        }
+                    </datalist>
                     <label class="form-label" for="schoolType">School Type</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Email" class="form-control" id="email1" placeholder="Email" data-section="section" name="email" disabled />
+                    <input type="text" value="@Model.Item1.Email" class="form-control" id="email1" placeholder="Email" data-section="section" name="email" disabled required />
                     <label class="form-label" for="email1">Email</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" value="@Model.Item1.Phone" class="form-control" id="phone1" placeholder="Phone" data-section="section" name="phone" disabled />
+                    <input type="text" value="@Model.Item1.Phone" class="form-control" id="phone1" placeholder="Phone" data-section="section" name="phone" disabled required />
                     <label class="form-label" for="phone1">Phone</label>
                 </div>
                 <div class="form-floating">
@@ -41,14 +58,14 @@
                     </textarea>
                     <label class="form-label" for="details1">Self Description</label>
                 </div>
-                <input type="file" id="newImageUpload" accept="image/*" name="newPhoto" data-section="section" onchange="uploadImage('newImageUpload','currentImage')" placeholder="Upload new photo" disabled/>
+                <input type="file" id="newImageUpload" accept="image/*" name="newPhoto" data-section="section" onchange="uploadImage('newImageUpload','currentImage')" placeholder="Upload new photo" disabled />
             </div>
         </div>
         <div class="card-footer">
             <p></p>
             <button class="btn btn-outline-warning" id="update1" onclick="enableSections()" type="button">Update</button>
             <button class="btn btn-outline-success d-none" type="submit" id="submit1">Submit update</button>
-            <button class="btn btn-outline-danger d-none" type="button" onclick="SendAccountDelete()"id="deleteAccount">Delete Account</button>
+            <button class="btn btn-outline-danger d-none" type="button" onclick="SendAccountDelete()" id="deleteAccount">Delete Account</button>
         </div>
     </div>
 </form>

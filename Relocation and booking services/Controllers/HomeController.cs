@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using static System.Net.WebRequestMethods;
 using Microsoft.AspNetCore.Http.Features;
 using System.Net.Http;
+using System.Linq;
 namespace Relocation_and_booking_services.Controllers
 {
     [Route("Home")]
@@ -24,7 +25,7 @@ namespace Relocation_and_booking_services.Controllers
         public static User CurrentUser { get; set; }
         private IndustryUser? IndustryUser { get; set; }
         private SchoolUser? SchoolUser { get; set; }
-        private bool FromLogin { get; set; } = false;
+        private static bool FromLogin { get; set; } = true;
         public HomeController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
             IUserService userService, IIndustryUserService industryUserService, ISchoolService schoolService, IHttpClientFactory httpClientFactory)
         {
@@ -40,39 +41,39 @@ namespace Relocation_and_booking_services.Controllers
             {
                 case (int)Roles.User: return RedirectToAction("UserHome", "User");
                 case (int)Roles.IndustryUser: return RedirectToAction("IndustryUserHome", "IndustryUser");
-                case (int)Roles.SchoolUser: return RedirectToAction("SchoolServices", "School");
+                case (int)Roles.SchoolUser: return RedirectToAction("SchoolUserView", "School");
                 default: break;
             }
-            return View("Homepage");
+            return Homepage("Failed to load your user type view. Sending you back to the homepage.", Convert.ToBoolean(MessageType.Bad));
         }
         [Route("/")]
         [Route("Homepage")]
         [AllowAnonymous]
-        public IActionResult Homepage()
-            => View("Homepage");
+        public IActionResult Homepage(string? message = null, bool messageType = false)
+            => View("Homepage", (message, messageType));
 
-        //FINISH LOG IN ASWELL
         [Route("Log in")]
         [AllowAnonymous]
         public IActionResult LogIn()
         {
             string name = Request.Form["Name"];
             string password = Request.Form["Password"];
-            CurrentUser = _serviceWrapper._userService.FindUserByName(name);
-            if (CurrentUser == null)
-                return View("Failed");
-            bool result = BCrypt.Net.BCrypt.EnhancedVerify(password, CurrentUser.Password);
+            User? user = _serviceWrapper._userService.FindUserByName(name);
+            if (user == null || user.Password.IsNullOrEmpty() || password.IsNullOrEmpty())
+                return View("Failed", "Invalid user, please try again");
+            bool result = BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password);
             if (!result)
-                return View("Failed");
+                return View("Failed", "Wrong password, please try again");
             int userType = 0;
             foreach (Roles item in Enum.GetValues(typeof(Roles)))
             {
-                if (Enum.GetName(item).Equals(CurrentUser.Role))
+                if (Enum.GetName(item).Equals(user.Role))
                 {
                     userType = (int)item;
                     break;
                 }
             }
+            CurrentUser = user;
             return ViewSelection(userType);
         }
         [Route("Sign out")]
@@ -83,7 +84,7 @@ namespace Relocation_and_booking_services.Controllers
             CurrentUser = null;
             IndustryUser = null;
             SchoolUser = null;
-            return View("Homepage");
+            return Homepage("You have logged out successfully", Convert.ToBoolean(MessageType.Good));
         }
         [Route("KeepPicture")]
         public string KeepPicture()
@@ -101,14 +102,15 @@ namespace Relocation_and_booking_services.Controllers
             return null;
         }
 
-        //Finish Create Account
         [Route("Create Account")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAccount()
         {
             int role = Convert.ToInt32(Request.Form["Option"]);
             if (_serviceWrapper._userService.FindUserByName(Request.Form["name"]) != null)
-                return View("Failed");
+                return View("Failed", "Error, user already exists.");
+            if (Request.Form["Email"].IsNullOrEmpty() || Request.Form["password"].IsNullOrEmpty())
+                return View("Failed", "Error, no email or password added.");
             CurrentUser = await _serviceWrapper._userService.AddUser(new()
             {
                 Name = Request.Form["Name"],
@@ -118,7 +120,8 @@ namespace Relocation_and_booking_services.Controllers
                 Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", "")),
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword(Request.Form["password"], 14),
                 ImageData = await ConvertImageToBytes(Request.Form.Files["photo"]),
-                GoogleId=default
+                SelfDescription="",
+                GoogleId = "",
             });
             if (role == (int)Roles.IndustryUser)
                 await _serviceWrapper._industryUserService.AddIndustryUser(new()
@@ -145,7 +148,8 @@ namespace Relocation_and_booking_services.Controllers
             {
                 Role = Enum.GetNames(typeof(Roles))[Convert.ToInt32(role)],
                 Gender = Convert.ToInt32(Request.Form["gender"]),
-                Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", ""))
+                Phone = ConvertNumber(Request.Form["Phone"].ToString().Replace(" ", "")),
+                SelfDescription="",
             };
             if (role == (int)Roles.IndustryUser)
                 IndustryUser = new()
@@ -162,16 +166,14 @@ namespace Relocation_and_booking_services.Controllers
                     UserId = _serviceWrapper._userService.GetUsers().Last().Id
                 };
             }
-            FromLogin = true;
+            FromLogin = false;
             await GoogleLogin();
         }
         [Route("google-login")]
         [AllowAnonymous]
         public async Task GoogleLogin()
-        {
-            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new() { RedirectUri = Url.Action("GoogleResponse") });
-            FromLogin = true;
-        }
+           => await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new() { RedirectUri = Url.Action("GoogleResponse") });
+
 
         private async Task<Stream> GetImageStreamAsync(string imageUrl)
         {
@@ -198,7 +200,7 @@ namespace Relocation_and_booking_services.Controllers
             if (user == null)
             {
                 if (FromLogin)
-                    return View("Failed");
+                    return View("Failed", "You don't have a google account added in your user profile.");
                 string? email = claims.FirstOrDefault(claim => claim.Type.Equals("email")).Value;
                 string? name = claims.FirstOrDefault(claim => claim.Type.Equals("name")).Value;
                 string? picture = claims.FirstOrDefault(claim => claim.Type.Equals("picture")).Value;
@@ -221,9 +223,11 @@ namespace Relocation_and_booking_services.Controllers
                 IndustryUser = null;
                 SchoolUser = null;
             }
+            else if (!FromLogin)
+                return View("Failed", "There's a user already using this google account on the platform, please use another google account or register normally.");
             else
                 CurrentUser = user;
-            FromLogin = false;
+            FromLogin = true;
             return ViewSelection(GetCurrentRole());
         }
         [Route("DeleteAccount")]
@@ -232,7 +236,7 @@ namespace Relocation_and_booking_services.Controllers
             int id = CurrentUser.Id;
             User? user = _serviceWrapper._userService.FindUserById(id);
             if (user is not User found)
-                return View("Failed");
+                return View("Failed", "User doesn't exist.");
             if (found.Role.Equals("IndustryUser"))
                 await _serviceWrapper._industryUserService.DeleteIndustryUser(id);
             else if (found.Role.Equals("SchoolUser"))
@@ -270,14 +274,14 @@ namespace Relocation_and_booking_services.Controllers
             => View("AllSchools", (_serviceWrapper._schoolService.GetSchools(), _serviceWrapper._schoolService.GetSchoolUsers()));
 
         [Route("Profile")]
-        public IActionResult Profile()
+        public IActionResult Profile(string? message=null)
         {
             if (CurrentUser == null)
-                return View("Failed");
+                return View("Failed", "You're not logged in yet. Only logged users can view their profiles.");
             User user = _serviceWrapper._userService.FindUserById(CurrentUser.Id);
             IndustryUser? industryUser = _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id);
             SchoolUser schoolUser = _serviceWrapper._schoolService.FindSchoolUser(CurrentUser.Id);
-            return View("CurrentProfile", (user, industryUser, schoolUser));
+            return View("CurrentProfile", (user, industryUser, schoolUser,message));
         }
         public async Task<IActionResult> ModifyProfile()
         {
@@ -286,18 +290,20 @@ namespace Relocation_and_booking_services.Controllers
             long? phone = ConvertNumber(Request.Form["phone"].ToString().Replace(" ", ""));
             string? gender = Request.Form["gender"];
             string? description = Request.Form["description"];
-            byte[]? newImage = await ConvertImageToBytes(Request.Form.Files["newPhoto"]);
+            byte[]? newImage = Request.Form.Files.Count() <1 ? CurrentUser.ImageData:await ConvertImageToBytes(Request.Form.Files["newPhoto"]);
             await _serviceWrapper._userService.UpdateUser(CurrentUser.Id, name, email, phone, gender, description, newImage);
             if (CurrentUser.Role.Equals("IndustryUser"))
             {
                 string? companyName = Request.Form["companyName"];
-                int? serviceType = 1;
+                int? serviceType = 0;
                 foreach (int service in Enum.GetValues(typeof(ServiceTypes)))
                     if (nameof(service).Equals(Request.Form["serviceType"]))
                     {
                         serviceType = service;
                         break;
                     }
+                if (serviceType == 0)
+                    return Profile("Invalid service type. Please select the available services only.");
                 IndustryUser user = _serviceWrapper._industryUserService.FindIndustryUser(CurrentUser.Id);
                 user.CompanyName = companyName;
                 user.ServiceType = serviceType;
@@ -305,12 +311,21 @@ namespace Relocation_and_booking_services.Controllers
             }
             else if (CurrentUser.Role.Equals("SchoolUser"))
             {
-                int? schooType = Convert.ToInt32(Request.Form["schoolType"]);
+                string? schoolType = Request.Form["schoolType"];
+                int? acceptedType = 0;
+                foreach(int school in Enum.GetValues(typeof(SchoolTypes)))
+                    if(nameof(school).Equals(schoolType))
+                    {
+                        acceptedType = school;
+                        break;
+                    }
+                if (acceptedType == 0)
+                    return Profile("Invalid school type. Please select the available school types only.");
                 SchoolUser user = _serviceWrapper._schoolService.FindSchoolUser(CurrentUser.Id);
-                user.SchoolType = schooType;
+                user.SchoolType = acceptedType;
                 await _serviceWrapper._schoolService.UpdateSchoolUser(user);
             }
-            return View("Homepage");
+            return Homepage("Profile updated.",Convert.ToBoolean(MessageType.Good));
         }
 
         [Route("GetRole")]

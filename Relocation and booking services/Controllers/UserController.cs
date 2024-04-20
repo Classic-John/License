@@ -16,7 +16,6 @@ namespace Relocation_and_booking_services.Controllers
     {
         private readonly ServiceWrapper _serviceWrapper;
         private static List<int> ChosenServices = new();
-        private static string CityOfOrigin { get; set; }
         private static string Destination { get; set; }
         public UserController(IBookingService bookingService, IFurnitureService furnitureService, IJobService jobService, IRentingService rentingService, ITransportService transportService,
             IUserService userService, IIndustryUserService industryUserService,ISchoolService schoolService)
@@ -25,10 +24,8 @@ namespace Relocation_and_booking_services.Controllers
         }
         [Route("user home")]
         public IActionResult UserHome() 
-            => View("UserView");
+            => View("UserView",$"Welcome {CurrentUser.Name} , you have logged as an user.");
         #region Iservice
-        private bool ServiceAvailable(IService service)
-            => service.GetCompanyNames().Contains(CityOfOrigin) || service.GetCompanyNames().Contains(Destination);
         private List<AbstractModel> FilterItems(IService service)
             => service.GetItems().Where(item => item.Location.Equals(Destination)).ToList();
         private AbstractModel? GetItem(IService service, int itemId)
@@ -47,8 +44,8 @@ namespace Relocation_and_booking_services.Controllers
         [Route("selected service")]
         public IActionResult ChosenService()
         {
-            if (ChosenServices.Count == 0) 
-                return View("Success");
+            if (ChosenServices.Count == 0)
+                View("Success", "You have finished your selected offer pages. Their creators have been notified that you are interested in their offers through an automatic email");
             try
             {
                 switch (ChosenServices[0])
@@ -80,13 +77,12 @@ namespace Relocation_and_booking_services.Controllers
 
                 }
             }
-            catch { return View("Failed"); }
-            return View("Success");
+            catch { return View("Failed","Failed to load the next offer page"); }
+            return View("Success","You have finished your selected offer pages. Their creators have been notified that you are interested in their offers through an automatic email");
         }
         [Route("selected companies offers")]
         public IActionResult PersonalizedOffers()
         {
-            CityOfOrigin = Request.Form["origin"].ToString();
             Destination = Request.Form["target"].ToString();
             foreach (string option in Request.Form.Keys)
             {
@@ -111,6 +107,7 @@ namespace Relocation_and_booking_services.Controllers
             Email? industryEmail = EmailTexts.IndustryUserReceivedEmail(CurrentUser.Name, serviceType, personId, CurrentUser.Phone.Value,CurrentUser.Id);
             if (industryEmail == null)
                 return false;
+            industryEmail.Opened = false;
            await _serviceWrapper._userService.AddEmail(industryEmail);
             return true;
         }
@@ -126,7 +123,7 @@ namespace Relocation_and_booking_services.Controllers
                 return false;
             Email? schoolEmail = new() {
                 Title = $"{actualUser.Name} applied to your school service", Body=$"{actualUser.Name} requests a place either for himself or his children at {item.Name}\n.Here is his phone: {actualUser.Password} and email: {actualUser.Email}"
-                , Date=DateTime.Now, UserId=userId 
+                , Date=DateTime.Now, UserId=userId , Opened=false, CreatorId=-1
             };
             await _serviceWrapper._userService.AddEmail(schoolEmail);
             return true;
@@ -137,7 +134,7 @@ namespace Relocation_and_booking_services.Controllers
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendEmail(industryUserId, apartmentId, _serviceWrapper._bookingService, "Booking");
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed","Apply failed, please try again.");
         }
         [Route("Renting")]
         public async Task<IActionResult> Renting()
@@ -145,7 +142,7 @@ namespace Relocation_and_booking_services.Controllers
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int rentingId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendEmail(industryUserId, rentingId, _serviceWrapper._rentingService, "Renting");
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed", "Apply failed, please try again.");
         }
         [Route("ChosenJob")]
         public async Task<IActionResult> FoundJob()
@@ -153,7 +150,7 @@ namespace Relocation_and_booking_services.Controllers
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int jobId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendEmail(industryUserId, jobId, _serviceWrapper._jobService, "Job Hunting");
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed", "Apply failed, please try again.");
         }
         [Route("Movers")]
         public async Task<IActionResult> Movers()
@@ -161,7 +158,7 @@ namespace Relocation_and_booking_services.Controllers
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int furnitureId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendEmail(industryUserId, furnitureId, _serviceWrapper._furnitureService, "Furniture");
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed", "Apply failed, please try again.");
         }
         [Route("Travel")]
         public async Task<IActionResult> Transport()
@@ -169,7 +166,7 @@ namespace Relocation_and_booking_services.Controllers
             int industryUserId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int apartmentId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendEmail(industryUserId, apartmentId, _serviceWrapper._transportService, "Travel");
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed", "Apply failed, please try again.");
         }
         [Route("ChosenSchool")]
         public async Task<IActionResult> ChosenSchool()
@@ -177,7 +174,7 @@ namespace Relocation_and_booking_services.Controllers
             int userId = Convert.ToInt32(Request.Form["optionalId"].ToString());
             int objectId = Convert.ToInt32(Request.Form["objectId"]);
             bool sent = await SendSchoolEmail(userId, objectId, _serviceWrapper._schoolService);
-            return sent ? ChosenService() : View("Failed");
+            return sent ? ChosenService() : View("Failed", "Apply failed, please try again.");
         }
     }
 }

@@ -12,9 +12,7 @@
         </div>
         <div class="card-footer">
             <blockquote class="blockquote">
-                Posted at @Model.Item1.Date?.ToString("dd/MM/yyyy");
-                <br />
-                At @Model.Item1.Date?.ToString("hh/mm/ss");
+                Posted at @Model.Item1.Date?.ToString("dd.MM.yyyy HH:mm");
             </blockquote>
             <button type="button" id="replyButton" class="btn btn-outline-primary" onclick="openReply()">Reply</button>
             <button type="button" class="btn btn-outline-warning" id="forwardButton" onclick="openForward()">Forward</button>

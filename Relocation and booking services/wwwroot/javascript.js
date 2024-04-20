@@ -10,6 +10,19 @@
     }
 }
 
+async function getNewEmails() {
+    try {
+        const response = await fetch('/Email/NewEmailsNumber');
+        const data = await response.json();
+        document.getElementById('userNewEmailNumber').textContent = data;
+        document.getElementById('industryUserNewEmailNumber').textContent = data;
+        document.getElementById('schoolUserNewEmailNumber').textContent = data;
+    }
+    catch (error) {
+        console.error("Failed to load the number of new emails", error);
+    }
+}
+
 async function loggedUser() {
     let option = getTheRole()
     option = await getTheRole(option);
@@ -76,6 +89,7 @@ async function loggedUser() {
             break;
     }
     KeepPicture();
+    getNewEmails();
 }
 
 function employeerButton() {
@@ -191,14 +205,16 @@ function addToIds() {
     email.value = "";
 }
 function addForward() {
-    addToEmails();
+    if (addToEmails() == false) {
+        return;
+    }
     addToIds();
 }
 function addToEmails() {
     let emails = document.getElementById('emails');
     let email = document.getElementById("forwardCommand");
     if (emails.value.includes(email.value)) {
-        return;
+        return false;
     }
     emails.value += (" " + email.value);
 }

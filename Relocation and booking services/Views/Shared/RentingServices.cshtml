@@ -17,7 +17,6 @@
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
-                    @Html.AntiForgeryToken();
                     <input class="form-control" type="text" value="@ap.CreatorId" name="vehicleCreatorId" hidden />
                     <input class="form-control" type="text" value="@ap.Id" name="vehicleId" hidden />
                     <h4 class="card-title">@ap.Name</h4>
@@ -29,6 +28,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
+                    <blockquote class="blockquote">
+                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
+                    </blockquote>
                     <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('rentingForm'),'@ap.CreatorId')">Reserve</button>
                 </div>
             </div>

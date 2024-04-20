@@ -1,1 +1,9 @@
-﻿<h1 class="d-flex justify-content-center p-5">Welcome to Reallocation platform</h1>
+﻿@model (string?,bool)
+
+@if(Model.Item1!=null)
+{
+    if (Model.Item2 == true)
+        await Html.RenderPartialAsync("Success", Model.Item1);
+    else
+        await Html.RenderPartialAsync("Failed", Model.Item1);
+}

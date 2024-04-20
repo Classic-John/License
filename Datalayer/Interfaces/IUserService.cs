@@ -25,5 +25,6 @@ namespace Datalayer.Interfaces
         public User? FindUserByName(string? name);
         public Task<bool> DeleteUser(int id);
         public User? FindUserByGoogleId(string? googleId);
+        public List<Email> GetNumberOfNewEmails(int id);
     }
 }

@@ -17,7 +17,6 @@
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
                 <div class="card-body">
-                    @Html.AntiForgeryToken();
                     <h4 class="card-title">@ap.Name</h4>
                     <input class="form-control" type="text" value="@ap.CreatorId" name="jobCreatorId" hidden />
                     <input class="form-control" type="text" value="@ap.Id" name="jobId" hidden />
@@ -30,9 +29,7 @@
                 </div>
                 <div class="card-footer">
                     <blockquote class="blockquote">
-                        Posted on: @ap.Date?.ToString("dd/MM/yyyy");
-                        <br />
-                        At @ap.Date?.ToString("hh/mm/ss");
+                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
                     </blockquote>
                     <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('jobForm'),'@ap.CreatorId')">Apply</button>
                 </div>

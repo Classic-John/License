@@ -29,12 +29,9 @@
                         <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
                     </div>
                 </div>
-                @Html.AntiForgeryToken();
                 <div class="card-footer">
                     <blockquote class="blockquote">
-                        Posted on: @ap.Date?.ToString("dd/MM/yyyy");
-                        <br />
-                        At @ap.Date?.ToString("hh/mm/ss");
+                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
                     </blockquote>
                     <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('furnitureForm'),'@ap.CreatorId')">
                         Reserve

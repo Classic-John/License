@@ -21,10 +21,10 @@ namespace Relocation_and_booking_services.Controllers
 
         [Route("Industry User View")]
         public IActionResult IndustryUserHome() 
-            => View("IndustryUserView");
+            => View("IndustryUserView",$"Welcome {CurrentUser.Name},you have logged as an industry user.");
         [Route("Service List")]
-        public IActionResult ServiceList() 
-            => View("PersonalServiceList", (_serviceWrapper._industryUserService.GetServiceList(CurrentUser.Id), _serviceWrapper._industryUserService.GetIndustryUsers()));
+        public IActionResult ServiceList(string? message=null) 
+            => View("PersonalServiceList", (_serviceWrapper._industryUserService.GetServiceList(CurrentUser.Id), _serviceWrapper._industryUserService.GetIndustryUsers(),message));
 
         [Route("Delete")]
         public async Task<IActionResult> Delete()
@@ -50,7 +50,7 @@ namespace Relocation_and_booking_services.Controllers
                     await _serviceWrapper._transportService.RemoveTransport((Transport)_serviceWrapper._industryUserService.GetItem(creatorId.Value, itemId.Value));
                     break;
             }
-            return ServiceList();
+            return ServiceList("Service deleted.");
         }
         [Route("UpdateOffer")]
         public async Task<IActionResult> UpdateOffer()
@@ -83,7 +83,7 @@ namespace Relocation_and_booking_services.Controllers
                     await _serviceWrapper._transportService.UpdateTransport((Transport)item);
                     break;
             }
-            return ServiceList();
+            return ServiceList("Service updated.");
 
         }
         [Route("AddOffer")]
@@ -115,7 +115,7 @@ namespace Relocation_and_booking_services.Controllers
                     await _serviceWrapper._transportService.AddTransport(new() { CreatorId = user.UserId.Value, Description = description, Link = link, Name = title, Price = price, Location = location, Image = newImage, Date = DateTime.Now });
                     break;
             }
-            return ServiceList();
+            return ServiceList($"New service added to your list: {title}");
         }
     }
 }

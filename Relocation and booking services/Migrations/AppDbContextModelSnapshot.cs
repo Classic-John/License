@@ -87,6 +87,9 @@ namespace Relocation_and_booking_services.Migrations
                     b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Opened")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 

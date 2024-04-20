@@ -1,5 +1,9 @@
-﻿@model (List<AbstractModel?>,List<IndustryUser>)
+﻿@model (List<AbstractModel?>,List<IndustryUser>,string?)
 
+@if(Model.Item3!=null)
+{
+    await Html.RenderPartialAsync("Success", Model.Item3);
+}
 
 <button class="btn btn-primary p-5" type="button" data-bs-toggle="modal" data-bs-target="#addModal">Add Offer</button>
 
@@ -10,7 +14,6 @@
             <div class="card">
                 <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(item.Image))" class="card-img-top" />
                 <div class="card-body">
-                    @Html.AntiForgeryToken();
                     <input class="form-control" type="text" value="@item.CreatorId" name="itemCreatorId" hidden />
                     <input class="form-control" type="text" value="@item.Id" name="itemId" hidden />
                     <h4 class="card-title">@item.Name</h4>

@@ -62,6 +62,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Nob29sXFBlcnNvbmFsU2Nob29sTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/School/SchoolUserView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Nob29sXFNjaG9vbFVzZXJWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/AllFurnitureTransports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEFsbEZ1cm5pdHVyZVRyYW5zcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -94,16 +98,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFJlbnRpbmdTZXJ2aWNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/Success.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFN1Y2Nlc3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/Shared/UserView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFVzZXJWaWV3LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/User/Relocation.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxSZWxvY2F0aW9uLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/User/Success.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxTdWNjZXNzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Desktop/Facultate/Anul 3/Licenta/Relocation and booking services/Relocation and booking services/Views/_ViewImports.cshtml]

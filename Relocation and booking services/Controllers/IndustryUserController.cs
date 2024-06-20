@@ -7,9 +7,12 @@ using NPOI.XWPF.UserModel;
 using Datalayer.Models.Users;
 using Datalayer.Models;
 using static Relocation_and_booking_services.Controllers.HomeController;
+using Relocation_and_booking_services.Filters;
 namespace Relocation_and_booking_services.Controllers
 {
+    [RequireHttps]
     [Route("IndustryUser")]
+    [RoleAuthorization("IndustryUser")]
     public class IndustryUserController : Controller
     {
         private readonly ServiceWrapper _serviceWrapper;

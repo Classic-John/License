@@ -86,10 +86,11 @@
                     <a class="nav-link text-white" asp-controller="IndustryUser" asp-action="ServiceList">Your services</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Email" asp-action="Emails">Emails</a>
+                    <a class="nav-link text-white" asp-controller="Email" asp-action="Emails">Emails
                     <span class="position-absolute top-1 start-99 translate-middle badge rounded-pill bg-danger" id="industryUserNewEmailNumber">
 
                     </span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Home" asp-action="AboutUs">About Us</a>
@@ -106,14 +107,11 @@
                     <a class="nav-link text-white" asp-controller="School" asp-action="SchoolServices">Your school servicess</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Email" asp-action="Emails">
-                        Emails
-                        <span class="position-absolute top-1 start-99 translate-middle badge rounded-pill bg-danger" id="schoolUserNewEmailNumber">
+                    <a class="nav-link text-white" asp-controller="Email" asp-action="Emails">Emails
+                    <span class="position-absolute top-1 start-99 translate-middle badge rounded-pill bg-danger" id="schoolUserNewEmailNumber">
 
-                        </span>
+                    </span>
                     </a>
-                </li>
-                </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Home" asp-action="AboutUs">About Us</a>
@@ -139,25 +137,78 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Log in</h5>
-                    <form asp-controller="Home" asp-action="LogIn" method="post" class="needs-validated">
-                        <div class="mb-3 mt-3">
-                            <label for="Name" class="form-label">Name:</label>
-                            <input type="text" name="Name" class="form-control" id="Name1" placeholder="Enter Name">
-                            <div class="valid-feedback">Ok</div>
-                            <div class="invalid-feedback">You must enter your name in order to log in</div>
+                    <form asp-controller="Home" asp-action="LogIn" method="post">
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+                            <div class="form-floating">
+                                <input type="text" name="Name" class="form-control" id="Name1" placeholder="Enter Name">
+                                <label for="Name1" class="form-label">Name</label>
+                            </div>
+                            <br>
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="Password1" placeholder="Enter password" name="Password">
+                                <label for="Password1" class="form-label">Password</label>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="Password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="Password1" placeholder="Enter password" name="Password">
-                            <div class="valid-feedback">Ok</div>
-                            <div class="invalid-feedback">You must enter password in order to log in</div>
-                        </div>
-                        <hstack>
+                        <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Submit</button>
                             <a asp-controller="Home" asp-action="GoogleLogin" class="btn btn-outline-dark">Google Login <img src="/GoogleLogo.jpg" width="25" height="25" /></a>
-                        </hstack>
+                            <a data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" class="button">Forgot Password</a>
+
+                        </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="forgotPasswordModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Enter your name and your email address and you will receive a new password</h6>
+                </div>
+                <form asp-controller="Home" asp-action="ForgotPassword" method="post">
+                    @Html.AntiForgeryToken()
+                    <br>
+                    <div class="form-floating d-flex justify-content-center">
+                        <input class="form-control w-75" id="nameInput" name="name" />
+                        <label class="form-label" for="nameInput">Name</label>
+                    </div>
+                    <br>
+                    <div class="form-floating d-flex justify-content-center">
+                        <input class="form-control w-75" id="emailInput" name="email" />
+                        <label class="form-label" for="emailInput">Email</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <a data-bs-toggle="modal" data-bs-target="#recoverWithPhone" class="button">Recover with phone</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="recoverWithPhone">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Enter your name and your phone number</h6>
+                </div>
+                <form asp-controller="Home" asp-action="RecoverThroughSMS" method="post">
+                    @Html.AntiForgeryToken()
+                    <br>
+                    <div class="form-floating d-flex justify-content-center">
+                        <input class="form-control w-75" id="nameInput" name="name" />
+                        <label class="form-label" for="nameInput">Name</label>
+                    </div>
+                    <br>
+                    <div class="form-floating d-flex justify-content-center">
+                        <input class="form-control w-75" id="phoneInput" name="phone" />
+                        <label class="form-label" for="phoneInput">Phone</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -167,22 +218,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">CreateAccount</h5>
-                    <form method="post" id="createAccountForm" enctype="multipart/form-data">
-                        <div class="mb-3 mt-3" data-section="nonGoogle">
-                            <label for="Name" class="form-label">Name:</label>
+                    <form method="post" id="createAccountForm" enctype="multipart/form-data" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-floating" data-section="nonGoogle">
                             <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Name">
+                            <label for="Name" class="form-label">Name:</label>
                         </div>
-                        <div class="mb-3" data-section="nonGoogle">
-                            <label for="Password" class="form-label">Password:</label>
+                        <div class="form-floating" data-section="nonGoogle">
                             <input type="password" class="form-control" id="Password" name=Password placeholder="Enter password">
+                            <label for="Password" class="form-label">Password:</label>
                         </div>
-                        <div class="mb-3" data-section="nonGoogle">
-                            <label for="Email" class="form-label">Email:</label>
+                        <div class="form-floating" data-section="nonGoogle">
                             <input type="email" class="form-control" id="Email" name=Email placeholder="Enter Email">
+                            <label for="Email" class="form-label">Email:</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="Phone" class="form-label">Phone:</label>
+                        <div class="form-floating">
                             <input type="text" class="form-control" id="Phone" name=Phone placeholder="Enter Phone Number" required>
+                            <label for="Phone" class="form-label">Phone:</label>
                         </div>
                         <div class="container" required>
                             <div class="form-check mb-3">
@@ -213,11 +265,10 @@
                             </div>
                         </div>
                         <div class="d-none" id="employeerExtra">
-                            <label for="Company" class="form-label">Enter Company</label>
-                            <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name" />
-                            <div class="valid-feedback">Ok</div>
-                            <div class="invalid-feedback">Company name required</div>
-
+                            <div class="form-floating">
+                                <input type="text" class="form-control" name="Company" id="Company" placeholder="Company's name" />
+                                <label for="Company" class="form-label">Enter Company</label>
+                            </div>
                             <label for="serviceType" class="form-label">Choose service type:</label>
                             <input class="form-control" list="services" name="serviceType" id="serviceType">
                             <datalist id="services">
@@ -253,6 +304,7 @@
             </div>
         </div>
     </div>
+    <h1 class="d-flex justify-content-center p-5"><strong>Welcome to Relocation and booking services</strong></h1>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

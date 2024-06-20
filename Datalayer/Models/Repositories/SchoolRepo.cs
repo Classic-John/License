@@ -10,9 +10,6 @@ namespace Datalayer.Models.Repositories
 {
     public class SchoolRepo:BaseRepo<School>
     {
-        public SchoolRepo(RelocationDbContext context):base(context)
-        {
-            
-        }
+
     }
 }

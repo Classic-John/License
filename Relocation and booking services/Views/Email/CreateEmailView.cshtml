@@ -2,10 +2,11 @@
 
 <div class="container mt-5">
     <form method="post" asp-controller="Email" asp-action="SendEmail">
+        @Html.AntiForgeryToken()
         <div class="card">
             <div class="card-body vstack gap-2">
                 <input class="form-control" id="userIds" name="ids" hidden />
-                <input class="form-control" id="emails" placeholder="Selected Emails" readonly />
+                <input class="form-control" id="emails" placeholder="Selected Emails" readonly required />
                 <label for="forwardCommand" class="form-label">Select people</label>
                 <input class="form-control" list="forwardList" id="forwardCommand" placeholder="Search" />
                 <button class="btn btn btn-outline-success w-25" type="button" onclick="addForward()">Add person</button>
@@ -15,12 +16,16 @@
                         <option data-id="@user.Id" value="@user.Email">@user.Email</option>
                     }
                 </datalist>
-                <label class="form-label" for="titleName">Email Title</label>
-                <input id="titleName" name="title" class="form-control w-50" />
-                <label class="form-label" for="bodyName">Email Body</label>
-                <textarea type="text" rows="15" class="form-control" id="bodyName" name="body">
+                <div class="form-floating">
+                    <input id="titleName" name="title" class="form-control w-50" required />
+                    <label class="form-label" for="titleName">Email Title</label>
+                </div>
+                <div class="form-floating">
+                    <textarea type="text" class="form-control" id="bodyName" name="body" required>
 
                     </textarea>
+                    <label class="form-label" for="bodyName">Email Body</label>
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-dark">Send<object class="image/svg+xml" data="/send.svg"></object></button>

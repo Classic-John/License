@@ -10,12 +10,13 @@ namespace Datalayer
 {
     public class BaseRepo<T> where T : BaseEntity
     {
-        private readonly RelocationDbContext _relocationDbContext;
-        private readonly DbSet<T> _dbSet;
-        private readonly List<T> _items;
-        public BaseRepo(RelocationDbContext context)
+        private  DbSet<T> _dbSet;
+        private List<T> _items;
+        public BaseRepo()
         {
-            _relocationDbContext = context;
+        }
+        public void InitialiseItems(RelocationDbContext context)
+        {
             _dbSet = context.Set<T>();
             _items = _dbSet.Select(item => item).ToListAsync().Result;
         }
@@ -25,7 +26,7 @@ namespace Datalayer
             {
                 _dbSet.Add(item);
                 _items.Add(item);
-                await _relocationDbContext.SaveChangesAsync();
+                await _dbSet.GetDbContext().SaveChangesAsync();
             }
             catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
             return item;
@@ -37,9 +38,9 @@ namespace Datalayer
             try
             {
                 T? found = _items.Find(item1 => item1.Id == item.Id);
-                found = item;
+                _dbSet.GetDbContext().Entry(found).CurrentValues.SetValues(item);
                 _dbSet.Update(found);
-                await _relocationDbContext.SaveChangesAsync();
+                await _dbSet.GetDbContext().SaveChangesAsync(); 
             }
             catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); }
             return item;
@@ -50,7 +51,7 @@ namespace Datalayer
             {
                 _dbSet.Remove(item);
                 _items.Remove(item);
-                await _relocationDbContext.SaveChangesAsync();
+               await _dbSet.GetDbContext().SaveChangesAsync();
             }
             catch (Exception ex) { Console.WriteLine(ex.InnerException?.Message); return false; }
             return true;
@@ -60,7 +61,7 @@ namespace Datalayer
             if (items == null)
                 return false;
             items.ForEach(item => _dbSet.Remove(item));
-            await _relocationDbContext.SaveChangesAsync();
+            await _dbSet.GetDbContext().SaveChangesAsync();
             return true;
         }
         public async Task<List<T>> UpdateAll(List<T> items)
@@ -68,10 +69,10 @@ namespace Datalayer
             foreach(T item in items)
             {
                 T? found = _items.Find(item1 => item1.Id == item.Id);
-                found = item;
+                _dbSet.GetDbContext().Entry(found).CurrentValues.SetValues(item);
                 _dbSet.Update(found);
             }
-            await _relocationDbContext.SaveChangesAsync();
+            await _dbSet.GetDbContext().SaveChangesAsync();
             return items;
         }
     }

@@ -18,6 +18,7 @@
     </div>
 </div>
 <form id="emailListForm" method="post">
+    @Html.AntiForgeryToken()
     <div class="d-flex table-responsive p-5">
         <table class="table">
             <thead>
@@ -37,10 +38,8 @@
                         <td>@mail.Body</td>
                         <td><a role="button" onclick="submitDelete('@mail.Id')" class="btn btn-outline-danger"><object class="image/svg+xml" data="/trash-2.svg"></object></a></td>
                     </tr>
-
                 }
             </tbody>
-
         </table>
     </div>
 </form>

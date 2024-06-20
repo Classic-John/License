@@ -11,26 +11,29 @@
 </div>
 
 <form id="schoolForm" asp-controller="User" asp-action="ChosenSchool">
-    <div class="card-group w-50 h-50 p-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (School? ap in Model.Item1)
         {
-            <div class="card">
-                <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
-                <div class="card-body">
-                    <h4 class="card-title">@ap.Name</h4>
-                    <p class="card-text">@ap.Description</p>
-                    <p class="card-text">School Type: @(Model.Item2.FirstOrDefault(item => item.UserId==ap.CreatorId).SchoolType)</p>
-                    <div class="card-footer">
-                        <a class="card-text" href="@ap.Link" target="_blank">Visit</a> 
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top h-100" />
+                    <div class="card-body">
+                        <h4 class="card-title">@ap.Name</h4>
+                        <p class="card-text">@ap.Location</p>
+                        <p class="card-text">@ap.Description</p>
+                        <p class="card-text">School Type: @(Model.Item2.FirstOrDefault(item => item.UserId == ap.CreatorId).SchoolType)</p>
+                        <div class="card-footer">
+                            <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <blockquote class="blockquote">
-                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
-                    </blockquote>
-                    <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('schoolForm'),'@ap.CreatorId')">
-                        Apply
-                    </button>
+                    <div class="card-footer">
+                        <blockquote class="blockquote">
+                            Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
+                        </blockquote>
+                        <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('schoolForm'),'@ap.CreatorId')">
+                            Apply
+                        </button>
+                    </div>
                 </div>
             </div>
         }

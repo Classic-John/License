@@ -1,6 +1,6 @@
 ﻿@model (List<AbstractModel?>,List<IndustryUser>,string?)
 
-@if(Model.Item3!=null)
+@if (Model.Item3 != null)
 {
     await Html.RenderPartialAsync("Success", Model.Item3);
 }
@@ -8,31 +8,33 @@
 <button class="btn btn-primary p-5" type="button" data-bs-toggle="modal" data-bs-target="#addModal">Add Offer</button>
 
 <form id="personalServiceForm" method="post">
-    <div class="card-group w-50 h-50 p-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (AbstractModel? item in Model.Item1)
         {
-            <div class="card">
-                <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(item.Image))" class="card-img-top" />
-                <div class="card-body">
-                    <input class="form-control" type="text" value="@item.CreatorId" name="itemCreatorId" hidden />
-                    <input class="form-control" type="text" value="@item.Id" name="itemId" hidden />
-                    <h4 class="card-title">@item.Name</h4>
-                    <p class="card-text">@item.Description</p>
-                    <p class="card-text">Company: @(Model.Item2.First(item1 => item1.UserId==item.CreatorId).CompanyName)</p>
-                    <p class="card-text">Location: @item.Location</p>
-                    <div class="card-footer">
-                        <p class="card-text">@item.Price</p>
-                        <a class="card-text" href="@item.Link" target="_blank">Visit</a>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(item.Image))" class="card-img-top h-100" />
+                    <div class="card-body">
+                        <input class="form-control" type="text" value="@item.CreatorId" name="itemCreatorId" hidden />
+                        <input class="form-control" type="text" value="@item.Id" name="itemId" hidden />
+                        <h4 class="card-title">@item.Name</h4>
+                        <p class="card-text">@item.Description</p>
+                        <p class="card-text">Company: @(Model.Item2.First(item1 => item1.UserId == item.CreatorId).CompanyName)</p>
+                        <p class="card-text">Location: @item.Location</p>
+                        <div class="card-footer">
+                            <p class="card-text">@item.Price</p>
+                            <a class="card-link" href="@item.Link" target="_blank">Visit</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer h-stack gap-3">
-                    <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="takeIds('@item.Id','@item.CreatorId')">Update</button>
-                    <button type="button" class="btn btn-outline-danger" onclick="DeleteOffer('@item.CreatorId','@item.Id')">Delete</button>
-                    <blockquote class="blockquote">
-                       Posted on: @item.Date?.ToString("dd/MM/yyyy");
-                       <br />
-                       At @item.Date?.ToString("hh/mm/ss");
-                    </blockquote>
+                    <div class="card-footer h-stack gap-3">
+                        <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="takeIds('@item.Id','@item.CreatorId')">Update</button>
+                        <button type="button" class="btn btn-outline-danger" onclick="DeleteOffer('@item.CreatorId','@item.Id')">Delete</button>
+                        <blockquote class="blockquote">
+                            Posted on: @item.Date?.ToString("dd/MM/yyyy");
+                            <br />
+                            At @item.Date?.ToString("hh/mm/ss");
+                        </blockquote>
+                    </div>
                 </div>
             </div>
         }
@@ -65,12 +67,6 @@
                                 <input type="text" class="form-control" name="offerPrice" id="price" placeholder="Price" required />
                                 <label for="price" class="form-label">Price</label>
                             </div>
-                            @*
-                            <div class="form-floating">
-                            <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
-                            <label class="form-label" for="link">Site's url'</label>
-                            </div>
-                            *@
                             <div class="form-floating">
                                 <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
                                 <label for="location" class="form-label">Location</label>
@@ -123,12 +119,6 @@
                                     <input class="form-control" type="text" name="offerLink" id="link" placeholder="Site's url" />
                                     <label class="form-label" for="link">Site's url'</label>
                                 </div>
-                                @*
-                                <div class="form-floating">
-                                <input class="form-control" type="text" name="offerImage" id="image" placeholder="The Image" />
-                                <label class="form-label" for="image">Offer's product image'</label>
-                                </div>
-                                *@
                                 <div class="form-floating">
                                     <input class="form-control" type="text" name="offerLocation" id="location" placeholder="Offer's Location" required />
                                     <label for="location" class="form-label">Location</label>

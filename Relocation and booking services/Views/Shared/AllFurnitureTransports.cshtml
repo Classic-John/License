@@ -13,29 +13,32 @@
 
 
 <form id="furnitureForm" asp-controller="User" asp-action="Movers">
-    <div class="card-group w-50 h-50 p-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (Furniture ap in Model.Item1)
         {
-            <div class="card">
-                <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top" />
-                <div class="card-body">
-                    <input class="form-control" type="text" value="@ap.CreatorId" name="furnitureCreatorId" hidden />
-                    <input class="form-control" type="text" value="@ap.Id" name="furnitureId" hidden />
-                    <h4 class="card-title">@ap.Name</h4>
-                    <p class="card-text">@ap.Description</p>
-                    <p class="card-text d-flex">Company @(Model.Item2.First(item => item.UserId == ap.CreatorId).CompanyName)</p>
-                    <div class="card-footer">
-                        <p class="card-text">@ap.Price</p>
-                        <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@("data:image/jpg;base64,"+Convert.ToBase64String(ap.Image))" class="card-img-top h-100" />
+                    <div class="card-body">
+                        <input class="form-control" type="text" value="@ap.CreatorId" name="furnitureCreatorId" hidden />
+                        <input class="form-control" type="text" value="@ap.Id" name="furnitureId" hidden />
+                        <h4 class="card-title">@ap.Name</h4>
+                        <p class="card-text">@ap.Location</p>
+                        <p class="card-text">@ap.Description</p>
+                        <p class="card-text d-flex">Company @(Model.Item2.First(item => item.UserId == ap.CreatorId).CompanyName)</p>
+                        <div class="card-footer">
+                            <p class="card-text">@ap.Price</p>
+                            <a class="card-text" href="@ap.Link" target="_blank">Visit</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <blockquote class="blockquote">
-                        Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
-                    </blockquote>
-                    <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('furnitureForm'),'@ap.CreatorId')">
-                        Reserve
-                    </button>
+                    <div class="card-footer">
+                        <blockquote class="blockquote">
+                            Posted at @ap.Date?.ToString("dd.MM.yyyy HH:mm");
+                        </blockquote>
+                        <button class="btn btn-primary" type="button" onclick="MakeInputCommand('@ap.Id',document.getElementById('furnitureForm'),'@ap.CreatorId')">
+                            Reserve
+                        </button>
+                    </div>
                 </div>
             </div>
         }

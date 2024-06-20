@@ -8,8 +8,6 @@ namespace Datalayer.Models.Repositories
 {
     public class FurnitureRepo : BaseRepo<Furniture>
     {
-        public FurnitureRepo(RelocationDbContext context) : base(context)
-        {
-        }
+
     }
 }

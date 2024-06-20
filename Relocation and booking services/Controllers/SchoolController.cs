@@ -3,11 +3,14 @@ using Datalayer.Models.SchoolItem;
 using Datalayer.Models.Users;
 using Datalayer.Models.Wrapper;
 using Microsoft.AspNetCore.Mvc;
+using Relocation_and_booking_services.Filters;
 using static Relocation_and_booking_services.Controllers.HomeController;
 
 namespace Relocation_and_booking_services.Controllers
 {
+    [RequireHttps]
     [Route("School")]
+    [RoleAuthorization("SchoolUser")]
     public class SchoolController : Controller
     {
         private readonly ServiceWrapper _serviceWrapper;

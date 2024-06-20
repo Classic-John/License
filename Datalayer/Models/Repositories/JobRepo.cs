@@ -8,9 +8,6 @@ namespace Datalayer.Models.Repositories
 {
     public class JobRepo:BaseRepo<Job>
     {
-        public JobRepo(RelocationDbContext context):base(context)
-        {
-            
-        }
+
     }
 }

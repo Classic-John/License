@@ -2,11 +2,6 @@
 using Datalayer.Interfaces;
 using Datalayer.Models.Email;
 using Datalayer.Models.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Services
 {
@@ -97,6 +92,11 @@ namespace Core.Services
 
         public List<Email> GetNumberOfNewEmails(int id)
            => GetEmails(id).Where(email => email.Opened==false).ToList();
-        
+        public void UpdateAsOpened(Email? email)
+            => _unitOfWork.Emails.Update(email).Wait();
+        public void UpdateUser(User? user)
+            => _unitOfWork.Users.Update(user).Wait();
+        public bool EmailAddressAlreadyUsed(string? email,int? id)
+            => GetUsers().FirstOrDefault(user =>  user.Id !=id && user.Email.Equals(email)) is null;
     }
 }

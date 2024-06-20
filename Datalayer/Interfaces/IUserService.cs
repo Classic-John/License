@@ -26,5 +26,8 @@ namespace Datalayer.Interfaces
         public Task<bool> DeleteUser(int id);
         public User? FindUserByGoogleId(string? googleId);
         public List<Email> GetNumberOfNewEmails(int id);
+        public void UpdateAsOpened(Email? email);
+        public void UpdateUser(User? user);
+        public bool EmailAddressAlreadyUsed(string? email, int? id);
     }
 }

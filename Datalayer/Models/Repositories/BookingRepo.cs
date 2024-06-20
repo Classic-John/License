@@ -8,9 +8,6 @@ namespace Datalayer.Models.Repositories
 {
     public class BookingRepo:BaseRepo<Apartment>
     {
-        public BookingRepo(RelocationDbContext context) : base(context)
-        {
-        }
-       
+
     }
 }

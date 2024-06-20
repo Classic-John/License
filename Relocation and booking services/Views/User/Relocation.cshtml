@@ -1,7 +1,8 @@
 ﻿@model ServiceWrapper;
 
 <div class="card w-60 h-70 p-5">
-    <form class="row" asp-controller="User" asp-action="PersonalizedOffers">
+    <form class="row" asp-controller="User" asp-action="PersonalizedOffers" method="post">
+        @Html.AntiForgeryToken()
         <div class="card-body">
             <div class="row">
                 <label class="card-title col-form-label d-flex justify-content-center">Please complete this form</label>
@@ -13,19 +14,18 @@
                     <label class="form-check-label" for="student">Student</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="adult" value="adult" name="button" onclick="familly1()" />
+                    <input class="form-check-input" type="radio" id="adult" value="adult" name="button" />
                     <label class="form-check-label" for="adult">Adult</label>
                 </div>
 
             </div>
-            @*de rezolvat : fa lista cu orasele disponibinile*@
             <div class="mb-3 row">
-                <input class="form-control" type="text" placeholder="City to move to" id="target" name="target" required/>
+                <input class="form-control" type="text" placeholder="City to move to" id="target" name="target" required />
             </div>
             <fieldset class="row-mb-3">
                 <legend class="form-control row-mb-3">Do you want booking services?</legend>
                 <div class="form-check">
-                    <input class="form-check-input" value ="1" type="checkbox" id="booking" name="booking" />
+                    <input class="form-check-input" value="1" type="checkbox" id="booking" name="booking" />
                     <label class="form-check-label" for="booking">Booking</label>
                 </div>
 
@@ -43,7 +43,7 @@
 
                 <legend class="form-control row-mb-3">Do you want furniture transport services?</legend>
                 <div class="form-check">
-                    <input class="form-check-input" value ="4" type="checkbox" id="furniture" name="furniture" />
+                    <input class="form-check-input" value="4" type="checkbox" id="furniture" name="furniture" />
                     <label class="form-check-label" for="furniture">Furniture</label>
                 </div>
 
@@ -52,41 +52,10 @@
                     <input class="form-check-input" value="5" type="checkbox" id="travel" name="travel" />
                     <label class="form-check-label" for="travel">Travel</label>
                 </div>
-                <div class="d-none" id="adultWithFamilly">
-                    <div class="row">
-                        <legend class="form-control">Do you travel with your familly?</legend>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="familly" name="familly" />
-                            <label class="form-check-label" for="familly">Yes</label>
-                        </div>
-
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" />
-                            <label class="form-check-label">No</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <legend class="form-control">Your wife needs a job there?</legend>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="wife" name="wife" />
-                            <label class="form-check-label" for="wife">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" />
-                            <label class="form-check-label">No</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <legend class="form-control">Your child needs to go to school there?</legend>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" value="6" type="radio" id="child" name="child" />
-                            <label class="form-check-label" for="child">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" />
-                            <label class="form-check-label">No</label>
-                        </div>
-                    </div>
+                 <legend class="form-control row-mb-3">Do you want school services?</legend>
+                <div class="form-check">
+                <input class="form-check-input" value="6" type="checkbox" id="travel" name="travel" />
+                <label class="form-check-label" for="travel">Schools</label>
                 </div>
             </fieldset>
 

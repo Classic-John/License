@@ -8,9 +8,6 @@ namespace Datalayer.Models.Repositories
 {
     public class RentingRepo:BaseRepo<Vehicle>
     {
-        public RentingRepo(RelocationDbContext context) :base(context)
-        {
-            
-        }
+
     }
 }

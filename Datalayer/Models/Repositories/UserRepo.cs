@@ -9,9 +9,6 @@ namespace Datalayer.Models.Repositories
 {
     public class UserRepo : BaseRepo<User>
     {
-        public UserRepo(RelocationDbContext context) : base(context)
-        {
 
-        }
     }
 }

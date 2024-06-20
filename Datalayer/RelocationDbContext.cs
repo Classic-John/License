@@ -5,6 +5,7 @@ using Datalayer.Models.Repositories;
 using Datalayer.Models.SchoolItem;
 using Datalayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using NPOI.POIFS.Properties;
 using System;
@@ -22,12 +23,6 @@ namespace Datalayer
         : base(options)
         {
         }
-        /* protected override void OnConfiguring(DbContextOptionsBuilder options)
-         {
-
-         }
-        */
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -62,7 +57,15 @@ namespace Datalayer
         public DbSet<IndustryUser> IndustryUsers { get; set; }
         public DbSet<SchoolUser> SchoolsUser { get; set; }
         public DbSet<Email> Emails { get; set; }
-
-
+    }
+    public static class DbSetExtensions
+    {
+        public static DbContext GetDbContext<TEntity>(this DbSet<TEntity> dbSet) where TEntity : class
+        {
+            var infrastructure = dbSet as IInfrastructure<IServiceProvider>;
+            var serviceProvider = infrastructure.Instance;
+            var currentDbContext = serviceProvider.GetService(typeof(ICurrentDbContext)) as ICurrentDbContext;
+            return currentDbContext.Context;
+        }
     }
 }

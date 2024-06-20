@@ -9,9 +9,12 @@ using Datalayer.Models.Enums;
 using static Relocation_and_booking_services.Controllers.HomeController;
 using System.Reflection;
 using Datalayer.Models.SchoolItem;
+using Relocation_and_booking_services.Filters;
 
 namespace Relocation_and_booking_services.Controllers
 {
+    [RequireHttps]
+    [RoleAuthorization("User")]
     public class UserController : Controller
     {
         private readonly ServiceWrapper _serviceWrapper;
@@ -46,6 +49,7 @@ namespace Relocation_and_booking_services.Controllers
         {
             if (ChosenServices.Count == 0)
                 View("Success", "You have finished your selected offer pages. Their creators have been notified that you are interested in their offers through an automatic email");
+            List<IndustryUser> users=_serviceWrapper._industryUserService.GetIndustryUsers();
             try
             {
                 switch (ChosenServices[0])
@@ -53,34 +57,35 @@ namespace Relocation_and_booking_services.Controllers
                     case 1:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("BookingServices", FilterItems(_serviceWrapper._bookingService).Select(item => (Apartment)item).ToList());
+                        return View("BookingServices", (FilterItems(_serviceWrapper._bookingService).Select(item => (Apartment)item).ToList(),users));
                     case 2:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("RentingServices", FilterItems(_serviceWrapper._rentingService).Select(item => (Vehicle)item).ToList());
+                        return View("RentingServices", (FilterItems(_serviceWrapper._rentingService).Select(item => (Vehicle)item).ToList(),users));
                     case 3:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("AllJobs", FilterItems(_serviceWrapper._jobService).Select(item => (Job)item).ToList());
+                        return View("AllJobs", (FilterItems(_serviceWrapper._jobService).Select(item => (Job)item).ToList(),users));
                     case 4:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("AllFurnitureTransports", FilterItems(_serviceWrapper._furnitureService).Select(item => (Furniture)item).ToList());
+                        return View("AllFurnitureTransports", (FilterItems(_serviceWrapper._furnitureService).Select(item => (Furniture)item).ToList(), users));
                     case 5:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("AllTransports", FilterItems(_serviceWrapper._transportService).Select(item => (Transport)item).ToList());
+                        return View("AllTransports", (FilterItems(_serviceWrapper._transportService).Select(item => (Transport)item).ToList(), users));
                     case 6:
                         if (ChosenServices.Count > 0)
                             ChosenServices.RemoveAt(0);
-                        return View("AllSchools",_serviceWrapper._schoolService.GetSchools().Where(item => item.Location.Equals(Destination)).ToList());
+                        return View("AllSchools",(_serviceWrapper._schoolService.GetSchools().Where(school=> school.Location.Equals(Destination)),_serviceWrapper._schoolService.GetSchoolUsers()));
 
                 }
             }
-            catch { return View("Failed","Failed to load the next offer page"); }
+            catch { return View("Success", "You have applied successfully"); }
             return View("Success","You have finished your selected offer pages. Their creators have been notified that you are interested in their offers through an automatic email");
         }
-        [Route("selected companies offers")]
+        [HttpPost("selected companies offers")]
+        [ValidateAntiForgeryToken]
         public IActionResult PersonalizedOffers()
         {
             Destination = Request.Form["target"].ToString();
@@ -108,6 +113,7 @@ namespace Relocation_and_booking_services.Controllers
             if (industryEmail == null)
                 return false;
             industryEmail.Opened = false;
+            industryEmail.CreatorId = -1;
            await _serviceWrapper._userService.AddEmail(industryEmail);
             return true;
         }
@@ -123,7 +129,7 @@ namespace Relocation_and_booking_services.Controllers
                 return false;
             Email? schoolEmail = new() {
                 Title = $"{actualUser.Name} applied to your school service", Body=$"{actualUser.Name} requests a place either for himself or his children at {item.Name}\n.Here is his phone: {actualUser.Password} and email: {actualUser.Email}"
-                , Date=DateTime.Now, UserId=userId , Opened=false, CreatorId=-1
+                , Date=DateTime.Now, UserId=userId , Opened=false, CreatorId= -1
             };
             await _serviceWrapper._userService.AddEmail(schoolEmail);
             return true;

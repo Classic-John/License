@@ -9,14 +9,26 @@
         return 0;
     }
 }
-
 async function getNewEmails() {
     try {
         const response = await fetch('/Email/NewEmailsNumber');
         const data = await response.json();
-        document.getElementById('userNewEmailNumber').textContent = data;
-        document.getElementById('industryUserNewEmailNumber').textContent = data;
-        document.getElementById('schoolUserNewEmailNumber').textContent = data;
+        let user = document.getElementById('userNewEmailNumber');
+        let industry = document.getElementById('industryUserNewEmailNumber');
+        let school = document.getElementById('schoolUserNewEmailNumber');
+        if (data != 0) {
+            user.textContent = data;
+            industry.textContent = data;
+            school.textContent = data;
+            if (user.classList.contains('d-none')) { user.classList.remove('d-none'); }
+            if (industry.classList.contains('d-none')) { industry.classList.remove('d-none'); }
+            if (school.classList.contains('d-none')) { school.classList.remove('d-none'); }
+        }
+        else {
+            if (!user.classList.contains('d-none')) { user.classList.add('d-none'); }
+            if (!industry.classList.contains('d-none')) { industry.classList.add('d-none'); }
+            if (!school.classList.contains('d-none')) { school.classList.add('d-none'); }
+        }
     }
     catch (error) {
         console.error("Failed to load the number of new emails", error);
@@ -100,20 +112,6 @@ function employeerButton() {
         return;
     }
     company.classList.replace("mb-3", "d-none");
-}
-
-function successLog() {
-    return "Welcome " + theName + " ," + "you are logged as an " + getRole();
-}
-
-function familly1() {
-    let famillyOption = document.getElementById("adultWithFamilly");
-    if (famillyOption.classList.contains("d-none")) {
-        famillyOption.classList.replace("d-none", "mb-3");
-    }
-    else {
-        famillyOption.classList.replace("mb-3", "d-none");
-    }
 }
 function checkSection(sectionId) {
     let section = document.getElementById(sectionId);
@@ -232,6 +230,30 @@ function submitForward() {
     form.action = "/Email/Forward";
     form.submit();
 }
+function submitToGmail() {
+    let form = document.getElementById('individualEmailForm');
+    form.action = "/Email/SendToGmail";
+    form.submit();
+}
+function submitToSenderGmail() {
+    let form = document.getElementById('individualEmailForm')
+    form.action = "/Email/SendToEmailSenderGmail";
+    var block = document.getElementById('replyBlock');
+    var blockData = document.getElementById('replyBlockData');
+    let newBody = block.value.trim();
+    blockData.setAttribute('value', newBody);
+    form.submit();
+}
+function syncGoogle() {
+    let form = document.getElementById('profileForm');
+    form.action = "/Home/google-login";
+    form.submit();
+}
+function desyncGoogle() {
+    let form = document.getElementById('profileForm');
+    form.action = "";
+    form.submit();
+}
 function Search() {
     let search = document.getElementById('search').value.toLowerCase();
     let emails = document.querySelectorAll("table tbody tr");
@@ -265,7 +287,7 @@ function DeleteOffer(creatorId, itemId, actionString = "/IndustryUser/Delete") {
     input2.value = creatorId;
     form.appendChild(input1);
     form.appendChild(input2);
-    form.action =actionString ;
+    form.action = actionString;
     form.submit();
 }
 function enableSections() {
@@ -288,12 +310,11 @@ function uploadImage(fileId, inputId) {
     reader.readAsDataURL(file);
 }
 
-function KeepPicture() {
+async function KeepPicture() {
     const img = document.getElementById('image');
-    fetch('/Home/KeepPicture')
+    await fetch('/Home/KeepPicture')
         .then(response => response.text())
         .then(data => {
-
             img.src = data == null ? '/default.jpg' : data;
         })
         .catch(error => {
@@ -307,15 +328,15 @@ function SendAccountDelete() {
     profile.submit();
 }
 function FilterOffers(formId, cityName) {
-    let divs = document.getElementById(formId).querySelectorAll(".card-group .card .card-body")
+    let divs = document.getElementById(formId).querySelectorAll(".row .col .card")
     divs.forEach(item => {
-        let parent = item.closest(".card");
-        let currentCity = item.querySelector('.card-text.d-flex');
-        if (!currentCity.textContent.includes(cityName) && !parent.classList.contains("d-none")) {
-            parent.classList.add("d-none");
+        let parent = item.closest(".card-body");
+        let currentCity = item.querySelector('.card-text');
+        if (!currentCity.textContent.includes(cityName) && !item.classList.contains("d-none")) {
+            item.classList.add("d-none");
         }
-        if (currentCity.textContent.includes(cityName) && parent.classList.contains("d-none")) {
-            parent.classList.remove("d-none");
+        if (currentCity.textContent.includes(cityName) && item.classList.contains("d-none")) {
+            item.classList.remove("d-none");
         }
     });
 }
@@ -346,7 +367,7 @@ function resetMethod() {
 }
 function createWithGoogle() {
     let form = document.getElementById('createAccountForm');
-    form.action ="/Home/CreateAccountWithGoogle";
+    form.action = "/Home/CreateAccountWithGoogle";
     form.submit();
 }
 function createNormal() {

@@ -8,9 +8,6 @@ namespace Datalayer.Models.Repositories
 {
     public class TransportRepo:BaseRepo<Transport>
     {
-        public TransportRepo(RelocationDbContext context):base(context)
-        {
-            
-        }
+
     }
 }
